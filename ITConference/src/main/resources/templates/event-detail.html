@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${event.naam}">Event Details</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{nav :: navbar}"></div>  <h1><span th:text="${event.naam}">Event Naam</span></h1>
+
+<p><span th:text="#{eventDetail.beschrijving}">Beschrijving:</span> <span th:text="${event.beschrijving}"></span></p>
+
+<p><span th:text="#{eventDetail.sprekers}">Spreker(s):</span>
+    <span th:each="spreker, iterStat : ${event.sprekers}">
+        <span th:text="${spreker.naam}">Spreker Naam</span><span th:if="${!iterStat.last}">, </span>
+    </span>
+</p>
+
+<p><span th:text="#{eventDetail.lokaal}">Lokaal:</span> <span th:text="${event.lokaal.naam}">Lokaal Naam</span> (<span th:text="#{eventDetail.capaciteit}">Capaciteit:</span> <span th:text="${event.lokaal.capaciteit}"></span>)</p>
+
+<p><span th:text="#{eventDetail.datumTijd}">Datum en Tijd:</span> <span th:text="${#temporals.format(event.datumTijd, #messages.msg('datetime.format.pattern'))}"></span></p>
+
+<a href="#" th:href="@{/events}" th:text="#{general.back}">Terug naar overzicht</a>
+
+</body>
+</html>
