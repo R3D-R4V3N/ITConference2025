@@ -5,38 +5,40 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString; // Zorg dat deze import er is
 
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity // Geeft aan dat dit een JPA entiteit is
-@Data // Lombok annotatie voor getters, setters, equals, hashCode en toString
-@NoArgsConstructor // Lombok annotatie voor een no-args constructor (vereist door JPA)
-@AllArgsConstructor // Lombok annotatie voor een constructor met alle argumenten
-@Table(name = "sprekers") // Specificeert de naam van de databasetabel
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+// Sluit 'events' uit om StackOverflowError te voorkomen
+@ToString(exclude = {"events"}) // Pas deze lijn aan
+@Table(name = "sprekers")
 public class Spreker implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id // Geeft aan dat dit het primaire sleutelveld is
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Laat de database de waarde genereren (auto-increment)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // Interne ID voor JPA
 
-    @Column(nullable = false, unique = true) // Spreker naam moet uniek zijn in de database kolom
-    @NotBlank(message = "{spreker.naam.notBlank}") // Validatie: mag niet leeg zijn (komt uit resource bundle)
+    @Column(nullable = false, unique = true)
+    @NotBlank(message = "{spreker.naam.notBlank}")
     private String naam;
 
-    // Relatie met Events - ManyToMany, mappedBy geeft aan dat Event de owning side is van de relatie
-    // De join tabel wordt beheerd door de Event entiteit
+    // Relatie met Events - ManyToMany, mappedBy geeft aan dat Event de owning side is
     @ManyToMany(mappedBy = "sprekers")
-    private Set<Event> events = new HashSet<>(); // Gebruik Set omdat de volgorde van events voor een spreker meestal niet uitmaakt en duplicaten voorkomen
+    private Set<Event> events = new HashSet<>(); // Dit wordt nu uitgesloten in toString()
 
     // Constructor voor het aanmaken van Spreker objecten zonder ID (voor JPA)
     public Spreker(String naam) {
         this.naam = naam;
     }
 
-    // De @Data annotatie genereert automatisch de getters en setters voor id en naam.
-    // Voor de 'events' set genereert @Data ook getters en setters.
+    // Getters en setters worden gegenereerd door @Data
+    // toString() wordt gegenereerd door @Data met de exclude lijst
 }
