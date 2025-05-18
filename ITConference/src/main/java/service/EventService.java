@@ -4,6 +4,8 @@ import domain.Event;
 import domain.Lokaal;
 import domain.Spreker;
 
+import jakarta.validation.Valid; // Import @Valid
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,7 +15,8 @@ public interface EventService {
 
     List<Event> findAllEvents();
 
-    Event saveEvent(Event event);
+    // Add @Valid here
+    Event saveEvent(@Valid Event event);
 
     Optional<Event> findEventById(Long id);
 

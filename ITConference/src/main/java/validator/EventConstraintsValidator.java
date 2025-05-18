@@ -4,19 +4,37 @@ import domain.Event;
 import domain.Lokaal;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import repository.EventRepository; // Importeer de EventRepository
-import org.springframework.beans.factory.annotation.Autowired; // Nodig voor injectie
-import org.springframework.stereotype.Component; // Maak dit een Spring Component zodat injectie werkt
+import repository.EventRepository;
+import org.springframework.beans.BeansException; // Import BeansException
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext; // Import ApplicationContext
+import org.springframework.context.ApplicationContextAware; // Import ApplicationContextAware
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Component // Maak deze klasse een Spring Component
-public class EventConstraintsValidator implements ConstraintValidator<ValidEventConstraints, Event> {
+@Component
+// Implement ApplicationContextAware
+public class EventConstraintsValidator implements ConstraintValidator<ValidEventConstraints, Event>, ApplicationContextAware {
 
-    @Autowired // Injecteer de EventRepository
+    // Keep @Autowired, but add a fallback
     private EventRepository eventRepository;
+
+    // Store the ApplicationContext
+    private ApplicationContext applicationContext;
+
+    @Autowired
+    public void setEventRepository(EventRepository eventRepository) {
+        this.eventRepository = eventRepository;
+    }
+
+    // Implement setApplicationContext method
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
 
     @Override
     public void initialize(ValidEventConstraints constraintAnnotation) {
@@ -25,6 +43,12 @@ public class EventConstraintsValidator implements ConstraintValidator<ValidEvent
 
     @Override
     public boolean isValid(Event event, ConstraintValidatorContext context) {
+        // If @Autowired injection failed, get the repository from the ApplicationContext
+        if (eventRepository == null) {
+            System.out.println("EventRepository was null, retrieving from ApplicationContext...");
+            eventRepository = applicationContext.getBean(EventRepository.class);
+        }
+
         // Null event object is geldig als eerdere validaties faalden
         if (event == null) {
             return true;
@@ -36,14 +60,12 @@ public class EventConstraintsValidator implements ConstraintValidator<ValidEvent
         LocalDateTime datumTijd = event.getDatumTijd();
         Lokaal lokaal = event.getLokaal();
 
-        // Zoek naar bestaande events met hetzelfde tijdstip en lokaal, exclusief het huidige event (als het al bestaat)
+        // Use the eventRepository (now guaranteed to be not null)
         List<Event> bestaandeEventsTijdLokaal = eventRepository.findByDatumTijdAndLokaal(datumTijd, lokaal);
 
-        // Als er bestaande events zijn en ze zijn niet het event dat we nu valideren (bij een update)
         if (bestaandeEventsTijdLokaal != null && !bestaandeEventsTijdLokaal.isEmpty()) {
             boolean isDuplicate = false;
             for (Event bestaandEvent : bestaandeEventsTijdLokaal) {
-                // Als het bestaande event niet hetzelfde is als het event dat we nu valideren (op basis van ID)
                 if (event.getId() == null || !event.getId().equals(bestaandEvent.getId())) {
                     isDuplicate = true;
                     break;
@@ -52,12 +74,11 @@ public class EventConstraintsValidator implements ConstraintValidator<ValidEvent
             if (isDuplicate) {
                 context.disableDefaultConstraintViolation();
                 context.buildConstraintViolationWithTemplate("{event.constraints.duplicateTimeLocation}")
-                        .addPropertyNode("datumTijd") // Koppel fout aan datumTijd veld
+                        .addPropertyNode("datumTijd")
                         .addConstraintViolation();
                 isValid = false;
             }
         }
-
 
         // Controle 2: Naam van het event op dezelfde dag mag nog niet voorkomen.
         String naam = event.getNaam();
@@ -66,10 +87,8 @@ public class EventConstraintsValidator implements ConstraintValidator<ValidEvent
             datum = datumTijd.toLocalDate();
         }
 
-
         if (naam != null && datum != null) {
-            // Zoek naar bestaande events met dezelfde naam op dezelfde dag
-            List<Event> bestaandeEventsNaamDag = eventRepository.findByNaamAndDatum(naam, datum); // We moeten deze methode toevoegen aan EventRepository
+            List<Event> bestaandeEventsNaamDag = eventRepository.findByNaamAndDatum(naam, datum);
 
             if (bestaandeEventsNaamDag != null && !bestaandeEventsNaamDag.isEmpty()) {
                 boolean isDuplicate = false;
@@ -82,13 +101,12 @@ public class EventConstraintsValidator implements ConstraintValidator<ValidEvent
                 if (isDuplicate) {
                     context.disableDefaultConstraintViolation();
                     context.buildConstraintViolationWithTemplate("{event.constraints.duplicateNameDay}")
-                            .addPropertyNode("naam") // Koppel fout aan naam veld
+                            .addPropertyNode("naam")
                             .addConstraintViolation();
                     isValid = false;
                 }
             }
         }
-
 
         return isValid;
     }

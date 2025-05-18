@@ -26,7 +26,7 @@
                     </span>
         </td>
         <td th:text="${event.lokaal.naam}">Lokaal Naam</td>
-        <td th:text="${#temporals.format(event.datumTijd, #{datetime.format.pattern})}">Datum en Tijd</td>
+        <td th:text="${#temporals.format(event.datumTijd, #messages.msg('datetime.format.pattern'))}">Datum en Tijd</td>
     </tr>
     </tbody>
 </table>
