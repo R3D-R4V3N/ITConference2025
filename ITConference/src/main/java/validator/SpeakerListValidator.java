@@ -27,30 +27,20 @@ public class SpeakerListValidator implements ConstraintValidator<ValidSpeakerLis
 
         // Loop door de lijst met sprekers
         for (Spreker spreker : sprekers) {
-            // Controleer op null sprekers in de lijst (hoewel dit door @NotNull op Spreker afgehandeld zou moeten worden indien Spreker nullable was)
-            if (spreker == null) {
-                // Voeg een fout toe als een spreker in de lijst null is
-                context.disableDefaultConstraintViolation();
-                context.buildConstraintViolationWithTemplate("Spreker in lijst mag niet null zijn") // Of gebruik een resource bundle key
-                        .addPropertyNode("sprekers")
-                        .addConstraintViolation();
-                return false;
-            }
-
             // Probeer de spreker aan de set toe te voegen.
             // Als add() 'false' teruggeeft, betekent dit dat de spreker (of een gelijk object) al in de set zat.
             if (!uniekeSprekers.add(spreker)) {
                 // Een duplicaat gevonden, dus de validatie mislukt.
-                // Voeg een fout toe aan het 'sprekers' veld
-                context.disableDefaultConstraintViolation(); // Schakel de standaardfout uit (indien van toepassing)
-                context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate()) // Gebruik de standaardfoutmelding van de annotatie
-                        .addPropertyNode("sprekers") // Koppel de foutmelding aan het 'sprekers' veld
-                        .addConstraintViolation(); // Voeg de aangepaste fout toe
+                // We kunnen hier eventueel context toevoegen aan het foutbericht.
+                // context.disableDefaultConstraintViolation();
+                // context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
+                //        .addPropertyNode("sprekers") // Koppel de foutmelding aan het 'sprekers' veld
+                //        .addConstraintViolation();
                 return false; // De validatie is mislukt
             }
         }
 
-        // Geen duplicaten of null sprekers gevonden, de validatie is geslaagd.
+        // Geen duplicaten gevonden, de validatie is geslaagd.
         return true;
     }
 }

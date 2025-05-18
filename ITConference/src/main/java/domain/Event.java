@@ -1,13 +1,10 @@
 package domain;
 
-// ... andere imports
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString; // Zorg dat deze import er is
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
 import validator.ValidBeamerCheck;
@@ -25,10 +22,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-// Sluit 'sprekers' en 'lokaal' uit om StackOverflowError te voorkomen.
-// Andere collecties zoals 'performances', 'tickets', 'region', 'genre'
-// die mogelijk in andere relaties voorkomen, ook uitsluiten indien bidirectioneel.
-@ToString(exclude = {"sprekers", "lokaal"}) // Pas deze lijn aan
 @Table(name = "events")
 public class Event implements Serializable {
 
@@ -54,19 +47,19 @@ public class Event implements Serializable {
     )
     @Size(min = 1, max = 3, message = "{event.sprekers.size}")
     @ValidSpeakerList
-    private List<Spreker> sprekers; // Dit veld wordt nu uitgesloten in toString()
+    private List<Spreker> sprekers;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lokaalId", nullable = false)
     @NotNull(message = "{event.lokaal.notNull}")
-    private Lokaal lokaal; // Dit wordt nu uitgesloten in toString()
+    private Lokaal lokaal;
 
     @Column(nullable = false)
     @NotNull(message = "{event.datumTijd.notNull}")
     @FutureOrPresent(message = "{event.datumTijd.futureOrPresent}")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     // ** UPDATED: Set a future conference period that includes your event dates **
-    @ValidConferenceDate(startDate = "2025-05-18", endDate = "2025-12-31") // Pas datums aan naar de werkelijke conferentieperiode
+    @ValidConferenceDate(startDate = "2025-05-18", endDate = "2025-12-31") // Example: From today onwards
     private LocalDateTime datumTijd;
 
     @Column(nullable = false)
@@ -75,7 +68,7 @@ public class Event implements Serializable {
     private int beamercode;
 
     @Transient
-    private int beamercheck; // Dit veld wordt niet gepersisteerd
+    private int beamercheck;
 
     @Column(nullable = false)
     @NotNull(message = "{event.prijs.notNull}")
@@ -94,9 +87,6 @@ public class Event implements Serializable {
         this.beamercode = beamercode;
         this.prijs = prijs;
     }
-
-    // Getters en setters worden gegenereerd door @Data
-    // toString() wordt gegenereerd door @Data met de exclude lijst
 
     public int getBeamercheck() {
         return beamercheck;
