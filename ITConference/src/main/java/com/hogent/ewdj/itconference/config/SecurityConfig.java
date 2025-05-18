@@ -37,7 +37,7 @@ public class SecurityConfig {
                         // Als je deze regel uitcommentarieert, vallen /events/add en andere niet-gedefinieerde
                         // URL's onder de .anyRequest().authenticated() regel en vereisen ze nog steeds login.
                         // Om /events/add ook publiek te maken voor tijdelijk testen, voeg je hier .permitAll() toe:
-                        .requestMatchers("/events/add").permitAll() // T IJDELIJK: Sta iedereen toe voor testen
+                        .requestMatchers("/events/add").hasRole("ADMIN")
 
 
                         .anyRequest().authenticated() // Alle andere requests vereisen authenticatie
