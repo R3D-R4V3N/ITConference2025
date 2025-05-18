@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="#{eventAdd.title}">Event Toevoegen</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<h1><span th:text="#{eventAdd.header}">Nieuw Event Toevoegen</span></h1>
+
+<form action="#" th:action="@{/events/add}" th:object="${event}" method="post">
+
+  <div>
+    <label for="naam" th:text="#{event.naam}">Naam:</label>
+    <input type="text" id="naam" th:field="*{naam}" />
+    <span th:if="${#fields.hasErrors('naam')}" th:errors="*{naam}" class="error">Naam Error</span>
+  </div>
+
+  <div>
+    <label for="beschrijving" th:text="#{event.beschrijving}">Beschrijving:</label>
+    <textarea id="beschrijving" th:field="*{beschrijving}"></textarea>
+  </div>
+
+  <div>
+    <label th:text="#{event.sprekers}">Spreker(s):</label>
+    <select th:field="*{sprekers}" multiple="multiple">
+      <option th:each="spreker : ${sprekers}"
+              th:value="${spreker.id}"
+              th:text="${spreker.naam}">Spreker Naam</option>
+    </select>
+    <span th:if="${#fields.hasErrors('sprekers')}" th:errors="*{sprekers}" class="error">Sprekers Error</span>
+  </div>
+
+  <div>
+    <label for="lokaal" th:text="#{event.lokaal}">Lokaal:</label>
+    <select id="lokaal" th:field="*{lokaal}">
+      <option value="">Selecteer een lokaal</option> <option th:each="lokaal : ${lokalen}"
+                                                             th:value="${lokaal.id}"
+                                                             th:text="${lokaal.naam} + ' (' + ${lokaal.capaciteit} + ' plaatsen)'">Lokaal Naam (Capaciteit)</option>
+    </select>
+    <span th:if="${#fields.hasErrors('lokaal')}" th:errors="*{lokaal}" class="error">Lokaal Error</span>
+  </div>
+
+  <div>
+    <label for="datumTijd" th:text="#{event.datumTijd}">Datum en Tijd:</label>
+    <input type="datetime-local" id="datumTijd" th:field="*{datumTijd}" />
+    <span th:if="${#fields.hasErrors('datumTijd')}" th:errors="*{datumTijd}" class="error">Datum en Tijd Error</span>
+  </div>
+
+  <div>
+    <label for="beamercode" th:text="#{event.beamercode}">Beamercode:</label>
+    <input type="number" id="beamercode" th:field="*{beamercode}" />
+    <span th:if="${#fields.hasErrors('beamercode')}" th:errors="*{beamercode}" class="error">Beamercode Error</span>
+  </div>
+
+  <div>
+    <label for="beamercheck" th:text="#{event.beamercheck}">Beamercheck:</label>
+    <input type="number" id="beamercheck" th:field="*{beamercheck}" />
+    <span th:if="${#fields.hasErrors('beamercheck')}" th:errors="*{beamercheck}" class="error">Beamercheck Error</span>
+  </div>
+
+
+  <div>
+    <label for="prijs" th:text="#{event.prijs}">Prijs:</label>
+    <input type="number" id="prijs" th:field="*{prijs}" step="0.01" />
+    <span th:if="${#fields.hasErrors('prijs')}" th:errors="*{prijs}" class="error">Prijs Error</span>
+  </div>
+
+  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+
+  <div>
+    <button type="submit" th:text="#{eventAdd.submitButton}">Event Toevoegen</button>
+  </div>
+
+  <div th:if="${#fields.hasGlobalErrors()}">
+    <p th:each="err : ${#fields.globalErrors()}" th:text="${err}" class="error">Algemene Fout</p>
+  </div>
+
+
+</form>
+
+<div>
+  <a href="#" th:href="@{/events}" th:text="#{general.cancel}">Annuleren</a>
+</div>
+
+</body>
+</html>
