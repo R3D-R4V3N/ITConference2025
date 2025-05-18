@@ -1,9 +1,13 @@
 package com.hogent.ewdj.itconference.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
@@ -11,40 +15,34 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    // ... UserDetailsService en configureGlobal beans (komen later)
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder; // Inject the PasswordEncoder bean
+
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.csrfTokenRepository(new HttpSessionCsrfTokenRepository()))
                 .authorizeHttpRequests(requests -> requests
-                        // ... bestaande regels ...
-
-                        .requestMatchers("/events").permitAll() // Publiek toegankelijk
-                        .requestMatchers("/login").permitAll() // Login pagina publiek
-                        .requestMatchers("/css/**").permitAll() // Statische bestanden
-                        .requestMatchers("/js/**").permitAll() // Statische bestanden
-                        .requestMatchers("/icons/**").permitAll() // Statische bestanden
-                        .requestMatchers("/error").permitAll() // Error pagina
-
-                        // *** Commentarieer deze regel tijdelijk uit voor testdoeleinden ***
-                        // .requestMatchers("/events/add").hasRole("ADMIN")
-
-                        // Hier komen later regels voor andere beveiligde pagina's
-                        // .requestMatchers("/admin/**").hasRole("ADMIN")
-                        // .requestMatchers("/favorites").hasRole("USER")
-
-                        // Als je deze regel uitcommentarieert, vallen /events/add en andere niet-gedefinieerde
-                        // URL's onder de .anyRequest().authenticated() regel en vereisen ze nog steeds login.
-                        // Om /events/add ook publiek te maken voor tijdelijk testen, voeg je hier .permitAll() toe:
+                        .requestMatchers("/events").permitAll()
+                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/css/**").permitAll()
+                        .requestMatchers("/js/**").permitAll()
+                        .requestMatchers("/icons/**").permitAll()
+                        .requestMatchers("/error").permitAll()
                         .requestMatchers("/events/add").hasRole("ADMIN")
-
-
-                        .anyRequest().authenticated() // Alle andere requests vereisen authenticatie
+                        .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/dashboard", true)
+                        .defaultSuccessUrl("/events", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -58,6 +56,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-    // ... UserDetailsService en PasswordEncoder beans (komen later)
 }

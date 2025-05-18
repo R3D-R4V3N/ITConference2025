@@ -3,12 +3,16 @@ package com.hogent.ewdj.itconference.config;
 import domain.Event;
 import domain.Lokaal;
 import domain.Spreker;
+import domain.MyUser; // Importeer MyUser
+import domain.Role; // Importeer Role
+import repository.MyUserRepository; // Importeer MyUserRepository
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder; // Importeer PasswordEncoder
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import service.EventService;
@@ -42,10 +46,39 @@ public class InitDataConfig implements CommandLineRunner {
     @Autowired
     private EventConstraintsValidator eventConstraintsValidator;
 
+    @Autowired
+    private MyUserRepository myUserRepository; // Injecteer de MyUserRepository
+
+    @Autowired
+    private PasswordEncoder passwordEncoder; // Injecteer de PasswordEncoder bean
+
 
     @Override
     public void run(String... args) throws Exception {
         System.out.println("Database initialiseren met voorbeeld data...");
+
+        // -------- -------- --------
+        // -------- GEBRUIKERS --------
+        // -------- -------- --------
+        // Maak een ADMIN gebruiker aan
+        MyUser adminUser = MyUser.builder()
+                .username("admin")
+                .password(passwordEncoder.encode("admin")) // Hash het wachtwoord
+                .role(Role.ADMIN) // Wijs de ADMIN rol toe
+                .build();
+
+        // Maak een standaard USER gebruiker aan
+        MyUser standardUser = MyUser.builder()
+                .username("user")
+                .password(passwordEncoder.encode("user")) // Hash het wachtwoord
+                .role(Role.USER) // Wijs de USER rol toe
+                .build();
+
+        // Sla de gebruikers op in de database
+        myUserRepository.saveAll(Arrays.asList(adminUser, standardUser));
+
+        System.out.println("Standaard gebruikers aangemaakt: admin/admin en user/user");
+
 
         // Voorbeeld Lokalen aanmaken en persisteren via de service
         Lokaal lokaal1 = new Lokaal("A101", 50);
