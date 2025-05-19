@@ -38,6 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/icons/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/events/add").hasRole("ADMIN")
+                        .requestMatchers("/lokalen/add").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
