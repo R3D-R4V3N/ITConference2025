@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import service.EventService;
 import service.LokaalService;
 import exceptions.LokaalNotFoundException;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,6 +24,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class ITConferenceRestController {
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Autowired
     private EventService eventService;

@@ -12,7 +12,7 @@
     <nav class="flex gap-4 bg-blue-900 justify-end p-2 items-center">
         <div class="font-bold border-black border-2 rounded-full py-1 px-4 bg-white">
             <a href="#" th:href="@{/events}" class="text-blue-700 hover:text-blue-900">Events</a>
-            <span sec:authorize="isAuthenticated()"> | <a href="#" th:href="@{/favorites}" class="text-blue-700 hover:text-blue-900">Mijn Favorieten</a>
+            <span sec:authorize="hasRole('USER')"> | <a href="#" th:href="@{/favorites}" class="text-blue-700 hover:text-blue-900">Mijn Favorieten</a>
             </span>
             <span sec:authorize="hasRole('ADMIN')"> | <a href="#" th:href="@{/lokalen}" class="text-blue-700 hover:text-blue-900">Lokalen Beheren</a>
             </span>

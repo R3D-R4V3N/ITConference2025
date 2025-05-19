@@ -10,12 +10,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import service.FavoriteService;
-
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import java.util.List;
 
 @Controller
 @RequestMapping("/favorites")
 public class FavoriteController {
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Autowired
     private FavoriteService favoriteService;
@@ -35,11 +39,14 @@ public class FavoriteController {
         String username = authentication.getName();
         try {
             favoriteService.addFavoriteEvent(username, eventId);
-            redirectAttributes.addFlashAttribute("message", "Evenement succesvol toegevoegd aan favorieten.");
+            String successMessage = messageSource.getMessage("favorite.add.success", null, LocaleContextHolder.getLocale());
+            redirectAttributes.addFlashAttribute("message", successMessage);
         } catch (IllegalStateException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            String errorMessage = messageSource.getMessage("favorite.add.error", new Object[]{e.getMessage()}, LocaleContextHolder.getLocale());
+            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
         } catch (UserNotFoundException | EventNotFoundException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            String errorMessage = messageSource.getMessage("favorite.add.error", new Object[]{e.getMessage()}, LocaleContextHolder.getLocale());
+            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
         }
         return "redirect:/events/" + eventId;
     }
@@ -51,9 +58,11 @@ public class FavoriteController {
         String username = authentication.getName();
         try {
             favoriteService.removeFavoriteEvent(username, eventId);
-            redirectAttributes.addFlashAttribute("message", "Evenement succesvol verwijderd uit favorieten."); // TODO: Resource bundle
+            String successMessage = messageSource.getMessage("favorite.remove.success", null, LocaleContextHolder.getLocale());
+            redirectAttributes.addFlashAttribute("message", successMessage);
         } catch (UserNotFoundException | EventNotFoundException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            String errorMessage = messageSource.getMessage("favorite.remove.error", new Object[]{e.getMessage()}, LocaleContextHolder.getLocale());
+            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
         }
         return "redirect:/favorites";
     }

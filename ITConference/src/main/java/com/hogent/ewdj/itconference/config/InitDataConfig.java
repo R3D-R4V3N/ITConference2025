@@ -7,9 +7,6 @@ import domain.MyUser;
 import domain.Role;
 import repository.MyUserRepository;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,14 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 import service.EventService;
 import service.LokaalService;
 import service.SprekerService;
-import validator.EventConstraintsValidator;
-
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 @Component
 @Transactional
@@ -41,21 +35,14 @@ public class InitDataConfig implements CommandLineRunner {
     private EventService eventService;
 
     @Autowired
-    private Validator validator;
-
-    @Autowired
-    private EventConstraintsValidator eventConstraintsValidator;
-
-    @Autowired
     private MyUserRepository myUserRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("Database initialiseren met voorbeeld data...");
+        System.out.println("⚙️ Database initialiseren met voorbeeld data...");
 
         MyUser adminUser = MyUser.builder()
                 .username("admin")
@@ -66,13 +53,12 @@ public class InitDataConfig implements CommandLineRunner {
         MyUser standardUser = MyUser.builder()
                 .username("user")
                 .password(passwordEncoder.encode("user"))
-                .role(Role.USER) // Wijs de USER rol toe
+                .role(Role.USER)
                 .build();
 
         myUserRepository.saveAll(Arrays.asList(adminUser, standardUser));
 
-        System.out.println("Standaard gebruikers aangemaakt: admin/admin en user/user");
-
+        System.out.println("👥 Standaard gebruikers aangemaakt: admin/admin en user/user");
 
         Lokaal lokaal1 = new Lokaal("A101", 50);
         Lokaal lokaal2 = new Lokaal("B202", 30);
@@ -85,7 +71,6 @@ public class InitDataConfig implements CommandLineRunner {
         spreker1 = sprekerService.saveSpreker(spreker1);
         spreker2 = sprekerService.saveSpreker(spreker2);
         spreker3 = sprekerService.saveSpreker(spreker3);
-
 
         LocalDateTime eventTime1 = LocalDateTime.now().plusDays(7).withHour(10).withMinute(0).withSecond(0).withNano(0);
         int beamerCode1 = 1234;
@@ -103,18 +88,7 @@ public class InitDataConfig implements CommandLineRunner {
         List<Spreker> sprekersEvent1 = Arrays.asList(spreker1, spreker2);
         event1.setSprekers(sprekersEvent1);
 
-
-        System.out.println("Manually validating Event 1...");
-        Set<ConstraintViolation<Event>> violations1 = validator.validate(event1);
-        if (!violations1.isEmpty()) {
-            System.err.println("Validation errors for Event 1:");
-            for (ConstraintViolation<Event> violation : violations1) {
-                System.err.println(violation.getPropertyPath() + ": " + violation.getMessage());
-            }
-        } else {
-            System.out.println("Event 1 validation successful.");
-            eventService.saveEvent(event1);
-        }
+        eventService.saveEvent(event1);
 
         LocalDateTime eventTime2 = LocalDateTime.now().plusDays(8).withHour(14).withMinute(30).withSecond(0).withNano(0);
         int beamerCode2 = 5678;
@@ -132,19 +106,8 @@ public class InitDataConfig implements CommandLineRunner {
         List<Spreker> sprekersEvent2 = Arrays.asList(spreker3);
         event2.setSprekers(sprekersEvent2);
 
-        System.out.println("Manually validating Event 2...");
-        Set<ConstraintViolation<Event>> violations2 = validator.validate(event2);
-        if (!violations2.isEmpty()) {
-            System.err.println("Validation errors for Event 2:");
-            for (ConstraintViolation<Event> violation : violations2) {
-                System.err.println(violation.getPropertyPath() + ": " + violation.getMessage());
-            }
-        } else {
-            System.out.println("Event 2 validation successful.");
-            eventService.saveEvent(event2);
-        }
+        eventService.saveEvent(event2);
 
-
-        System.out.println("Database initialisatie voltooid.");
+        System.out.println("✅ Database initialisatie voltooid.");
     }
 }

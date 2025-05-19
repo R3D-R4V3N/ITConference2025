@@ -36,7 +36,7 @@ public class PerformRestITConference implements CommandLineRunner {
         System.out.println("\n---- ---- GET LOKAAL CAPACITEIT (niet-bestaand lokaal) ---- ----");
         getLokaalCapaciteit("ONBESTAAND_LOKAAL");
 
-        System.out.println("\n---- ---- TESTEN VAN REST API VOLTOOID ---- ----");
+        System.out.println("\n✅---- ---- TESTEN VAN REST API VOLTOOID ---- ----");
     }
 
     private void getEventsByDate(LocalDate date) {

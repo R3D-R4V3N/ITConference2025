@@ -12,7 +12,6 @@ import service.FavoriteService;
 import service.FavoriteServiceImpl;
 
 @SpringBootApplication
-// Pas deze regel aan: voeg "perform" toe aan de basePackages
 @ComponentScan(basePackages = {"com.hogent.ewdj.itconference", "domain", "exceptions", "repository", "service", "service", "util", "validator", "com.hogent.ewdj.itconference.advice", "com.hogent.ewdj.itconference.controller", "perform"})
 @EnableJpaRepositories({"repository"})
 @EntityScan("domain")
