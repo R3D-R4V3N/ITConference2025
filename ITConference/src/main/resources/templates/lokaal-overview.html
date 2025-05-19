@@ -4,26 +4,37 @@
     <meta charset="UTF-8">
     <title th:text="#{lokaalOverview.title}">Lokaal Overzicht</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<h1><span th:text="#{lokaalOverview.header}">Overzicht van Lokalen</span></h1>
+<body class="bg-gray-100 min-h-screen">
+<div th:replace="~{nav :: navbar}"></div>
 
-<table>
-    <thead>
-    <tr>
-        <th th:text="#{lokaal.naam}">Naam</th>
-        <th th:text="#{lokaal.capaciteit}">Capaciteit</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="lokaal : ${lokalen}">
-        <td th:text="${lokaal.naam}"></td>
-        <td th:text="${lokaal.capaciteit}"></td>
-    </tr>
-    </tbody>
-</table>
+<div class="flex flex-col justify-center items-center mt-8 mb-8">
+    <h1 class="font-bold text-blue-900 text-3xl mt-4 mb-4">
+        <span th:text="#{lokaalOverview.header}">Overzicht van Lokalen</span>
+    </h1>
 
-<a href="#" th:href="@{/lokalen/add}" th:text="#{lokaalOverview.addLink}">Lokaal Toevoegen</a>
+    <div class="border-2 border-black p-16 rounded-md bg-blue-100">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-blue-700">
+            <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider" th:text="#{lokaal.naam}">Naam</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider" th:text="#{lokaal.capaciteit}">Capaciteit</th>
+            </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+            <tr th:each="lokaal : ${lokalen}">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" th:text="${lokaal.naam}"></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${lokaal.capaciteit}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-6 text-center">
+        <a href="#" th:href="@{/lokalen/add}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline inline-block" th:text="#{lokaalOverview.addLink}">Lokaal Toevoegen</a>
+    </div>
+</div>
 
 </body>
 </html>

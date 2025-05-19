@@ -4,34 +4,41 @@
     <meta charset="UTF-8">
     <title th:text="#{lokaalAdd.title}">Add Location</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<h1><span th:text="#{lokaalAdd.header}">Add New Location</span></h1>
+<body class="bg-gray-100 min-h-screen">
+<div th:replace="~{nav :: navbar}"></div>
 
-<form action="#" th:action="@{/lokalen/add}" th:object="${lokaal}" method="post">
+<div class="flex justify-center items-center mt-8 mb-8">
+    <div class="w-full max-w-md border-2 border-black p-8 rounded-md bg-white shadow-md">
+        <h1 class="text-2xl font-bold text-center mb-6" th:text="#{lokaalAdd.header}">Add New Location</h1>
 
-    <div>
-        <label for="naam" th:text="#{lokaal.naam}">Location Name:</label>
-        <input type="text" id="naam" th:field="*{naam}" />
-        <span th:if="${#fields.hasErrors('naam')}" th:errors="*{naam}" class="error">Name Error</span>
+        <form action="#" th:action="@{/lokalen/add}" th:object="${lokaal}" method="post" class="space-y-4">
+
+            <div>
+                <label for="naam" class="block text-gray-700 text-sm font-bold mb-2" th:text="#{lokaal.naam}">Location Name:</label>
+                <input type="text" id="naam" th:field="*{naam}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                <span th:if="${#fields.hasErrors('naam')}" th:errors="*{naam}" class="error text-red-500 text-xs italic">Name Error</span>
+            </div>
+
+            <div>
+                <label for="capaciteit" class="block text-gray-700 text-sm font-bold mb-2" th:text="#{lokaal.capaciteit}">Capacity:</label>
+                <input type="number" id="capaciteit" th:field="*{capaciteit}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                <span th:if="${#fields.hasErrors('capaciteit')}" th:errors="*{capaciteit}" class="error text-red-500 text-xs italic">Capacity Error</span>
+            </div>
+
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+            <div>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full" th:text="#{lokaalAdd.submitButton}">Add Location</button>
+            </div>
+
+            <div class="mt-6 text-center">
+                <a href="#" th:href="@{/events}" class="text-blue-500 hover:text-blue-800" th:text="#{general.cancel}">Cancel</a>
+            </div>
+        </form>
     </div>
-
-    <div>
-        <label for="capaciteit" th:text="#{lokaal.capaciteit}">Capacity:</label>
-        <input type="number" id="capaciteit" th:field="*{capaciteit}" />
-        <span th:if="${#fields.hasErrors('capaciteit')}" th:errors="*{capaciteit}" class="error">Capacity Error</span>
-    </div>
-
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-
-    <div>
-        <button type="submit" th:text="#{lokaalAdd.submitButton}">Add Location</button>
-    </div>
-
-    <div>
-        <a href="#" th:href="@{/events}" th:text="#{general.cancel}">Cancel</a>  </div>
-
-</form>
+</div>
 
 </body>
 </html>
