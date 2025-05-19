@@ -1,3 +1,4 @@
+// Begin modificatie van r3d-r4v3n/itconference2025/ITConference2025-7b1337b477e4fe2130cc11934b3ba32ccae06e35/ITConference/src/main/java/repository/EventRepository.java
 package repository;
 
 import domain.Event;
@@ -24,6 +25,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query("SELECT e FROM Event e WHERE e.naam = :naam AND DATE(e.datumTijd) = :datum")
     List<Event> findByNaamAndDatum(@Param("naam") String naam, @Param("datum") LocalDate datum);
 
+    // NIEUWE METHODE: Zoek events op een specifieke datum (alle events op die dag)
+    @Query("SELECT e FROM Event e WHERE DATE(e.datumTijd) = :date ORDER BY e.datumTijd ASC")
+    List<Event> findByDatum(@Param("date") LocalDate date);
+
     // Andere custom find methoden indien nodig (bv. sorteren op datum en tijd)
     List<Event> findAllByOrderByDatumTijdAsc();
 }
+// Einde modificatie van r3d-r4v3n/itconference2025/ITConference2025-7b1337b477e4fe2130cc11934b3ba32ccae06e35/ITConference/src/main/java/repository/EventRepository.java

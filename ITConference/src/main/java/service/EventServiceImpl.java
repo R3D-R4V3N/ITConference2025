@@ -1,3 +1,4 @@
+// Begin modificatie van r3d-r4v3n/itconference2025/ITConference2025-7b1337b477e4fe2130cc11934b3ba32ccae06e35/ITConference/src/main/java/service/EventServiceImpl.java
 package service;
 
 import domain.Event;
@@ -85,6 +86,11 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public List<Event> findEventsByDate(LocalDate date) {
+        return eventRepository.findByDatum(date);
+    }
+
+    @Override
     public List<Lokaal> findAllLokalen() {
         return lokaalService.findAllLokalen();
     }
@@ -94,3 +100,4 @@ public class EventServiceImpl implements EventService {
         return sprekerService.findAllSprekers();
     }
 }
+// Einde modificatie van r3d-r4v3n/itconference2025/ITConference2025-7b1337b477e4fe2130cc11934b3ba32ccae06e35/ITConference/src/main/java/service/EventServiceImpl.java

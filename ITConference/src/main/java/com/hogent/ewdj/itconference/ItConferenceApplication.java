@@ -1,41 +1,49 @@
-// Begin modificatie van r3d-r4v3n/itconference2025/ITConference2025-7b1337b477e4fe2130cc11934b3ba32ccae06e35/ITConference/src/main/java/com/hogent/ewdj/itconference/ItConferenceApplication.java
+// Begin modificatie van r3d-r4v3n/itconference2025/ITConference2025-7b1337b477e4fe2130cc11934b3ba32ccae06e35/ITConference/src/main/java/com/hogent/ewdj.itconference/ItConferenceApplication.java
 package com.hogent.ewdj.itconference;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.annotation.Bean; // Importeer @Bean
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // Importeer BCryptPasswordEncoder
-import org.springframework.security.crypto.password.PasswordEncoder; // Importeer PasswordEncoder
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer; // Nodig als je WebMvcConfigurer implementeert
-import service.FavoriteService; // Importeer FavoriteService
-import service.FavoriteServiceImpl; // Importeer FavoriteServiceImpl
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import service.FavoriteService;
+import service.FavoriteServiceImpl;
+// Verwijder: import perform.PerformRestITConference;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.hogent.ewdj.itconference", "domain", "exceptions", "repository", "service", "service", "util", "validator", "com.hogent.ewdj.itconference.advice", "com.hogent.ewdj.itconference.config", "com.hogent.ewdj.itconference.controller"})
-@EnableJpaRepositories({"repository"}) // Pas dit aan om alle repositories te scannen
+@ComponentScan(basePackages = {"com.hogent.ewdj.itconference", "domain", "exceptions", "repository", "service", "service", "util", "validator", "com.hogent.ewdj.itconference.advice", "com.hogent.ewdj.itconference.controller"}) // Verwijder "perform"
+@EnableJpaRepositories({"repository"})
 @EntityScan("domain")
-// Voeg hier eventueel 'implements WebMvcConfigurer' toe als je deze interface gebruikt
 public class ItConferenceApplication /* implements WebMvcConfigurer */ {
 
     public static void main(String[] args) {
         SpringApplication.run(ItConferenceApplication.class, args);
+
+        // Verwijder dit hele blok:
+        /*
+        try {
+            // Geef de server even de tijd om te starten (dit is een simpele benadering, geen garantie)
+            Thread.sleep(5000); // Wacht 5 seconden
+            new PerformRestITConference();
+        } catch (Exception e) {
+            System.err.println("Fout bij het uitvoeren van de REST client: " + e.getMessage());
+            e.printStackTrace();
+        }
+        */
     }
 
-    // Definieer de PasswordEncoder bean hier
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // Definieer de FavoriteService bean
     @Bean
     public FavoriteService favoriteService() {
         return new FavoriteServiceImpl();
     }
-
-    // TODO: Implementeer eventuele methoden van WebMvcConfigurer indien nodig
 }
-// Einde modificatie van r3d-r4v3n/itconference2025/ITConference2025-7b1337b477e4fe2130cc11934b3ba32ccae06e35/ITConference/src/main/java/com/hogent/ewdj/itconference/ItConferenceApplication.java
+// Einde modificatie van r3d-r4v3n/itconference2025/ITConference2025-7b1337b477e4fe2130cc11934b3ba32ccae06e35/ITConference/src/main/java/com/hogent/ewdj.itconference/ItConferenceApplication.java
