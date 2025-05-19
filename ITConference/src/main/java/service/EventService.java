@@ -1,10 +1,12 @@
+// service/EventService.java
 package service;
 
 import domain.Event;
 import domain.Lokaal;
 import domain.Spreker;
 
-import jakarta.validation.Valid; // Import @Valid
+// Verwijder de import van @Valid
+// import jakarta.validation.Valid;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,7 +17,8 @@ public interface EventService {
 
     List<Event> findAllEvents();
 
-    Event saveEvent(@Valid Event event);
+    // Verwijder @Valid hier
+    Event saveEvent(Event event);
 
     Optional<Event> findEventById(Long id);
 

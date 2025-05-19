@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import repository.MyUserRepository;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -19,11 +18,11 @@ import java.util.Collections;
 public class MyUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private MyUserRepository myUserRepository;
+    private MyUserService myUserService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        MyUser user = myUserRepository.findByUsername(username);
+        MyUser user = myUserService.findByUsername(username);
 
         if (user == null) {
             throw new UsernameNotFoundException("Gebruiker niet gevonden met gebruikersnaam: " + username);

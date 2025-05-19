@@ -8,11 +8,18 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import service.FavoriteService;
-import service.FavoriteServiceImpl;
+
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.hogent.ewdj.itconference", "domain", "exceptions", "repository", "service", "service", "util", "validator", "com.hogent.ewdj.itconference.advice", "com.hogent.ewdj.itconference.controller", "perform"})
+@ComponentScan(basePackages = {
+        "com.hogent.ewdj.itconference",
+        "domain",
+        "exceptions",
+        "perform",
+        "repository",
+        "service",
+        "validator"
+})
 @EnableJpaRepositories({"repository"})
 @EntityScan("domain")
 public class ItConferenceApplication{
@@ -26,8 +33,4 @@ public class ItConferenceApplication{
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public FavoriteService favoriteService() {
-        return new FavoriteServiceImpl();
-    }
 }

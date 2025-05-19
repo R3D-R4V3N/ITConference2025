@@ -1,3 +1,4 @@
+// service/FavoriteServiceImpl.java
 package service;
 
 import domain.Event;
@@ -5,7 +6,8 @@ import domain.MyUser;
 import exceptions.UserNotFoundException;
 import exceptions.EventNotFoundException;
 import repository.FavoriteRepository;
-import repository.MyUserRepository;
+// Verwijder de import van MyUserRepository
+// import repository.MyUserRepository;
 import repository.EventRepository;
 import service.FavoriteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Autowired
     private FavoriteRepository favoriteRepository;
     @Autowired
-    private MyUserRepository myUserRepository;
+    private MyUserService myUserService; // Injecteer de nieuwe service interface
     @Autowired
     private EventRepository eventRepository;
 
@@ -36,7 +38,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     @Transactional
     public void addFavoriteEvent(String username, Long eventId) {
-        MyUser user = myUserRepository.findByUsername(username);
+        MyUser user = myUserService.findByUsername(username); // Gebruik de service
         if (user == null) {
             throw new UserNotFoundException("Gebruiker met gebruikersnaam " + username + " niet gevonden.");
         }
@@ -55,14 +57,15 @@ public class FavoriteServiceImpl implements FavoriteService {
 
         if (!favoriteEvents.contains(event)) {
             favoriteEvents.add(event);
-            myUserRepository.save(user);
+            // Je moet de user opslaan, maar de myUserService heeft geen save methode, dit moet nog toegevoegd worden
+            myUserService.saveUser(user); // Dit is een nieuwe methode die we moeten toevoegen in MyUserService
         }
     }
 
     @Override
     @Transactional
     public void removeFavoriteEvent(String username, Long eventId) {
-        MyUser user = myUserRepository.findByUsername(username);
+        MyUser user = myUserService.findByUsername(username); // Gebruik de service
         if (user == null) {
             throw new UserNotFoundException("Gebruiker met gebruikersnaam " + username + " niet gevonden.");
         }
@@ -75,7 +78,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 
         Set<Event> favoriteEvents = user.getFavoriteEvents();
         if (favoriteEvents.remove(event)) {
-            myUserRepository.save(user);
+            myUserService.saveUser(user); // Dit is een nieuwe methode die we moeten toevoegen in MyUserService
         }
     }
 
@@ -86,7 +89,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public long getNumberOfFavoriteEventsForUser(String username) {
-        MyUser user = myUserRepository.findByUsername(username);
+        MyUser user = myUserService.findByUsername(username); // Gebruik de service
         if (user == null) {
             return 0;
         }

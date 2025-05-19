@@ -1,8 +1,9 @@
+// com/hogent/ewdj/itconference/controller/FavoriteController.java
 package com.hogent.ewdj.itconference.controller;
 
 import domain.Event;
-import exceptions.EventNotFoundException;
-import exceptions.UserNotFoundException;
+import exceptions.EventNotFoundException; // Zorg dat deze imports er zijn
+import exceptions.UserNotFoundException; // Zorg dat deze imports er zijn
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -37,17 +38,12 @@ public class FavoriteController {
                                    Authentication authentication,
                                    RedirectAttributes redirectAttributes) {
         String username = authentication.getName();
-        try {
-            favoriteService.addFavoriteEvent(username, eventId);
-            String successMessage = messageSource.getMessage("favorite.add.success", null, LocaleContextHolder.getLocale());
-            redirectAttributes.addFlashAttribute("message", successMessage);
-        } catch (IllegalStateException e) {
-            String errorMessage = messageSource.getMessage("favorite.add.error", new Object[]{e.getMessage()}, LocaleContextHolder.getLocale());
-            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
-        } catch (UserNotFoundException | EventNotFoundException e) {
-            String errorMessage = messageSource.getMessage("favorite.add.error", new Object[]{e.getMessage()}, LocaleContextHolder.getLocale());
-            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
-        }
+        // Verwijder try-catch, laat ITConferenceErrorAdvice de exceptions afhandelen
+        // IllegalStateException, UserNotFoundException, EventNotFoundException
+        favoriteService.addFavoriteEvent(username, eventId);
+        String successMessage = messageSource.getMessage("favorite.add.success", null, LocaleContextHolder.getLocale());
+        redirectAttributes.addFlashAttribute("message", successMessage);
+
         return "redirect:/events/" + eventId;
     }
 
@@ -56,14 +52,12 @@ public class FavoriteController {
                                       Authentication authentication,
                                       RedirectAttributes redirectAttributes) {
         String username = authentication.getName();
-        try {
-            favoriteService.removeFavoriteEvent(username, eventId);
-            String successMessage = messageSource.getMessage("favorite.remove.success", null, LocaleContextHolder.getLocale());
-            redirectAttributes.addFlashAttribute("message", successMessage);
-        } catch (UserNotFoundException | EventNotFoundException e) {
-            String errorMessage = messageSource.getMessage("favorite.remove.error", new Object[]{e.getMessage()}, LocaleContextHolder.getLocale());
-            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
-        }
+        // Verwijder try-catch, laat ITConferenceErrorAdvice de exceptions afhandelen
+        // UserNotFoundException, EventNotFoundException
+        favoriteService.removeFavoriteEvent(username, eventId);
+        String successMessage = messageSource.getMessage("favorite.remove.success", null, LocaleContextHolder.getLocale());
+        redirectAttributes.addFlashAttribute("message", successMessage);
+
         return "redirect:/favorites";
     }
 }
