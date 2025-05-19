@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{lokaalOverview.title}">Lokaal Overzicht</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<h1><span th:text="#{lokaalOverview.header}">Overzicht van Lokalen</span></h1>
+
+<table>
+    <thead>
+    <tr>
+        <th th:text="#{lokaal.naam}">Naam</th>
+        <th th:text="#{lokaal.capaciteit}">Capaciteit</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="lokaal : ${lokalen}">
+        <td th:text="${lokaal.naam}"></td>
+        <td th:text="${lokaal.capaciteit}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="#" th:href="@{/lokalen/add}" th:text="#{lokaalOverview.addLink}">Lokaal Toevoegen</a>
+
+</body>
+</html>

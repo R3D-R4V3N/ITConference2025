@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import service.LokaalService;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/lokalen")
 public class LokaalController {
@@ -35,6 +37,13 @@ public class LokaalController {
         lokaalService.saveLokaal(lokaal);
         redirectAttributes.addFlashAttribute("successMessage", "Lokaal met " + lokaal.getCapaciteit() + " plaatsen werd toegevoegd."); // TODO: Use resource bundle
         return "redirect:/lokalen"; // Redirect to a Lokaal overview page (or wherever you want)
+    }
+
+    @GetMapping // This method handles the /lokalen request
+    public String showLokaalOverview(Model model) {
+        List<Lokaal> lokalen = lokaalService.findAllLokalen();
+        model.addAttribute("lokalen", lokalen);
+        return "lokaal-overview"; // Return the name of the template
     }
 
     // You can add more methods here for viewing/editing Lokalen later

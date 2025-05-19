@@ -39,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/events/add").hasRole("ADMIN")
                         .requestMatchers("/lokalen/add").hasRole("ADMIN")
+                        .requestMatchers("/lokalen").hasRole("ADMIN") // Add this line
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
