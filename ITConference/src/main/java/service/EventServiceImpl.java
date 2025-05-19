@@ -1,18 +1,15 @@
-// Begin modificatie van r3d-r4v3n/itconference2025/ITConference2025-7b1337b477e4fe2130cc11934b3ba32ccae06e35/ITConference/src/main/java/service/EventServiceImpl.java
 package service;
 
 import domain.Event;
 import domain.Lokaal;
 import domain.Spreker;
 import repository.EventRepository;
-import service.EventService;
-import service.LokaalService;
-import service.SprekerService;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import jakarta.validation.Valid; // Import @Valid
+import jakarta.validation.Valid;
 
 
 import java.time.LocalDate;
@@ -39,7 +36,6 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    // Add @Valid here
     public Event saveEvent(@Valid Event event) {
         if (event.getSprekers() != null) {
             for (int i = 0; i < event.getSprekers().size(); i++) {
@@ -100,4 +96,3 @@ public class EventServiceImpl implements EventService {
         return sprekerService.findAllSprekers();
     }
 }
-// Einde modificatie van r3d-r4v3n/itconference2025/ITConference2025-7b1337b477e4fe2130cc11934b3ba32ccae06e35/ITConference/src/main/java/service/EventServiceImpl.java

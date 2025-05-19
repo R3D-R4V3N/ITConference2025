@@ -1,8 +1,8 @@
-package service.impl;
+package service;
 
 import domain.Lokaal;
 import repository.LokaalRepository;
-import service.LokaalService;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

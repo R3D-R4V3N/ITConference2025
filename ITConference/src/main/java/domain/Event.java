@@ -60,8 +60,8 @@ public class Event implements Serializable {
     @NotNull(message = "{event.datumTijd.notNull}")
     @FutureOrPresent(message = "{event.datumTijd.futureOrPresent}")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    // ** UPDATED: Set a future conference period that includes your event dates **
-    @ValidConferenceDate(startDate = "2025-05-18", endDate = "2025-12-31") // Example: From today onwards
+
+    @ValidConferenceDate(startDate = "2025-05-18", endDate = "2025-12-31")
     private LocalDateTime datumTijd;
 
     @Column(nullable = false)
@@ -79,7 +79,6 @@ public class Event implements Serializable {
     @NumberFormat(style = NumberFormat.Style.CURRENCY)
     private BigDecimal prijs;
 
-    // Constructor for the creation of Event objects without ID (for JPA)
     public Event(String naam, String beschrijving, List<Spreker> sprekers, Lokaal lokaal, LocalDateTime datumTijd, int beamercode, BigDecimal prijs) {
         this.naam = naam;
         this.beschrijving = beschrijving;

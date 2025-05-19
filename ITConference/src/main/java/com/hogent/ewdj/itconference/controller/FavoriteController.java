@@ -1,4 +1,3 @@
-// Begin creatie van r3d-r4v3n/itconference2025/ITConference2025-7b1337b477e4fe2130cc11934b3ba32ccae06e35/ITConference/src/main/java/com/hogent/ewdj/itconference/controller/FavoriteController.java
 package com.hogent.ewdj.itconference.controller;
 
 import domain.Event;
@@ -36,13 +35,13 @@ public class FavoriteController {
         String username = authentication.getName();
         try {
             favoriteService.addFavoriteEvent(username, eventId);
-            redirectAttributes.addFlashAttribute("message", "Evenement succesvol toegevoegd aan favorieten."); // TODO: Resource bundle
+            redirectAttributes.addFlashAttribute("message", "Evenement succesvol toegevoegd aan favorieten.");
         } catch (IllegalStateException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         } catch (UserNotFoundException | EventNotFoundException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
-        return "redirect:/events/" + eventId; // Keer terug naar de event detail pagina
+        return "redirect:/events/" + eventId;
     }
 
     @PostMapping("/remove")
@@ -56,7 +55,6 @@ public class FavoriteController {
         } catch (UserNotFoundException | EventNotFoundException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
-        return "redirect:/favorites"; // Keer terug naar het favorieten overzicht
+        return "redirect:/favorites";
     }
 }
-// Einde creatie van r3d-r4v3n/itconference2025/ITConference2025-7b1337b477e4fe2130cc11934b3ba32ccae06e35/ITConference/src/main/java/com/hogent/ewdj/itconference/controller/FavoriteController.java

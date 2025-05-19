@@ -1,11 +1,10 @@
-// Begin modificatie van r3d-r4v3n/itconference2025/ITConference2025-7b1337b477e4fe2130cc11934b3ba32ccae06e35/ITConference/src/main/java/com/hogent/ewdj/itconference/controller/EventController.java
 package com.hogent.ewdj.itconference.controller;
 
 import domain.Event;
 import domain.Lokaal;
 import domain.Spreker;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication; // Import Authentication
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import service.EventService;
 import service.LokaalService;
 import service.SprekerService;
-import service.FavoriteService; // Import FavoriteService
+import service.FavoriteService;
 
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class EventController {
     private SprekerService sprekerService;
 
     @Autowired
-    private FavoriteService favoriteService; // Inject FavoriteService
+    private FavoriteService favoriteService;
 
     @GetMapping
     public String showEventOverview(Model model) {
@@ -76,22 +75,16 @@ public class EventController {
         Event event = eventService.findEventById(id).orElse(null);
         if (event == null) {
             // TODO: Handle event not found (e.g., show an error page or redirect)
-            return "error"; // Or "redirect:/events"
+            return "error";
         }
         model.addAttribute("event", event);
 
-        // Voeg favorieten logica toe voor de view
         if (authentication != null && authentication.isAuthenticated() &&
                 authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_USER"))) {
             String username = authentication.getName();
             boolean isFavorite = favoriteService.isEventFavoriteForUser(username, event.getId());
             long numberOfFavorites = favoriteService.getNumberOfFavoriteEventsForUser(username);
 
-            // Haal de MAX_FAVORITES_PER_USER op een veilige manier op
-            // Omdat MAX_FAVORITES_PER_USER een private static final is in FavoriteServiceImpl,
-            // kunnen we deze niet direct injecteren of via de interface ophalen.
-            // Voor dit voorbeeld hardcoden we het hier, maar in een echte applicatie
-            // zou dit via een configuratie property of een getter in de service moeten.
             int maxFavorites = 5;
 
             model.addAttribute("isFavorite", isFavorite);
@@ -102,4 +95,3 @@ public class EventController {
         return "event-detail";
     }
 }
-// Einde modificatie van r3d-r4v3n/itconference2025/ITConference2025-7b1337b477e4fe2130cc11934b3ba32ccae06e35/ITConference/src/main/java/com/hogent/ewdj/itconference/controller/EventController.java

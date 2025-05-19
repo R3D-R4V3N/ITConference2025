@@ -15,14 +15,14 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users") // Kies een geschikte tabelnaam
+@Table(name = "users")
 public class MyUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Gebruik een Long als ID
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -30,17 +30,16 @@ public class MyUser implements Serializable {
     @Column(nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING) // Sla de Enum waarde op als String in de database
-    @Column(length = 20) // Definieer de maximale lengte voor de rol String
-    private Role role; // Gebruik de Role enum die je al hebt
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private Role role;
 
     @ManyToMany
     @JoinTable(
-            name = "user_favorite_events", // Naam van de tussentabel
-            joinColumns = @JoinColumn(name = "userId"), // Kolom in tussentabel die verwijst naar MyUser
-            inverseJoinColumns = @JoinColumn(name = "eventId") // Kolom in tussentabel die verwijst naar Event
+            name = "user_favorite_events",
+            joinColumns = @JoinColumn(name = "userId"),
+            inverseJoinColumns = @JoinColumn(name = "eventId")
     )
-    private Set<Event> favoriteEvents = new HashSet<>(); // Gebruik een Set om duplicaten te voorkomen
+    private Set<Event> favoriteEvents = new HashSet<>();
 
-    // TODO: Voeg eventueel andere gebruikersspecifieke velden toe
 }

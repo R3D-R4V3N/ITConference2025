@@ -1,8 +1,8 @@
-package service.impl;
+package service;
 
 import domain.Spreker;
 import repository.SprekerRepository;
-import service.SprekerService;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

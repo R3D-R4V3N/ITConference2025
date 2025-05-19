@@ -7,12 +7,12 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
 
 @Documented
-@Constraint(validatedBy = EventConstraintsValidator.class) // Koppel aan de validator
-@Target({TYPE, ANNOTATION_TYPE}) // Deze validatie werkt op klasniveau
-@Retention(RUNTIME) // Beschikbaar tijdens runtime
+@Constraint(validatedBy = EventConstraintsValidator.class)
+@Target({TYPE, ANNOTATION_TYPE})
+@Retention(RUNTIME)
 public @interface ValidEventConstraints {
 
-    String message() default "{event.constraints.invalid}"; // Standaard foutmelding
+    String message() default "{event.constraints.invalid}";
 
     Class<?>[] groups() default {};
 

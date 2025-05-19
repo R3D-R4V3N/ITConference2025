@@ -23,7 +23,7 @@ public class LokaalController {
 
     @GetMapping("/add")
     public String showAddLokaalForm(Model model) {
-        model.addAttribute("lokaal", new Lokaal()); // Empty Lokaal object for the form
+        model.addAttribute("lokaal", new Lokaal());
         return "lokaal-add";
     }
 
@@ -36,15 +36,13 @@ public class LokaalController {
 
         lokaalService.saveLokaal(lokaal);
         redirectAttributes.addFlashAttribute("successMessage", "Lokaal met " + lokaal.getCapaciteit() + " plaatsen werd toegevoegd."); // TODO: Use resource bundle
-        return "redirect:/lokalen"; // Redirect to a Lokaal overview page (or wherever you want)
+        return "redirect:/lokalen";
     }
 
-    @GetMapping // This method handles the /lokalen request
+    @GetMapping
     public String showLokaalOverview(Model model) {
         List<Lokaal> lokalen = lokaalService.findAllLokalen();
         model.addAttribute("lokalen", lokalen);
-        return "lokaal-overview"; // Return the name of the template
+        return "lokaal-overview";
     }
-
-    // You can add more methods here for viewing/editing Lokalen later
 }

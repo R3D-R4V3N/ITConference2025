@@ -23,6 +23,6 @@ public class LoginController {
             model.addAttribute("msg", "Je bent succesvol uitgelogd."); // TODO: gebruik resource bundle
         }
 
-        return "login"; // Dit verwijst naar de login.html template
+        return "login";
     }
 }

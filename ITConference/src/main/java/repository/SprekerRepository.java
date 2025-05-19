@@ -6,10 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository // Geeft aan dat dit een Spring Repository component is
+@Repository
 public interface SprekerRepository extends JpaRepository<Spreker, Long> {
 
-    // Custom find methoden zoals findByNaam, die door Spring Data JPA automatisch worden geïmplementeerd.
     Spreker findByNaam(String naam);
 
     boolean existsByNaam(String naam);

@@ -3,16 +3,16 @@ package com.hogent.ewdj.itconference.config;
 import domain.Event;
 import domain.Lokaal;
 import domain.Spreker;
-import domain.MyUser; // Importeer MyUser
-import domain.Role; // Importeer Role
-import repository.MyUserRepository; // Importeer MyUserRepository
+import domain.MyUser;
+import domain.Role;
+import repository.MyUserRepository;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.password.PasswordEncoder; // Importeer PasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import service.EventService;
@@ -47,46 +47,38 @@ public class InitDataConfig implements CommandLineRunner {
     private EventConstraintsValidator eventConstraintsValidator;
 
     @Autowired
-    private MyUserRepository myUserRepository; // Injecteer de MyUserRepository
+    private MyUserRepository myUserRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder; // Injecteer de PasswordEncoder bean
+    private PasswordEncoder passwordEncoder;
 
 
     @Override
     public void run(String... args) throws Exception {
         System.out.println("Database initialiseren met voorbeeld data...");
 
-        // -------- -------- --------
-        // -------- GEBRUIKERS --------
-        // -------- -------- --------
-        // Maak een ADMIN gebruiker aan
         MyUser adminUser = MyUser.builder()
                 .username("admin")
-                .password(passwordEncoder.encode("admin")) // Hash het wachtwoord
-                .role(Role.ADMIN) // Wijs de ADMIN rol toe
+                .password(passwordEncoder.encode("admin"))
+                .role(Role.ADMIN)
                 .build();
 
-        // Maak een standaard USER gebruiker aan
         MyUser standardUser = MyUser.builder()
                 .username("user")
-                .password(passwordEncoder.encode("user")) // Hash het wachtwoord
+                .password(passwordEncoder.encode("user"))
                 .role(Role.USER) // Wijs de USER rol toe
                 .build();
 
-        // Sla de gebruikers op in de database
         myUserRepository.saveAll(Arrays.asList(adminUser, standardUser));
 
         System.out.println("Standaard gebruikers aangemaakt: admin/admin en user/user");
 
 
-        // Voorbeeld Lokalen aanmaken en persisteren via de service
         Lokaal lokaal1 = new Lokaal("A101", 50);
         Lokaal lokaal2 = new Lokaal("B202", 30);
         lokaalService.saveLokaal(lokaal1);
         lokaalService.saveLokaal(lokaal2);
 
-        // Voorbeeld Sprekers aanmaken en persisteren via de service
         Spreker spreker1 = new Spreker("Jan Janssen");
         Spreker spreker2 = new Spreker("Piet Peeters");
         Spreker spreker3 = new Spreker("Joris Joosten");
@@ -95,8 +87,6 @@ public class InitDataConfig implements CommandLineRunner {
         spreker3 = sprekerService.saveSpreker(spreker3);
 
 
-        // Voorbeeld Events aanmaken
-        // Dates are already set to future dates using LocalDateTime.now().plusDays()
         LocalDateTime eventTime1 = LocalDateTime.now().plusDays(7).withHour(10).withMinute(0).withSecond(0).withNano(0);
         int beamerCode1 = 1234;
         int beamerCheck1 = beamerCode1 % 97;
@@ -113,7 +103,7 @@ public class InitDataConfig implements CommandLineRunner {
         List<Spreker> sprekersEvent1 = Arrays.asList(spreker1, spreker2);
         event1.setSprekers(sprekersEvent1);
 
-        // Manual validation using the injected validator
+
         System.out.println("Manually validating Event 1...");
         Set<ConstraintViolation<Event>> violations1 = validator.validate(event1);
         if (!violations1.isEmpty()) {
@@ -126,8 +116,6 @@ public class InitDataConfig implements CommandLineRunner {
             eventService.saveEvent(event1);
         }
 
-
-        // Dates are already set to future dates using LocalDateTime.now().plusDays()
         LocalDateTime eventTime2 = LocalDateTime.now().plusDays(8).withHour(14).withMinute(30).withSecond(0).withNano(0);
         int beamerCode2 = 5678;
         int beamerCheck2 = beamerCode2 % 97;
@@ -144,7 +132,6 @@ public class InitDataConfig implements CommandLineRunner {
         List<Spreker> sprekersEvent2 = Arrays.asList(spreker3);
         event2.setSprekers(sprekersEvent2);
 
-        // Manual validation using the injected validator
         System.out.println("Manually validating Event 2...");
         Set<ConstraintViolation<Event>> violations2 = validator.validate(event2);
         if (!violations2.isEmpty()) {
