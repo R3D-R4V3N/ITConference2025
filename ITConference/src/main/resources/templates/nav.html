@@ -2,24 +2,30 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/springsecurity6">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title th:text="#{nav.title}">Navigation</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
 <div th:fragment="navbar">
-    <nav class="flex gap-4 bg-blue-900 justify-end p-2 items-center">
-        <div class="font-bold border-black border-2 rounded-full py-1 px-4 bg-white">
-            <a href="#" th:href="@{/events}" class="text-blue-700 hover:text-blue-900">Events</a>
-            <span sec:authorize="hasRole('USER')"> | <a href="#" th:href="@{/favorites}" class="text-blue-700 hover:text-blue-900">Mijn Favorieten</a>
+    <nav class="flex justify-end items-center gap-4 bg-blue-900 p-2" role="navigation" aria-label="Main navigation">
+        <div class="font-bold border-2 border-black rounded-full py-1 px-4 bg-white flex items-center gap-4">
+            <a href="#" th:href="@{/events}" class="text-blue-700 hover:text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-400 rounded">Events</a>
+            <span sec:authorize="hasRole('USER')">
+                <a href="#" th:href="@{/favorites}" class="text-blue-700 hover:text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-400 rounded">Mijn Favorieten</a>
             </span>
-            <span sec:authorize="hasRole('ADMIN')"> | <a href="#" th:href="@{/lokalen}" class="text-blue-700 hover:text-blue-900">Lokalen Beheren</a>
+            <span sec:authorize="hasRole('ADMIN')">
+                <a href="#" th:href="@{/lokalen}" class="text-blue-700 hover:text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-400 rounded">Lokalen Beheren</a>
             </span>
-            |
-            <form method="post" th:action="@{/logout}" class="inline">
-                <input class="border-0 bg-transparent text-red-700 hover:text-red-900 cursor-pointer" th:value="#{nav.logoutButton}" type="submit"/>
-                <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+
+            <form method="post" th:action="@{/logout}" class="inline ml-2">
+                <button type="submit"
+                        class="border-0 bg-transparent text-red-700 hover:text-red-900 cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-400 rounded"
+                        th:text="#{nav.logoutButton}">
+                    Logout
+                </button>
+                <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden" />
             </form>
         </div>
     </nav>
