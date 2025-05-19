@@ -11,6 +11,9 @@
 <div th:fragment="navbar">
     <nav class="flex justify-end items-center gap-4 bg-blue-900 p-2" role="navigation" aria-label="Main navigation">
         <div class="font-bold border-2 border-black rounded-full py-1 px-4 bg-white flex items-center gap-4">
+            <!-- Add this inside your <div class="font-bold ...">, before or after the links -->
+            <span sec:authorize="hasRole('ADMIN')" class="text-xs text-white bg-blue-700 rounded px-2 py-1 ml-2">Admin</span>
+            <span sec:authorize="hasRole('USER') and !hasRole('ADMIN')" class="text-xs text-white bg-blue-700 rounded px-2 py-1 ml-2">User</span>
             <a href="#" th:href="@{/events}" class="text-blue-700 hover:text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-400 rounded">Events</a>
             <span sec:authorize="hasRole('USER')">
                 <a href="#" th:href="@{/favorites}" class="text-blue-700 hover:text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-400 rounded">Mijn Favorieten</a>
