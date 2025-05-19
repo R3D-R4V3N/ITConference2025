@@ -1,3 +1,4 @@
+// Begin modificatie van r3d-r4v3n/itconference2025/ITConference2025-7b1337b477e4fe2130cc11934b3ba32ccae06e35/ITConference/src/main/java/com/hogent/ewdj/itconference/config/SecurityConfig.java
 package com.hogent.ewdj.itconference.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,9 @@ public class SecurityConfig {
                         .requestMatchers("/events/add").hasRole("ADMIN")
                         .requestMatchers("/lokalen/add").hasRole("ADMIN")
                         .requestMatchers("/lokalen").hasRole("ADMIN") // Add this line
+                        .requestMatchers("/favorites").hasRole("USER") // Toegang tot favorieten overzicht
+                        .requestMatchers("/favorites/add").hasRole("USER") // Toevoegen aan favorieten
+                        .requestMatchers("/favorites/remove").hasRole("USER") // Verwijderen uit favorieten
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -59,3 +63,4 @@ public class SecurityConfig {
         return http.build();
     }
 }
+// Einde modificatie van r3d-r4v3n/itconference2025/ITConference2025-7b1337b477e4fe2130cc11934b3ba32ccae06e35/ITConference/src/main/java/com/hogent/ewdj/itconference/config/SecurityConfig.java

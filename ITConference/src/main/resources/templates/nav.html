@@ -1,12 +1,17 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/springsecurity6">
 <head>
     <meta charset="UTF-8">
     <title>Navigation</title>
 </head>
 <body>
 <div th:fragment="navbar">
-    <a href="#" th:href="@{/events}">Events</a> | <a href="#">Other Link</a>
-</div>
+    <a href="#" th:href="@{/events}">Events</a>
+    <span sec:authorize="isAuthenticated()"> | <a href="#" th:href="@{/favorites}">Mijn Favorieten</a>
+    </span>
+    <span sec:authorize="hasRole('ADMIN')"> | <a href="#" th:href="@{/lokalen}">Lokalen Beheren</a>
+    </span>
+    | <a href="#" th:href="@{/logout}">Uitloggen</a> </div>
 </body>
 </html>

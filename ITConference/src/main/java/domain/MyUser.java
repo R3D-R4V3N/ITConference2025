@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -31,6 +33,14 @@ public class MyUser implements Serializable {
     @Enumerated(EnumType.STRING) // Sla de Enum waarde op als String in de database
     @Column(length = 20) // Definieer de maximale lengte voor de rol String
     private Role role; // Gebruik de Role enum die je al hebt
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_favorite_events", // Naam van de tussentabel
+            joinColumns = @JoinColumn(name = "userId"), // Kolom in tussentabel die verwijst naar MyUser
+            inverseJoinColumns = @JoinColumn(name = "eventId") // Kolom in tussentabel die verwijst naar Event
+    )
+    private Set<Event> favoriteEvents = new HashSet<>(); // Gebruik een Set om duplicaten te voorkomen
 
     // TODO: Voeg eventueel andere gebruikersspecifieke velden toe
 }

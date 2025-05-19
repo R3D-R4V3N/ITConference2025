@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/springsecurity6">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="#{favoritesOverview.title}">Favorieten Overzicht</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{nav :: navbar}"></div>
+<h1><span th:text="#{favoritesOverview.header}">Overzicht van uw favoriete evenementen</span></h1>
+
+<div th:if="${#lists.isEmpty(favoriteEvents)}">
+  <p th:text="#{favoritesOverview.noFavorites}">U heeft nog geen favoriete evenementen.</p>
+</div>
+
+<table th:unless="${#lists.isEmpty(favoriteEvents)}">
+  <thead>
+  <tr>
+    <th th:text="#{event.naam}">Naam</th>
+    <th th:text="#{event.sprekers}">Spreker(s)</th>
+    <th th:text="#{event.lokaal}">Lokaal</th>
+    <th th:text="#{event.datumTijd}">Datum en Tijd</th>
+    <th></th> </tr>
+  </thead>
+  <tbody>
+  <tr th:each="event : ${favoriteEvents}">
+    <td><a href="#" th:href="@{'/events/' + ${event.id}}" th:text="${event.naam}">Event Naam</a></td>
+    <td>
+            <span th:each="spreker, iterStat : ${event.sprekers}">
+                <span th:text="${spreker.naam}">Spreker Naam</span><span th:if="${!iterStat.last}">, </span>
+            </span>
+    </td>
+    <td th:text="${event.lokaal.naam}">Lokaal Naam</td>
+    <td th:text="${#temporals.format(event.datumTijd, #messages.msg('datetime.format.pattern'))}">Datum en Tijd</td>
+    <td>
+      <form th:action="@{/favorites/remove}" method="post">
+        <input type="hidden" name="eventId" th:value="${event.id}" />
+        <button type="submit" th:text="#{favoritesOverview.removeButton}">Verwijder</button>
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<div th:if="${message}" class="msg">
+  <span th:text="${message}"></span>
+</div>
+<div th:if="${errorMessage}" class="error">
+  <span th:text="${errorMessage}"></span>
+</div>
+
+<a href="#" th:href="@{/events}" th:text="#{general.backToEvents}">Terug naar evenementen</a>
+
+</body>
+</html>
