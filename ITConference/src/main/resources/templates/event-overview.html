@@ -5,43 +5,44 @@
     <title th:text="#{eventOverview.title}">Event Overzicht</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans min-h-screen">
+<body class="bg-gray-900 text-gray-300 font-sans min-h-screen">
 <div th:replace="~{nav :: navbar}"></div>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="flex flex-col items-center mb-8">
-        <h1 class="text-4xl font-extrabold text-center text-blue-900 mb-4" th:text="#{eventOverview.header}">Overzicht van Events</h1>
+    <div class="flex flex-col items-left">
+        <h1 class="text-2xl font-bold text-left text-white mb-4" th:text="#{eventOverview.header}">Overzicht van Events</h1>
     </div>
 
-    <div class="bg-white shadow-xl rounded-2xl border border-gray-200 overflow-hidden">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-blue-700">
+    <div class="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden shadow">
+        <table class="min-w-full divide-y divide-gray-700">
+            <thead class="bg-gray-700">
             <tr>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider" th:text="#{event.naam}">Naam</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider" th:text="#{event.sprekers}">Spreker(s)</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider" th:text="#{event.lokaal}">Lokaal</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider" th:text="#{event.datumTijd}">Datum en Tijd</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider" th:text="#{event.naam}">Naam</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider" th:text="#{event.sprekers}">Spreker(s)</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider" th:text="#{event.lokaal}">Lokaal</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider" th:text="#{event.datumTijd}">Datum en Tijd</th>
             </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-100">
-            <tr th:each="event : ${events}" class="hover:bg-gray-50 transition">
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-blue-600">
-                    <a href="#" th:href="@{'/events/' + ${event.id}}" th:text="${event.naam}" class="hover:underline">Event Naam</a>
+            <tbody class="divide-y divide-gray-700">
+            <tr th:each="event : ${events}" class="hover:bg-gray-700 transition">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-indigo-400">
+                    <a href="#" th:href="@{'/events/' + ${event.id}}" th:text="${event.naam}" class="hover:underline text-indigo-400 hover:text-indigo-300">Event Naam</a>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                     <span th:each="spreker, iterStat : ${event.sprekers}">
                         <span th:text="${spreker.naam}">Spreker Naam</span><span th:if="${!iterStat.last}">, </span>
                     </span>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700" th:text="${event.lokaal.naam}">Lokaal Naam</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700" th:text="${#temporals.format(event.datumTijd, #messages.msg('datetime.format.pattern'))}">Datum en Tijd</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300" th:text="${event.lokaal.naam}">Lokaal Naam</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300" th:text="${#temporals.format(event.datumTijd, #messages.msg('datetime.format.pattern'))}">Datum en Tijd</td>
             </tr>
             </tbody>
         </table>
     </div>
 
     <div class="flex justify-end mt-6" sec:authorize="hasRole('ADMIN')">
-        <a href="#" th:href="@{/events/add}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-5 rounded-lg shadow-md transition">
+        <a href="#" th:href="@{/events/add}"
+           class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-5 rounded-md transition focus:outline-none focus:ring-2 focus:ring-indigo-500">
             <span th:text="#{eventOverview.addEventButton}">Add Event</span>
         </a>
     </div>

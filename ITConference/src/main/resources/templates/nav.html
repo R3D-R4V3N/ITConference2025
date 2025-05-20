@@ -7,29 +7,39 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
-<body>
+<body class="bg-gray-900 min-h-screen text-gray-300">
 <div th:fragment="navbar">
-    <nav class="flex justify-end items-center gap-4 bg-blue-900 p-2" role="navigation" aria-label="Main navigation">
-        <div class="font-bold border-2 border-black rounded-full py-1 px-4 bg-white flex items-center gap-4">
-            <!-- Add this inside your <div class="font-bold ...">, before or after the links -->
-            <span sec:authorize="hasRole('ADMIN')" class="text-xs text-white bg-blue-700 rounded px-2 py-1 ml-2">Admin</span>
-            <span sec:authorize="hasRole('USER') and !hasRole('ADMIN')" class="text-xs text-white bg-blue-700 rounded px-2 py-1 ml-2">User</span>
-            <a href="#" th:href="@{/events}" class="text-blue-700 hover:text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-400 rounded">Events</a>
-            <span sec:authorize="hasRole('USER')">
-                <a href="#" th:href="@{/favorites}" class="text-blue-700 hover:text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-400 rounded">Mijn Favorieten</a>
-            </span>
-            <span sec:authorize="hasRole('ADMIN')">
-                <a href="#" th:href="@{/lokalen}" class="text-blue-700 hover:text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-400 rounded">Lokalen Beheren</a>
-            </span>
-
-            <form method="post" th:action="@{/logout}" class="inline ml-2">
-                <button type="submit"
-                        class="border-0 bg-transparent text-red-700 hover:text-red-900 cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-400 rounded"
-                        th:text="#{nav.logoutButton}">
-                    Logout
-                </button>
-                <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden" />
-            </form>
+    <nav class="bg-gray-800 border-b border-gray-700" role="navigation" aria-label="Main navigation">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex h-16 items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <span sec:authorize="hasRole('ADMIN')" class="text-xs text-white bg-indigo-700 rounded px-2 py-1">Admin</span>
+                    <span sec:authorize="hasRole('USER') and !hasRole('ADMIN')" class="text-xs text-white bg-indigo-700 rounded px-2 py-1">User</span>
+                </div>
+                <div class="flex items-center space-x-6 font-semibold">
+                    <a href="#" th:href="@{/events}"
+                       class="rounded-md px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                    >Events</a>
+                    <span sec:authorize="hasRole('USER')">
+                        <a href="#" th:href="@{/favorites}"
+                           class="rounded-md px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                        >Mijn Favorieten</a>
+                    </span>
+                    <span sec:authorize="hasRole('ADMIN')">
+                        <a href="#" th:href="@{/lokalen}"
+                           class="rounded-md px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                        >Lokalen Beheren</a>
+                    </span>
+                    <form method="post" th:action="@{/logout}" class="inline ml-4">
+                        <button type="submit"
+                                class="text-red-400 text-sm hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 rounded px-2 py-1 bg-transparent border border-transparent"
+                                th:text="#{nav.logoutButton}">
+                            Logout
+                        </button>
+                        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden" />
+                    </form>
+                </div>
+            </div>
         </div>
     </nav>
 </div>

@@ -5,20 +5,19 @@
     <title th:text="#{lokaalAdd.title}">Add Location</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-gray-900 min-h-screen text-gray-200 font-sans">
 <div th:replace="~{nav :: navbar}"></div>
 
-<div class="flex justify-center items-center mt-8 mb-8">
-    <div class="w-full max-w-md border-2 border-black p-8 rounded-md bg-white shadow-md">
+<div class="flex justify-center items-center py-12">
+    <div class="w-full max-w-md bg-gray-800 border border-gray-700 rounded-xl shadow-lg p-8">
 
-        <h1 class="text-2xl font-bold text-center mb-6" th:text="#{lokaalAdd.header}">
+        <h1 class="text-2xl font-bold text-center text-white mb-6" th:text="#{lokaalAdd.header}">
             Add New Location
         </h1>
 
-        <form th:action="@{/lokalen/add}" th:object="${lokaal}" method="post" class="space-y-6" novalidate>
-
+        <form th:action="@{/lokalen/add}" th:object="${lokaal}" method="post" class="space-y-8" novalidate>
             <div>
-                <label for="naam" class="block text-gray-700 text-sm font-semibold mb-2" th:text="#{lokaal.naam}">
+                <label for="naam" class="block text-sm font-semibold mb-2" th:text="#{lokaal.naam}">
                     Location Name:
                 </label>
                 <input
@@ -26,14 +25,14 @@
                         id="naam"
                         th:field="*{naam}"
                         required
-                        class="shadow appearance-none border border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        class="w-full rounded-md bg-gray-900 border border-gray-600 px-4 py-2 text-gray-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                         aria-describedby="naamError"
                 />
                 <span
                         id="naamError"
                         th:if="${#fields.hasErrors('naam')}"
                         th:errors="*{naam}"
-                        class="text-red-600 text-xs italic mt-1 block"
+                        class="text-red-400 text-xs mt-1 block"
                         role="alert"
                 >
                     Name Error
@@ -41,7 +40,7 @@
             </div>
 
             <div>
-                <label for="capaciteit" class="block text-gray-700 text-sm font-semibold mb-2" th:text="#{lokaal.capaciteit}">
+                <label for="capaciteit" class="block text-sm font-semibold mb-2" th:text="#{lokaal.capaciteit}">
                     Capacity:
                 </label>
                 <input
@@ -50,14 +49,14 @@
                         th:field="*{capaciteit}"
                         min="1"
                         required
-                        class="shadow appearance-none border border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        class="w-full rounded-md bg-gray-900 border border-gray-600 px-4 py-2 text-gray-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                         aria-describedby="capaciteitError"
                 />
                 <span
                         id="capaciteitError"
                         th:if="${#fields.hasErrors('capaciteit')}"
                         th:errors="*{capaciteit}"
-                        class="text-red-600 text-xs italic mt-1 block"
+                        class="text-red-400 text-xs mt-1 block"
                         role="alert"
                 >
                     Capacity Error
@@ -69,7 +68,7 @@
             <div>
                 <button
                         type="submit"
-                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full focus:outline-none focus:ring-4 focus:ring-blue-300 transition"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded w-full focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
                         th:text="#{lokaalAdd.submitButton}"
                 >
                     Add Location
@@ -77,14 +76,12 @@
             </div>
 
             <div class="mt-6 text-center">
-                <a href="#" th:href="@{/events}" class="text-blue-500 hover:text-blue-800" th:text="#{general.cancel}">
+                <a th:href="@{/events}" class="text-indigo-400 hover:text-indigo-200 font-semibold" th:text="#{general.cancel}">
                     Cancel
                 </a>
             </div>
-
         </form>
     </div>
 </div>
-
 </body>
 </html>

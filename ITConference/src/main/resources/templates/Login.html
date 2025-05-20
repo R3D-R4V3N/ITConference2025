@@ -5,25 +5,29 @@
     <title th:text="#{login.title}">Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-blue-100 min-h-screen flex items-center justify-center" onload="document.loginForm.username.focus();">
+<body class="bg-gray-900 min-h-screen flex items-center justify-center">
 
-<div class="w-full max-w-md p-8 bg-white rounded-lg shadow-md border border-gray-300">
+<div class="w-full max-w-md p-8 bg-gray-800 rounded-2xl shadow-2xl border border-gray-700">
+    <!-- Logo/Title -->
+    <div class="flex flex-col items-center mb-8">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 text-indigo-500 mb-2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        </svg>
 
-    <h3 class="text-2xl font-extrabold text-center text-blue-900 mb-6" th:text="#{login.header}">
-        Login with Username and Password
-    </h3>
+        <h1 class="text-2xl font-bold text-white tracking-tight" th:text="#{login.header}">Sign in</h1>
+    </div>
 
-    <div th:if="${error}" class="text-red-700 bg-red-100 p-3 rounded mb-4" role="alert" aria-live="assertive" aria-atomic="true">
+    <div th:if="${error}" class="text-red-300 bg-red-900/80 border border-red-700 p-3 rounded mb-4 text-center font-medium" role="alert" aria-live="assertive" aria-atomic="true">
         <span th:text="${error}"></span>
     </div>
-    <div th:if="${msg}" class="text-blue-700 bg-blue-100 p-3 rounded mb-4" role="alert" aria-live="polite" aria-atomic="true">
+    <div th:if="${msg}" class="text-indigo-200 bg-indigo-900/80 border border-indigo-700 p-3 rounded mb-4 text-center font-medium" role="alert" aria-live="polite" aria-atomic="true">
         <span th:text="${msg}"></span>
     </div>
 
     <form th:action="@{/login}" method="post" name="loginForm" class="space-y-6">
         <div>
-            <label for="username" class="block text-gray-700 text-sm font-semibold mb-2" th:text="#{login.usernameLabel}">
-                Gebruikersnaam:
+            <label for="username" class="block text-gray-200 text-sm font-semibold mb-2" th:text="#{login.usernameLabel}">
+                Username
             </label>
             <input
                     type="text"
@@ -32,31 +36,40 @@
                     required
                     autofocus
                     autocomplete="username"
-                    class="shadow appearance-none border border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="border border-gray-600 rounded-md w-full py-2 px-3 bg-gray-900 text-gray-100 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
             />
         </div>
         <div>
-            <label for="password" class="block text-gray-700 text-sm font-semibold mb-2" th:text="#{login.passwordLabel}">
-                Wachtwoord:
+            <label for="password" class="block text-gray-200 text-sm font-semibold mb-2" th:text="#{login.passwordLabel}">
+                Password
             </label>
-            <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    required
-                    autocomplete="current-password"
-                    class="shadow appearance-none border border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <div class="relative">
+                <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        required
+                        autocomplete="current-password"
+                        class="border border-gray-600 rounded-md w-full py-2 px-3 bg-gray-900 text-gray-100 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 transition pr-10"
+                />
+                <button type="button" tabindex="-1" aria-label="Show password"
+                        class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-indigo-400 focus:outline-none"
+                        onclick="const p=document.getElementById('password');p.type=p.type==='password'?'text':'password';this.setAttribute('aria-label',p.type==='password'?'Show password':'Hide password')">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                </button>
+            </div>
         </div>
         <div>
             <button
                     type="submit"
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full focus:outline-none focus:ring-4 focus:ring-blue-300 transition"
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
                     th:text="#{login.submitButton}">
-                Inloggen
+                Sign in
             </button>
         </div>
-
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
     </form>
 </div>
