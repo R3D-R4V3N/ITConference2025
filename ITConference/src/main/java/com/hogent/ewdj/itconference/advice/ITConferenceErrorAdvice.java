@@ -1,4 +1,3 @@
-// com/hogent/ewdj/itconference/advice/ITConferenceErrorAdvice.java
 package com.hogent.ewdj.itconference.advice;
 
 import exceptions.EventNotFoundException;
@@ -72,28 +71,7 @@ public class ITConferenceErrorAdvice {
         return response;
     }
 
-    // NIEUW: Afhandeling van validatiefouten voor web formulieren
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ModelAndView handleValidationExceptions(MethodArgumentNotValidException ex) {
-        ModelAndView mav = new ModelAndView();
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        mav.addObject("errors", errors);
-        // Je moet hier bepalen naar welke view je wilt teruggaan, afhankelijk van de controller.
-        // Dit is een uitdaging met één globale advice voor alle controllers.
-        // Een oplossing is om de viewnaam als redirect-attribuut mee te geven,
-        // of te vallen naar een generieke foutpagina, of specifieke @ControllerAdvice per controller.
-        // Voor nu geven we een algemene foutpagina weer, of je moet de specifieke form-view per controller weten.
-        // Laten we aannemen dat we in dit geval naar een algemene error pagina gaan.
-        mav.addObject("errorMessage", "Validatiefouten: " + errors.values());
-        mav.setViewName("error"); // Zorg dat je een 'error.html' template hebt of een andere generieke foutpagina.
-        return mav;
-    }
+
 
 
     // NIEUW: Generieke foutafhandeling voor alle andere RuntimeExceptions
