@@ -14,7 +14,7 @@
     Overzicht van uw favoriete evenementen
   </h1>
 
-  <div th:if="${#lists.isEmpty(favoriteEvents)}" class="text-center text-lg text-gray-300 bg-gray-800 p-8 rounded-lg shadow border border-gray-700">
+  <div th:if="${#lists.isEmpty(favoriteEvents)}" class="text-center font-medium text-lg text-gray-300 bg-gray-800 p-8 rounded-lg shadow border border-gray-700">
     <p th:text="#{favoritesOverview.noFavorites}">U heeft nog geen favoriete evenementen.</p>
   </div>
 
@@ -58,10 +58,10 @@
     </table>
   </div>
 
-  <div th:if="${message}" class="mt-6 text-indigo-200 bg-indigo-900/70 border border-indigo-700 p-4 rounded-lg text-center" role="alert">
+  <div th:if="${message}" class="mt-6 font-medium text-indigo-200 bg-indigo-900/70 border border-indigo-700 p-4 rounded-lg text-center" role="alert">
     <span th:text="${message}"></span>
   </div>
-  <div th:if="${errorMessage}" class="mt-6 text-red-300 bg-red-900/70 border border-red-700 p-4 rounded-lg text-center" role="alert">
+  <div th:if="${errorMessage}" class="mt-6 font-medium text-red-300 bg-red-900/70 border border-red-700 p-4 rounded-lg text-center" role="alert">
     <span th:text="${errorMessage}"></span>
   </div>
 

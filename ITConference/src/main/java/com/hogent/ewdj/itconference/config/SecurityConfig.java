@@ -37,6 +37,7 @@ public class SecurityConfig {
                         .requestMatchers("/js/**").permitAll()
                         .requestMatchers("/icons/**").permitAll()
                         .requestMatchers("/error").permitAll()
+                        .requestMatchers("/changeLocale").permitAll() //
                         .requestMatchers("/events/add").hasRole("ADMIN")
                         .requestMatchers("/lokalen/add").hasRole("ADMIN")
                         .requestMatchers("/lokalen").hasRole("ADMIN")

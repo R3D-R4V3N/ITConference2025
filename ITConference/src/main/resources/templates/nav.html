@@ -30,6 +30,18 @@
                            class="rounded-md px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
                         >Lokalen Beheren</a>
                     </span>
+
+                    <form th:action="@{/changeLocale}" method="get" class="inline-block">
+                        <select name="lang" onchange="this.form.submit()"
+                                class="bg-gray-700 border border-gray-600 text-gray-200 text-sm rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-1">
+                            <option value="nl" th:selected="${#locale.language == 'nl'}">Nederlands</option>
+                            <option value="en" th:selected="${#locale.language == 'en'}">English</option>
+                        </select>
+                        <noscript>
+                            <button type="submit" class="hidden">Update Language</button>
+                        </noscript>
+                    </form>
+
                     <form method="post" th:action="@{/logout}" class="inline ml-4">
                         <button type="submit"
                                 class="text-red-400 text-sm hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 rounded px-2 py-1 bg-transparent border border-transparent"
