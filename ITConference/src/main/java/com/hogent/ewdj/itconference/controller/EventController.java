@@ -18,7 +18,7 @@ import service.FavoriteService;
 import exceptions.EventNotFoundException;
 
 import java.util.List;
-import java.util.Optional; // Importeer Optional
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/events")
@@ -52,6 +52,7 @@ public class EventController {
         model.addAttribute("event", event);
         model.addAttribute("lokalen", beschikbareLokalen);
         model.addAttribute("sprekers", beschikbareSprekers);
+        model.addAttribute("isEdit", false); // <-- Voeg deze regel toe
 
         return "event-add";
     }
@@ -65,6 +66,7 @@ public class EventController {
 
             model.addAttribute("lokalen", beschikbareLokalen);
             model.addAttribute("sprekers", beschikbareSprekers);
+            model.addAttribute("isEdit", false); // <-- Voeg deze regel ook hier toe voor formulierfouten
 
             return "event-add";
         }
@@ -97,7 +99,6 @@ public class EventController {
         return "event-detail";
     }
 
-    // NIEUW: Methode om het bewerkingsformulier te tonen
     @GetMapping("/edit/{id}")
     public String showEditEventForm(@PathVariable("id") Long id, Model model) {
         Event event = eventService.findEventById(id)
@@ -114,7 +115,6 @@ public class EventController {
         return "event-add";
     }
 
-    // NIEUW: Methode om het bewerkingsformulier te verwerken
     @PostMapping("/edit/{id}")
     public String processEditEventForm(@PathVariable("id") Long id,
                                        @Validated @ModelAttribute("event") Event event,
@@ -130,7 +130,7 @@ public class EventController {
 
             model.addAttribute("lokalen", beschikbareLokalen);
             model.addAttribute("sprekers", beschikbareSprekers);
-            model.addAttribute("isEdit", true); // <-- VOEG DEZE REGEL TOE
+            model.addAttribute("isEdit", true);
             return "event-add";
         }
 
