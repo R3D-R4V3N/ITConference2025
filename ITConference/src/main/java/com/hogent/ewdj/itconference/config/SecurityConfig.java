@@ -31,8 +31,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.csrfTokenRepository(new HttpSessionCsrfTokenRepository()))
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/events").permitAll()
-                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/events").permitAll() // Toegang voor iedereen tot /events
+                        .requestMatchers("/login").permitAll() // Toegang voor iedereen tot /login
                         .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/js/**").permitAll()
                         .requestMatchers("/icons/**").permitAll()
@@ -45,16 +45,16 @@ public class SecurityConfig {
                         .requestMatchers("/favorites").hasRole("USER")
                         .requestMatchers("/favorites/add").hasRole("USER")
                         .requestMatchers("/favorites/remove").hasRole("USER")
-                        .anyRequest().authenticated()
+                        .anyRequest().authenticated() // Alle andere verzoeken vereisen authenticatie
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/events", true)
+                        .loginPage("/login") // Specificeert de loginpagina
+                        .defaultSuccessUrl("/events", true) // Redirect na succesvolle login naar /events
                         .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
+                        .logoutSuccessUrl("/login?logout") // Redirect na logout naar /login met een logout parameter
                         .permitAll()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
