@@ -37,8 +37,9 @@ public class SecurityConfig {
                         .requestMatchers("/js/**").permitAll()
                         .requestMatchers("/icons/**").permitAll()
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers("/changeLocale").permitAll() //
+                        .requestMatchers("/changeLocale").permitAll()
                         .requestMatchers("/events/add").hasRole("ADMIN")
+                        .requestMatchers("/events/edit/**").hasRole("ADMIN") // Hersteld
                         .requestMatchers("/lokalen/add").hasRole("ADMIN")
                         .requestMatchers("/lokalen").hasRole("ADMIN")
                         .requestMatchers("/favorites").hasRole("USER")
@@ -57,7 +58,7 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .accessDeniedPage("/error?errorCode=403")
+                        .accessDeniedPage("/error?errorCode=403&errorMessage=Access+Denied")
                 );
 
         return http.build();

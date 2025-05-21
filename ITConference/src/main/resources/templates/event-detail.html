@@ -12,7 +12,7 @@
 <div class="flex justify-center items-center py-12 px-4">
     <div class="relative w-full max-w-2xl bg-gray-800 rounded-lg p-8 border border-gray-700">
 
-        <!-- Stericoon rechtsboven -->
+        <!-- Favorieten ster links bovenin -->
         <div sec:authorize="hasRole('USER')" class="absolute top-4 right-4">
             <form th:if="${isFavorite}" th:action="@{/favorites/remove}" method="post">
                 <input type="hidden" name="eventId" th:value="${event.id}" />
@@ -29,6 +29,18 @@
                 </button>
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             </form>
+        </div>
+
+        <!-- Edit knop rechts bovenin -->
+        <div sec:authorize="hasRole('ADMIN')" class="absolute top-4 right-4">
+            <a th:href="@{'/events/edit/' + ${event.id}}"
+               class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold py-2 px-2 rounded-md transition focus:outline-none focus:ring-2 focus:ring-indigo-500"
+               title="Event bewerken">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
+                    <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
+                </svg>
+
+            </a>
         </div>
 
         <h1 class="text-2xl font-bold text-center text-white mb-6" th:text="${event.naam}">Event Naam</h1>
@@ -59,14 +71,12 @@
             </p>
         </div>
 
-        <!-- Favoriet limiet waarschuwing -->
         <div sec:authorize="hasRole('USER')" class="mt-8 space-y-4">
             <div th:if="${!isFavorite and maxFavoritesReached}" class="bg-yellow-900/70 border text-center border-yellow-700 text-yellow-200 p-4 rounded-lg">
                 <p class="font-medium">U heeft het maximale aantal favoriete evenementen bereikt.</p>
             </div>
         </div>
 
-        <!-- Meldingen -->
         <div th:if="${message}" class="mt-6 text-center bg-indigo-900/70 font-medium border border-indigo-700 text-indigo-200 p-4 rounded-lg" role="alert">
             <span th:text="${message}"></span>
         </div>

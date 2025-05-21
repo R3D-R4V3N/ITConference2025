@@ -1,3 +1,4 @@
+// src/test/java/com/hogent/ewdj/itconference/EventControllerTest.java
 package com.hogent.ewdj.itconference;
 
 import domain.Event;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -111,8 +113,7 @@ class EventControllerTest {
         when(eventService.saveEvent(any(Event.class))).thenReturn(testEvent);
         when(lokaalService.findLokaalById(any(Long.class))).thenReturn(Optional.of(testLokaal));
         when(sprekerService.findSprekerById(any(Long.class))).thenReturn(Optional.of(testSpreker1));
-        when(sprekerService.findSprekerById(any(Long.class))).thenReturn(Optional.of(testSpreker2));
-
+        when(sprekerService.findSprekerById(eq(2L))).thenReturn(Optional.of(testSpreker2)); // Specifieker voor spreker2
 
         mockMvc.perform(post("/events/add")
                         .param("naam", testEvent.getNaam())
@@ -122,7 +123,7 @@ class EventControllerTest {
                         .param("lokaal.id", testLokaal.getId().toString())
                         .param("datumTijd", testEvent.getDatumTijd().toString())
                         .param("beamercode", String.valueOf(testEvent.getBeamercode()))
-                        .param("beamercheck", String.valueOf(testEvent.getBeamercheck())) // Transient field
+                        .param("beamercheck", String.valueOf(testEvent.calculateCorrectBeamerCheck())) // Gebruik correcte beamercheck
                         .param("prijs", testEvent.getPrijs().toString())
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
@@ -132,9 +133,12 @@ class EventControllerTest {
     @Test
     @WithMockUser(username = "ADMIN", roles = {"ADMIN"})
     void testProcessAddEventForm_InvalidData() throws Exception {
+        when(lokaalService.findAllLokalen()).thenReturn(Collections.singletonList(testLokaal));
+        when(sprekerService.findAllSprekers()).thenReturn(Arrays.asList(testSpreker1, testSpreker2));
         when(lokaalService.findLokaalById(any(Long.class))).thenReturn(Optional.of(testLokaal));
         when(sprekerService.findSprekerById(any(Long.class))).thenReturn(Optional.of(testSpreker1));
-        when(sprekerService.findSprekerById(any(Long.class))).thenReturn(Optional.of(testSpreker2));
+        when(sprekerService.findSprekerById(eq(2L))).thenReturn(Optional.of(testSpreker2));
+
         mockMvc.perform(post("/events/add")
                         .param("naam", "ValidNaam")
                         .param("beschrijving", testEvent.getBeschrijving())
@@ -143,8 +147,8 @@ class EventControllerTest {
                         .param("lokaal.id", testLokaal.getId().toString())
                         .param("datumTijd", testEvent.getDatumTijd().toString())
                         .param("beamercode", String.valueOf(testEvent.getBeamercode()))
-                        .param("beamercheck", String.valueOf(testEvent.getBeamercheck()))
-                        .param("prijs", "0.00")
+                        .param("beamercheck", String.valueOf(testEvent.getBeamercheck())) // Transient field
+                        .param("prijs", "0.00") // Ongeldige prijs
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("event-add"))
@@ -223,5 +227,111 @@ class EventControllerTest {
                 .andExpect(view().name("error"));
     }
 
+    @Test
+    @WithMockUser(username = "ADMIN", roles = {"ADMIN"})
+    void testShowEditEventForm_Admin() throws Exception {
+        when(eventService.findEventById(1L)).thenReturn(Optional.of(testEvent));
+        when(lokaalService.findAllLokalen()).thenReturn(Collections.singletonList(testLokaal));
+        when(sprekerService.findAllSprekers()).thenReturn(Arrays.asList(testSpreker1, testSpreker2));
 
+        mockMvc.perform(get("/events/edit/1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("event-edit"))
+                .andExpect(model().attributeExists("event"))
+                .andExpect(model().attribute("event", testEvent))
+                .andExpect(model().attributeExists("lokalen"))
+                .andExpect(model().attributeExists("sprekers"));
+    }
+
+    @Test
+    @WithMockUser(username = "USER", roles = {"USER"})
+    void testShowEditEventForm_UserDenied() throws Exception {
+        mockMvc.perform(get("/events/edit/1"))
+                .andExpect(status().isForbidden()); // Verwacht 403 Forbidden
+    }
+
+    @Test
+    @WithMockUser(username = "ADMIN", roles = {"ADMIN"})
+    void testShowEditEventForm_NotFound() throws Exception {
+        when(eventService.findEventById(99L)).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/events/edit/99"))
+                .andExpect(status().isOk()) // Via GlobalExceptionHandler naar error view
+                .andExpect(view().name("error"));
+    }
+
+
+    @Test
+    @WithMockUser(username = "ADMIN", roles = {"ADMIN"})
+    void testProcessEditEventForm_ValidData() throws Exception {
+        Event updatedEvent = new Event(
+                1L,
+                "Updated Event",
+                "Bijgewerkte beschrijving",
+                Arrays.asList(testSpreker1), // Slechts één spreker
+                testLokaal,
+                LocalDateTime.of(2025, 6, 2, 11, 0),
+                5678,
+                testEvent.calculateCorrectBeamerCheck(), // Correcte beamercheck
+                new BigDecimal("60.00")
+        );
+
+        when(eventService.saveEvent(any(Event.class))).thenReturn(updatedEvent);
+        when(lokaalService.findLokaalById(any(Long.class))).thenReturn(Optional.of(testLokaal));
+        when(sprekerService.findSprekerById(any(Long.class))).thenReturn(Optional.of(testSpreker1));
+
+
+        mockMvc.perform(post("/events/edit/{id}", updatedEvent.getId())
+                        .param("id", updatedEvent.getId().toString()) // Zorg dat ID in params zit
+                        .param("naam", updatedEvent.getNaam())
+                        .param("beschrijving", updatedEvent.getBeschrijving())
+                        .param("sprekers[0].id", testSpreker1.getId().toString())
+                        .param("lokaal.id", testLokaal.getId().toString())
+                        .param("datumTijd", updatedEvent.getDatumTijd().toString())
+                        .param("beamercode", String.valueOf(updatedEvent.getBeamercode()))
+                        .param("beamercheck", String.valueOf(updatedEvent.calculateCorrectBeamerCheck()))
+                        .param("prijs", updatedEvent.getPrijs().toString())
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/events/" + updatedEvent.getId()));
+    }
+
+    @Test
+    @WithMockUser(username = "ADMIN", roles = {"ADMIN"})
+    void testProcessEditEventForm_InvalidData() throws Exception {
+        // Een ongeldig event object met bijvoorbeeld een te lage prijs
+        Event invalidEvent = new Event(
+                1L,
+                "Invalid Event",
+                "Beschrijving",
+                Arrays.asList(testSpreker1, testSpreker2),
+                testLokaal,
+                LocalDateTime.of(2025, 6, 1, 10, 0),
+                1234,
+                testEvent.calculateCorrectBeamerCheck(),
+                new BigDecimal("5.00") // Prijs is te laag
+        );
+
+        when(lokaalService.findAllLokalen()).thenReturn(Collections.singletonList(testLokaal));
+        when(sprekerService.findAllSprekers()).thenReturn(Arrays.asList(testSpreker1, testSpreker2));
+        when(lokaalService.findLokaalById(any(Long.class))).thenReturn(Optional.of(testLokaal));
+        when(sprekerService.findSprekerById(any(Long.class))).thenReturn(Optional.of(testSpreker1));
+        when(sprekerService.findSprekerById(eq(2L))).thenReturn(Optional.of(testSpreker2));
+
+        mockMvc.perform(post("/events/edit/{id}", invalidEvent.getId())
+                        .param("id", invalidEvent.getId().toString())
+                        .param("naam", invalidEvent.getNaam())
+                        .param("beschrijving", invalidEvent.getBeschrijving())
+                        .param("sprekers[0].id", testSpreker1.getId().toString())
+                        .param("sprekers[1].id", testSpreker2.getId().toString())
+                        .param("lokaal.id", testLokaal.getId().toString())
+                        .param("datumTijd", invalidEvent.getDatumTijd().toString())
+                        .param("beamercode", String.valueOf(invalidEvent.getBeamercode()))
+                        .param("beamercheck", String.valueOf(invalidEvent.calculateCorrectBeamerCheck()))
+                        .param("prijs", invalidEvent.getPrijs().toString())
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("event-edit"))
+                .andExpect(model().attributeHasFieldErrors("event", "prijs"));
+    }
 }

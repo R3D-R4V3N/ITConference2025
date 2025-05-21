@@ -5,6 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString; // Importeer ToString
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
 import validator.ValidBeamerCheck;
@@ -49,6 +50,7 @@ public class Event implements Serializable {
     )
     @Size(min = 1, max = 3, message = "{event.sprekers.size}")
     @ValidSpeakerList
+    @ToString.Exclude // Hersteld
     private List<Spreker> sprekers;
 
     @ManyToOne(fetch = FetchType.LAZY)

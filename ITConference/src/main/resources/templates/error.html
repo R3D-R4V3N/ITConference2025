@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="#{error.title}">Error</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body class="bg-gray-900 text-gray-200 font-sans min-h-screen">
+<div th:replace="~{nav :: navbar}"></div>
+
+<div class="w-full max-w-md p-8 mt-24 mx-auto bg-gray-800 rounded-lg border border-gray-700 text-center">
+  <h1 class="font-bold text-2xl" th:text="${'HTTP Status ' + errorCode + ' - ' + errorMessage}">Error</h1>
+
+  <div class="mt-8 text-center">
+    <a href="#" th:href="@{/events}" class="inline-block text-sm font-medium text-indigo-400 hover:underline">
+      <span th:text="#{general.backToEvents}">Terug naar evenementen</span>
+    </a>
+  </div>
+
+  <form method="post" th:action="@{/logout}" class="mt-4">
+    <button type="submit"
+            class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md transition focus:outline-none focus:ring-2 focus:ring-red-500"
+            th:text="#{nav.logoutButton}">
+      Logout
+    </button>
+    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden" />
+  </form>
+</div>
+
+</body>
+</html>

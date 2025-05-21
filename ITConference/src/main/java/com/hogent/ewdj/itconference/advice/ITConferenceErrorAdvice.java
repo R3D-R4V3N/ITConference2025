@@ -9,16 +9,16 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.ControllerAdvice; // Gebruik ControllerAdvice
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.servlet.ModelAndView; // Importeer ModelAndView
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@ControllerAdvice // Veranderd naar ControllerAdvice
+@ControllerAdvice
 public class ITConferenceErrorAdvice {
 
     // Bestaande methoden voor RESTful API's blijven behouden (return Map<String, String>)
@@ -71,26 +71,17 @@ public class ITConferenceErrorAdvice {
         return response;
     }
 
-
-
-
-    // NIEUW: Generieke foutafhandeling voor alle andere RuntimeExceptions
     @ExceptionHandler(RuntimeException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ModelAndView handleAllRuntimeExceptions(RuntimeException ex) {
-        ModelAndView mav = new ModelAndView("error"); // Verwijst naar error.html
-        mav.addObject("errorMessage", "Er is een onverwachte fout opgetreden: " + ex.getMessage());
-        // Optioneel kun je ook de HTTP status code in de model toevoegen voor de view
-        mav.addObject("errorCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        return mav;
+    public String handleAllRuntimeExceptions(RuntimeException ex, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+        redirectAttributes.addFlashAttribute("errorCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        return "redirect:/error";
     }
 
-    // Optioneel: Voeg een handler toe voor IllegalStateException, zoals in ewdj2024ep3festivals
     @ExceptionHandler(IllegalStateException.class)
-    public ModelAndView handleIllegalStateException(IllegalStateException ex, RedirectAttributes redirectAttributes) {
-        ModelAndView mav = new ModelAndView("redirect:/error"); // Redirect naar een algemene foutpagina
+    public String handleIllegalStateException(IllegalStateException ex, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
-        redirectAttributes.addFlashAttribute("errorCode", HttpStatus.BAD_REQUEST.value()); // Kan ook 400 zijn
-        return mav;
+        redirectAttributes.addFlashAttribute("errorCode", HttpStatus.BAD_REQUEST.value());
+        return "redirect:/error";
     }
 }

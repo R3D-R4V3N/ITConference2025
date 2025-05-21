@@ -1,4 +1,3 @@
-// service/EventServiceImpl.java
 package service;
 
 import domain.Event;
@@ -10,7 +9,7 @@ import repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import jakarta.validation.Valid; // Importeer @Valid
+import jakarta.validation.Valid;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -36,8 +35,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    // Plaats @Valid hier
-    public Event saveEvent(@Valid Event event) {
+    public Event saveEvent(@Valid Event event) { // @Valid hier
         if (event.getSprekers() != null) {
             for (int i = 0; i < event.getSprekers().size(); i++) {
                 Spreker spreker = event.getSprekers().get(i);

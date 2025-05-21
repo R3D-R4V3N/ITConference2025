@@ -21,6 +21,9 @@
                 <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider" th:text="#{event.sprekers}">Spreker(s)</th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider" th:text="#{event.lokaal}">Lokaal</th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider" th:text="#{event.datumTijd}">Datum en Tijd</th>
+                <th scope="col" class="relative px-6 py-3" sec:authorize="hasRole('ADMIN')">
+                    <span class="sr-only" th:text="#{general.actions}">Acties</span>
+                </th>
             </tr>
             </thead>
             <tbody class="divide-y divide-gray-700">
@@ -35,6 +38,9 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300" th:text="${event.lokaal.naam}">Lokaal Naam</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300" th:text="${#temporals.format(event.datumTijd, #messages.msg('datetime.format.pattern'))}">Datum en Tijd</td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium" sec:authorize="hasRole('ADMIN')">
+                    <a th:href="@{'/events/edit/' + ${event.id}}" class="text-indigo-400 hover:text-indigo-200 hover:underline" th:text="#{eventOverview.editButton}">Bewerken</a>
+                </td>
             </tr>
             </tbody>
         </table>

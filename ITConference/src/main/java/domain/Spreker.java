@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString; // Importeer ToString
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -28,10 +29,10 @@ public class Spreker implements Serializable {
     private String naam;
 
     @ManyToMany(mappedBy = "sprekers")
+    @ToString.Exclude // Hersteld
     private Set<Event> events = new HashSet<>();
 
     public Spreker(String naam) {
         this.naam = naam;
     }
-
 }
