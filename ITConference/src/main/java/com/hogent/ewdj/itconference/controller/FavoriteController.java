@@ -53,6 +53,7 @@ public class FavoriteController {
         String successMessage = messageSource.getMessage("favorite.remove.success", null, LocaleContextHolder.getLocale());
         redirectAttributes.addFlashAttribute("message", successMessage);
 
-        return "redirect:/favorites";
+        // Changed redirect URL to stay on the event-detail page
+        return "redirect:/events/" + eventId;
     }
 }
