@@ -9,7 +9,7 @@
 <div th:replace="~{nav :: navbar}"></div>
 
 <div class="flex justify-center items-center py-12">
-    <div class="w-full max-w-md bg-gray-800 border border-gray-700 rounded-xl shadow-lg p-8">
+    <div class="w-full max-w-md bg-gray-800 border border-gray-700 rounded-lg p-8">
 
         <h1 class="text-2xl font-bold text-center text-white mb-6" th:text="#{lokaalAdd.header}">
             Add New Location
@@ -17,7 +17,7 @@
 
         <form th:action="@{/lokalen/add}" th:object="${lokaal}" method="post" class="space-y-8" novalidate>
             <div>
-                <label for="naam" class="block text-sm font-semibold mb-2" th:text="#{lokaal.naam}">
+                <label for="naam" class="block text-gray-200 text-sm font-semibold mb-2" th:text="#{lokaal.naam}">
                     Location Name:
                 </label>
                 <input
@@ -40,7 +40,7 @@
             </div>
 
             <div>
-                <label for="capaciteit" class="block text-sm font-semibold mb-2" th:text="#{lokaal.capaciteit}">
+                <label for="capaciteit" class="block text-gray-200 text-sm font-semibold mb-2" th:text="#{lokaal.capaciteit}">
                     Capacity:
                 </label>
                 <input

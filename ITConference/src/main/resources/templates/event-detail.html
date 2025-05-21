@@ -10,7 +10,7 @@
 <div th:replace="~{nav :: navbar}"></div>
 
 <div class="flex justify-center items-center py-12 px-4">
-    <div class="relative w-full max-w-2xl bg-gray-800 shadow-xl rounded-2xl p-8 border border-gray-700">
+    <div class="relative w-full max-w-2xl bg-gray-800 rounded-lg p-8 border border-gray-700">
 
         <!-- Stericoon rechtsboven -->
         <div sec:authorize="hasRole('USER')" class="absolute top-4 right-4">
@@ -35,26 +35,26 @@
 
         <div class="space-y-4 text-base leading-relaxed">
             <p>
-                <span class="font-semibold text-gray-300" th:text="#{eventDetail.beschrijving}">Beschrijving:</span>
+                <span class="font-semibold text-gray-200" th:text="#{eventDetail.beschrijving}">Beschrijving:</span>
                 <span class="text-gray-400" th:text="${event.beschrijving}"></span>
             </p>
 
             <p>
-                <span class="font-semibold text-gray-300" th:text="#{eventDetail.sprekers}">Spreker(s):</span>
+                <span class="font-semibold text-gray-200" th:text="#{eventDetail.sprekers}">Spreker(s):</span>
                 <span class="text-gray-400" th:each="spreker, iterStat : ${event.sprekers}">
-                    <span th:text="${spreker.naam}">Spreker Naam</span><span th:if="${!iterStat.last}">, </span>
+                    <span th:text="${spreker.naam}"></span><span th:if="${!iterStat.last}"> </span>
                 </span>
             </p>
 
             <p>
-                <span class="font-semibold text-gray-300" th:text="#{eventDetail.lokaal}">Lokaal:</span>
-                <span class="text-gray-400" th:text="${event.lokaal.naam}">Lokaal Naam</span>
-                (<span class="text-gray-500" th:text="#{eventDetail.capaciteit}">Capaciteit:</span>
-                <span class="text-gray-400" th:text="${event.lokaal.capaciteit}"></span>)
+                <span class="font-semibold text-gray-200" th:text="#{eventDetail.lokaal}">Lokaal:</span>
+                <span class="text-gray-400" th:text="${event.lokaal.naam}"></span>
+                <span class="text-gray-500" th:text="#{eventDetail.capaciteit}"></span>
+                <span class="text-gray-400" th:text="${event.lokaal.capaciteit}"></span>
             </p>
 
             <p>
-                <span class="font-semibold text-gray-300" th:text="#{eventDetail.datumTijd}">Datum en Tijd:</span>
+                <span class="font-semibold text-gray-200" th:text="#{eventDetail.datumTijd}">Datum en Tijd:</span>
                 <span class="text-gray-400" th:text="${#temporals.format(event.datumTijd, #messages.msg('datetime.format.pattern'))}"></span>
             </p>
         </div>
