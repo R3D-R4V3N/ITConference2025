@@ -17,17 +17,15 @@
                     <span sec:authorize="hasRole('USER') and !hasRole('ADMIN')" class="text-xs text-white bg-blue-700 rounded px-2 py-1">User</span>
                 </div>
                 <div class="flex items-center space-x-6 font-semibold">
-                    <a href="#" th:href="@{/events}"
-                       class="rounded-md px-3 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
-                    >Events</a>
+                    <a href="#" th:href="@{/events}" class="rounded-md px-3 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white " th:text="#{nav.events}">Events</a>
                     <span sec:authorize="hasRole('USER')">
                         <a href="#" th:href="@{/favorites}"
-                           class="rounded-md px-3 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                           class="rounded-md px-3 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white" th:text="#{nav.favorites}"
                         >Mijn Favorieten</a>
                     </span>
                     <span sec:authorize="hasRole('ADMIN')">
                         <a href="#" th:href="@{/lokalen}"
-                           class="rounded-md px-3 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                           class="rounded-md px-3 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white" th:text="#{nav.premises}"
                         >Lokalen Beheren</a>
                     </span>
 

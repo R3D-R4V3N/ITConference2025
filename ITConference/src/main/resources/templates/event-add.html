@@ -18,7 +18,7 @@
         <p th:if="${#fields.hasErrors('naam')}" th:errors="*{naam}" class="mt-1 text-xs text-red-400">Naam Error</p>
       </div>
       <div class="mt-6">
-        <label for="beschrijving" class="block text-gray-200 text-sm font-semibold mb-2" th:text="#{event.beschrijving}">Beschrijving:</label>
+        <label for="beschrijving" class="block text-gray-200 text-sm font-semibold mb-2" th:text="#{event.description}">Beschrijving:</label>
         <textarea id="beschrijving" th:field="*{beschrijving}" rows="3" class="w-full rounded-md bg-gray-900 border border-gray-600 px-4 py-2 text-gray-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
       </div>
 
@@ -58,7 +58,7 @@
           <p th:if="${#fields.hasErrors('beamercheck')}" th:errors="*{beamercheck}" class="mt-1 text-xs text-red-400">Beamercheck Error</p>
         </div>
         <div>
-          <label for="prijs" class="block text-gray-200 text-sm font-semibold mb-2" th:text="#{event.prijs}">Prijs:</label>
+          <label for="prijs" class="block text-gray-200 text-sm font-semibold mb-2" th:text="#{event.price}">Prijs:</label>
           <input type="number" id="prijs" th:field="*{prijs}" step="0.01" class="w-full rounded-md bg-gray-900 border border-gray-600 px-4 py-2 text-gray-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
           <p th:if="${#fields.hasErrors('prijs')}" th:errors="*{prijs}" class="mt-1 text-xs text-red-400">Prijs Error</p>
         </div>
