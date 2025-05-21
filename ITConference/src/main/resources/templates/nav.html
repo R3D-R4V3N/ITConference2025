@@ -13,8 +13,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex h-16 items-center justify-between">
                 <div class="flex items-center space-x-4">
-                    <span sec:authorize="hasRole('ADMIN')" class="text-xs text-white bg-indigo-700 rounded px-2 py-1">Admin</span>
-                    <span sec:authorize="hasRole('USER') and !hasRole('ADMIN')" class="text-xs text-white bg-indigo-700 rounded px-2 py-1">User</span>
+                    <span sec:authorize="hasRole('ADMIN')" class="text-xs text-white bg-red-700 rounded px-2 py-1">Admin</span>
+                    <span sec:authorize="hasRole('USER') and !hasRole('ADMIN')" class="text-xs text-white bg-blue-700 rounded px-2 py-1">User</span>
                 </div>
                 <div class="flex items-center space-x-6 font-semibold">
                     <a href="#" th:href="@{/events}"
