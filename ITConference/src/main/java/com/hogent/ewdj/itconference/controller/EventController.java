@@ -52,7 +52,7 @@ public class EventController {
         model.addAttribute("event", event);
         model.addAttribute("lokalen", beschikbareLokalen);
         model.addAttribute("sprekers", beschikbareSprekers);
-        model.addAttribute("isEdit", false); // <-- Voeg deze regel toe
+        model.addAttribute("isEdit", false);
 
         return "event-add";
     }
@@ -66,7 +66,7 @@ public class EventController {
 
             model.addAttribute("lokalen", beschikbareLokalen);
             model.addAttribute("sprekers", beschikbareSprekers);
-            model.addAttribute("isEdit", false); // <-- Voeg deze regel ook hier toe voor formulierfouten
+            model.addAttribute("isEdit", false);
 
             return "event-add";
         }

@@ -67,12 +67,11 @@ class EventControllerTest {
                 testLokaal,
                 LocalDateTime.of(2025, 6, 1, 10, 0),
                 1234,
-                0, // beamercheck is transient en wordt niet door form ingevuld
+                0,
                 new BigDecimal("50.00")
         );
     }
 
-    // ---- showEventOverview tests ----
     @Test
     @WithMockUser
     void testShowEventOverview() throws Exception {
@@ -90,7 +89,7 @@ class EventControllerTest {
         when(eventService.findAllEvents()).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/events"))
-                .andExpect(status().isOk()) // /events is permitAll
+                .andExpect(status().isOk())
                 .andExpect(view().name("event-overview"))
                 .andExpect(model().attributeExists("events"))
                 .andExpect(model().attribute("events", Collections.emptyList()));
@@ -112,23 +111,20 @@ class EventControllerTest {
                 .andExpect(redirectedUrlPattern("**/login"));
     }
 
-    // ---- processAddEventForm tests ----
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void testProcessAddEventFormValidData() throws Exception {
-        // Mock saveEvent to return the saved event
         when(eventService.saveEvent(any(Event.class))).thenReturn(testEvent);
 
         mockMvc.perform(post("/events/add")
                         .param("naam", testEvent.getNaam())
                         .param("beschrijving", testEvent.getBeschrijving())
-                        // Gebruik nu id's voor sprekers en lokaal
                         .param("sprekers[0].id", testSpreker1.getId().toString())
                         .param("sprekers[1].id", testSpreker2.getId().toString())
                         .param("lokaal.id", testLokaal.getId().toString())
-                        .param("datumTijd", "2025-06-01T10:00") // Must match @DateTimeFormat pattern
+                        .param("datumTijd", "2025-06-01T10:00")
                         .param("beamercode", String.valueOf(testEvent.getBeamercode()))
-                        .param("beamercheck", String.valueOf(testEvent.calculateCorrectBeamerCheck())) // Voeg beamercheck toe die overeenkomt met de berekende waarde
+                        .param("beamercheck", String.valueOf(testEvent.calculateCorrectBeamerCheck()))
                         .param("prijs", testEvent.getPrijs().toString())
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
@@ -144,7 +140,6 @@ class EventControllerTest {
                 .andExpect(status().isForbidden());
     }
 
-    // ---- showEventDetail tests ----
     @Test
     @WithMockUser(roles = {"USER"})
     void testShowEventDetailUserRole() throws Exception {
@@ -165,22 +160,18 @@ class EventControllerTest {
     @Test
     @WithMockUser(username = "user", roles = {"USER"})
     void testShowEventDetailUserRoleMaxFavoritesReached() throws Exception {
-        // Mock dat het evenement gevonden wordt
         when(eventService.findEventById(testEvent.getId())).thenReturn(Optional.of(testEvent));
-        // Mock dat het evenement nog GEEN favoriet is voor de gebruiker
         when(favoriteService.isEventFavoriteForUser(anyString(), eq(testEvent.getId()))).thenReturn(false);
-        // Mock dat het maximale aantal favorieten al BEREIKT is (bijv. 5)
-        when(favoriteService.getNumberOfFavoriteEventsForUser(anyString())).thenReturn(5L); // 5 is de maximale limiet in FavoriteServiceImpl
+        when(favoriteService.getNumberOfFavoriteEventsForUser(anyString())).thenReturn(5L);
 
-        // Voer de GET-aanvraag uit naar de detailpagina van het evenement
         mockMvc.perform(get("/events/{id}", testEvent.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("event-detail"))
                 .andExpect(model().attributeExists("event"))
                 .andExpect(model().attribute("event", testEvent))
-                .andExpect(model().attribute("isFavorite", false)) // Bevestigt dat het nog geen favoriet is
-                .andExpect(model().attribute("canAddFavorite", false)) // Verwacht false, omdat limiet bereikt is
-                .andExpect(model().attribute("maxFavoritesReached", true)); // Verwacht true, omdat limiet bereikt is
+                .andExpect(model().attribute("isFavorite", false))
+                .andExpect(model().attribute("canAddFavorite", false))
+                .andExpect(model().attribute("maxFavoritesReached", true));
     }
 
 
@@ -194,12 +185,11 @@ class EventControllerTest {
                 .andExpect(view().name("event-detail"))
                 .andExpect(model().attributeExists("event"))
                 .andExpect(model().attribute("event", testEvent))
-                .andExpect(model().attributeDoesNotExist("isFavorite")) // Not applicable for ADMIN
-                .andExpect(model().attributeDoesNotExist("canAddFavorite")); // Not applicable for ADMIN
+                .andExpect(model().attributeDoesNotExist("isFavorite"))
+                .andExpect(model().attributeDoesNotExist("canAddFavorite"));
     }
 
 
-    // ---- showEditEventForm tests ----
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void testShowEditEventFormAdmin() throws Exception {
@@ -230,26 +220,24 @@ class EventControllerTest {
         when(eventService.findEventById(any(Long.class))).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/events/edit/{id}", 999L))
-                .andExpect(status().isNotFound()) // Handled by ITConferenceErrorAdvice
+                .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Evenement met ID 999 niet gevonden om te bewerken."));
     }
 
-    // ---- processEditEventForm tests ----
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void testProcessEditEventFormValidData() throws Exception {
-        // Mock saveEvent to return the saved event
         when(eventService.saveEvent(any(Event.class))).thenReturn(testEvent);
 
         mockMvc.perform(post("/events/edit/{id}", testEvent.getId())
-                        .param("id", testEvent.getId().toString()) // Important for the controller
+                        .param("id", testEvent.getId().toString())
                         .param("naam", testEvent.getNaam())
                         .param("beschrijving", testEvent.getBeschrijving())
                         .param("sprekers[0].id", testSpreker1.getId().toString())
                         .param("lokaal.id", testLokaal.getId().toString())
                         .param("datumTijd", "2025-06-01T10:00")
                         .param("beamercode", String.valueOf(testEvent.getBeamercode()))
-                        .param("beamercheck", String.valueOf(testEvent.calculateCorrectBeamerCheck())) // Voeg beamercheck toe die overeenkomt met de berekende waarde
+                        .param("beamercheck", String.valueOf(testEvent.calculateCorrectBeamerCheck()))
                         .param("prijs", testEvent.getPrijs().toString())
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
@@ -266,13 +254,13 @@ class EventControllerTest {
 
         mockMvc.perform(post("/events/edit/{id}", testEvent.getId())
                         .param("id", testEvent.getId().toString())
-                        .param("naam", "") // Invalid name
+                        .param("naam", "")
                         .param("beschrijving", "Some description")
                         .param("sprekers[0].id", testSpreker1.getId().toString())
                         .param("lokaal.id", testLokaal.getId().toString())
                         .param("datumTijd", "2025-06-01T10:00")
                         .param("beamercode", "1234")
-                        .param("beamercheck", "0") // Incorrecte beamercheck
+                        .param("beamercheck", "0")
                         .param("prijs", "50.00")
                         .with(csrf()))
                 .andExpect(status().isOk())
@@ -302,74 +290,63 @@ class EventControllerTest {
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void testProcessAddEventFormInvalidData() throws Exception {
-        // Mock services om de formulieren te vullen, zelfs bij invalidatie
         when(lokaalService.findAllLokalen()).thenReturn(Collections.singletonList(testLokaal));
         when(sprekerService.findAllSprekers()).thenReturn(Arrays.asList(testSpreker1, testSpreker2));
 
-        // Uitvoeren van het POST-verzoek met ongeldige 'naam' en 'beamercheck'
         mockMvc.perform(post("/events/add")
-                        .param("naam", "") // Ongeldige naam: leeg
+                        .param("naam", "")
                         .param("beschrijving", "Dit is een beschrijving.")
                         .param("sprekers[0].id", testSpreker1.getId().toString())
                         .param("lokaal.id", testLokaal.getId().toString())
                         .param("datumTijd", "2025-06-01T10:00")
                         .param("beamercode", "1234")
-                        .param("beamercheck", "0") // Foutieve beamercheck (beamercheck is afhankelijk van beamercode)
+                        .param("beamercheck", "0")
                         .param("prijs", "50.00")
-                        .requestAttr("isEdit", false) // <-- VOEG DEZE REGEL TOE
+                        .requestAttr("isEdit", false)
                         .with(csrf()))
-                .andExpect(status().isOk()) // Verwacht HTTP 200 OK, omdat het formulier opnieuw wordt weergegeven
-                .andExpect(view().name("event-add")) // Verwacht dat de view "event-add" is (formulier wordt opnieuw getoond)
-                .andExpect(model().attributeHasFieldErrors("event", "naam")) // Controleer of er een fout is voor het veld 'naam'
-                .andExpect(model().attributeHasFieldErrors("event", "beamercheck")); // Controleer of er een fout is voor het veld 'beamercheck'
+                .andExpect(status().isOk())
+                .andExpect(view().name("event-add"))
+                .andExpect(model().attributeHasFieldErrors("event", "naam"))
+                .andExpect(model().attributeHasFieldErrors("event", "beamercheck"));
     }
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void testAddFavoriteEventAdminForbidden() throws Exception {
-        // We proberen een favoriet toe te voegen als ADMIN.
-        // Volgens SecurityConfig.java is /favorites/add alleen toegankelijk voor ROLE_USER.
         mockMvc.perform(post("/favorites/add")
-                        .param("eventId", "1") // Een willekeurig eventId
+                        .param("eventId", "1")
                         .with(csrf()))
-                .andExpect(status().isForbidden()); // Verwacht een 403 Forbidden status
+                .andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(username = "user", roles = {"USER"})
     void testAddFavoriteEventSuccess() throws Exception {
-        // Mock de services die door FavoriteService worden aangeroepen
-        // We hoeven hier geen specifieke return values te hebben, alleen te bevestigen dat de methoden worden aangeroepen.
         doNothing().when(favoriteService).addFavoriteEvent(anyString(), anyLong());
 
-        // Voer de POST-aanvraag uit om een favoriet evenement toe te voegen
         mockMvc.perform(post("/favorites/add")
-                        .param("eventId", "1") // Een willekeurig, geldig eventId
+                        .param("eventId", "1")
                         .with(csrf()))
-                .andExpect(status().is3xxRedirection()) // Verwacht een redirect
-                .andExpect(redirectedUrl("/events/1")) // Verwacht een redirect terug naar de detailpagina van het evenement
-                .andExpect(flash().attributeExists("message")); // Controleer of er een flash attribute 'message' is
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/events/1"))
+                .andExpect(flash().attributeExists("message"));
     }
     @Test
     @WithMockUser(username = "user", roles = {"USER"})
     void testRemoveFavoriteEventSuccess() throws Exception {
-        // Mock de service die door FavoriteService wordt aangeroepen
-        // We hoeven hier geen specifieke return values te hebben, alleen te bevestigen dat de methoden worden aangeroepen.
         doNothing().when(favoriteService).removeFavoriteEvent(anyString(), anyLong());
 
-        // Voer de POST-aanvraag uit om een favoriet evenement te verwijderen
         mockMvc.perform(post("/favorites/remove")
-                        .param("eventId", "1") // Een willekeurig, geldig eventId
+                        .param("eventId", "1")
                         .with(csrf()))
-                .andExpect(status().is3xxRedirection()) // Verwacht een redirect
-                .andExpect(redirectedUrl("/favorites")) // Verwacht een redirect terug naar het favorietenoverzicht
-                .andExpect(flash().attributeExists("message")); // Controleer of er een flash attribute 'message' is
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/favorites"))
+                .andExpect(flash().attributeExists("message"));
     }
 
     @Test
     @WithMockUser(username = "user", roles = {"USER"})
     void testShowFavoriteEventsUserRole() throws Exception {
-        // Maak een aantal mock favoriete evenementen
         Lokaal lokaalFav = new Lokaal(10L, "C303", 25);
         Spreker sprekerFav = new Spreker(10L, "Alice Smith", new HashSet<>());
 
@@ -399,15 +376,13 @@ class EventControllerTest {
 
         List<Event> favoriteEvents = Arrays.asList(favEvent1, favEvent2);
 
-        // Mock de favoriteService om deze lijst te retourneren wanneer findFavoriteEventsByUsername wordt aangeroepen
         when(favoriteService.findFavoriteEventsByUsername(anyString())).thenReturn(favoriteEvents);
 
-        // Voer de GET-aanvraag uit naar het favorietenoverzicht
         mockMvc.perform(get("/favorites"))
-                .andExpect(status().isOk()) // Verwacht een 200 OK status
-                .andExpect(view().name("favorites-overview")) // Controleer of de view correct is
-                .andExpect(model().attributeExists("favoriteEvents")) // Controleer of het model 'favoriteEvents' bevat
-                .andExpect(model().attribute("favoriteEvents", favoriteEvents)); // Controleer de inhoud van 'favoriteEvents'
+                .andExpect(status().isOk())
+                .andExpect(view().name("favorites-overview"))
+                .andExpect(model().attributeExists("favoriteEvents"))
+                .andExpect(model().attribute("favoriteEvents", favoriteEvents));
     }
 
 }

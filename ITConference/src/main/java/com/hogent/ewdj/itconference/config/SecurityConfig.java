@@ -39,7 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/changeLocale").permitAll()
                         .requestMatchers("/events/add").hasRole("ADMIN")
-                        .requestMatchers("/events/edit/**").hasRole("ADMIN") // Hersteld
+                        .requestMatchers("/events/edit/**").hasRole("ADMIN")
                         .requestMatchers("/lokalen/add").hasRole("ADMIN")
                         .requestMatchers("/lokalen").hasRole("ADMIN")
                         .requestMatchers("/favorites").hasRole("USER")

@@ -35,7 +35,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public Event saveEvent(@Valid Event event) { // @Valid hier
+    public Event saveEvent(@Valid Event event) {
         if (event.getSprekers() != null) {
             for (int i = 0; i < event.getSprekers().size(); i++) {
                 Spreker spreker = event.getSprekers().get(i);

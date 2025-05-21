@@ -21,17 +21,15 @@ public class LocaleController {
         Locale locale = switch (lang) {
             case "nl" -> new Locale("nl");
             case "en" -> Locale.ENGLISH;
-            default -> Locale.ENGLISH; // Fallback to English if an unknown language is provided
+            default -> Locale.ENGLISH;
         };
 
         localeResolver.setLocale(request, response, locale);
 
-        // Redirect back to the previous page (Referer header)
         String referer = request.getHeader("Referer");
         if (referer != null && !referer.isEmpty()) {
             return "redirect:" + referer;
         } else {
-            // Fallback if Referer header is not available (e.g., direct access)
             return "redirect:/events";
         }
     }

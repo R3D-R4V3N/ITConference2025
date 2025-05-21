@@ -1,4 +1,3 @@
-// com/hogent/ewdj/itconference/controller/LokaalController.java
 package com.hogent.ewdj.itconference.controller;
 
 import domain.Lokaal;
@@ -37,7 +36,6 @@ public class LokaalController {
     @PostMapping("/add")
     public String processAddLokaalForm(@Valid Lokaal lokaal, BindingResult result, RedirectAttributes redirectAttributes) {
 
-        // Deze if-check blijft behouden voor formuliervalidatie, conform de cursus.
         if (result.hasErrors()) {
             return "lokaal-add";
         }

@@ -64,7 +64,6 @@ class FavoriteControllerTest {
         );
     }
 
-    // ---- addFavoriteEvent tests ----
     @Test
     @WithMockUser(roles = {"USER"})
     void testAddFavoriteEventSuccess() throws Exception {
@@ -96,7 +95,6 @@ class FavoriteControllerTest {
                 .andExpect(redirectedUrlPattern("**/login"));
     }
 
-    // ---- removeFavoriteEvent tests ----
     @Test
     @WithMockUser(roles = {"USER"})
     void testRemoveFavoriteEventSuccess() throws Exception {
@@ -128,7 +126,6 @@ class FavoriteControllerTest {
                 .andExpect(redirectedUrlPattern("**/login"));
     }
 
-    // ---- showFavoriteEvents tests ----
     @Test
     @WithMockUser(username = "user", roles = {"USER"})
     void testShowFavoriteEventsUserRole() throws Exception {

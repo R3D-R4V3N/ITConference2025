@@ -21,7 +21,6 @@ import java.util.Optional;
 @ControllerAdvice
 public class ITConferenceErrorAdvice {
 
-    // Bestaande methoden voor RESTful API's blijven behouden (return Map<String, String>)
     @ResponseBody
     @ExceptionHandler(EventNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)

@@ -1,4 +1,4 @@
-package com.hogent.ewdj.itconference.config; // Pas dit package aan
+package com.hogent.ewdj.itconference.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

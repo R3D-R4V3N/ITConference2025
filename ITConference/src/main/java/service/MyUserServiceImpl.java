@@ -1,11 +1,10 @@
-// service/MyUserServiceImpl.java
 package service;
 
 import domain.MyUser;
 import repository.MyUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional; // Importeer Transactional
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MyUserServiceImpl implements MyUserService {
@@ -19,7 +18,7 @@ public class MyUserServiceImpl implements MyUserService {
     }
 
     @Override
-    @Transactional // Voeg @Transactional toe voor schrijfbewerkingen
+    @Transactional
     public MyUser saveUser(MyUser user) {
         return myUserRepository.save(user);
     }

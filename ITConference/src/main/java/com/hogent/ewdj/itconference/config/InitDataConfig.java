@@ -1,4 +1,3 @@
-// com/hogent/ewdj/itconference/config/InitDataConfig.java
 package com.hogent.ewdj.itconference.config;
 
 import domain.Event;
@@ -6,8 +5,6 @@ import domain.Lokaal;
 import domain.Spreker;
 import domain.MyUser;
 import domain.Role;
-// Verwijder de import van MyUserRepository
-// import repository.MyUserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -17,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import service.EventService;
 import service.LokaalService;
 import service.SprekerService;
-import service.MyUserService; // Importeer de nieuwe MyUserService
+import service.MyUserService;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -38,7 +35,7 @@ public class InitDataConfig implements CommandLineRunner {
     private EventService eventService;
 
     @Autowired
-    private MyUserService myUserService; // Injecteer de nieuwe MyUserService
+    private MyUserService myUserService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -59,8 +56,8 @@ public class InitDataConfig implements CommandLineRunner {
                 .role(Role.USER)
                 .build();
 
-        myUserService.saveUser(adminUser); // Gebruik de service
-        myUserService.saveUser(standardUser); // Gebruik de service
+        myUserService.saveUser(adminUser);
+        myUserService.saveUser(standardUser);
 
         System.out.println("👥 Standaard gebruikers aangemaakt: admin/admin en user/user");
 

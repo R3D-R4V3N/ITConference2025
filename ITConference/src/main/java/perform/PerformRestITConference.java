@@ -1,8 +1,7 @@
-// Begin modificatie van r3d-r4v3n/itconference2025/ITConference2025-7b1337b477e4fe2130cc11934b3ba32ccae06e35/ITConference/src/main/java/perform/PerformRestITConference.java
 package perform;
 
-import org.springframework.boot.CommandLineRunner; // Importeer CommandLineRunner
-import org.springframework.stereotype.Component; // Importeer Component
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
@@ -20,23 +19,23 @@ public class PerformRestITConference implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("---- ---- TESTEN VAN REST API MET REACTIVE WEB CLIENT ---- ----");
+        System.out.println("🎯 ---- TESTEN VAN REST API MET REACTIVE WEB CLIENT ----");
 
-        System.out.println("\n---- ---- GET EVENTS BY DATE (bestaande datum) ---- ----");
+        System.out.println("\n📅 ---- GET EVENTS BY DATE (bestaande datum) ----");
         LocalDate testDate = LocalDate.now().plusDays(7);
         getEventsByDate(testDate);
 
-        System.out.println("\n---- ---- GET EVENTS BY DATE (niet-bestaande datum) ---- ----");
+        System.out.println("\n📅 ---- GET EVENTS BY DATE (niet-bestaande datum) ----");
         LocalDate nonExistentDate = LocalDate.now().plusYears(1);
         getEventsByDate(nonExistentDate);
 
-        System.out.println("\n---- ---- GET LOKAAL CAPACITEIT (bestaand lokaal) ---- ----");
+        System.out.println("\n🏢 ---- GET LOKAAL CAPACITEIT (bestaand lokaal) ----");
         getLokaalCapaciteit("A101");
 
-        System.out.println("\n---- ---- GET LOKAAL CAPACITEIT (niet-bestaand lokaal) ---- ----");
+        System.out.println("\n🏢 ---- GET LOKAAL CAPACITEIT (niet-bestaand lokaal) ----");
         getLokaalCapaciteit("ONBESTAAND_LOKAAL");
 
-        System.out.println("\n✅---- ---- TESTEN VAN REST API VOLTOOID ---- ----");
+        System.out.println("\n✅ ---- TESTEN VAN REST API VOLTOOID ----");
     }
 
     private void getEventsByDate(LocalDate date) {
@@ -56,17 +55,18 @@ public class PerformRestITConference implements CommandLineRunner {
                     }
                 })
                 .onErrorResume(WebClientResponseException.NotFound.class, ex -> {
-                    System.err.println("Fout: Evenementen niet gevonden op " + formattedDate + " (HTTP 404)");
-                    return Mono.empty(); // Ga verder zonder een fout te gooien
+                    System.err.println("🚫 Fout: Evenementen niet gevonden op " + formattedDate + " (HTTP 404)");
+                    return Mono.empty();
                 })
                 .onErrorResume(WebClientResponseException.class, ex -> {
-                    System.err.println("Fout bij het ophalen van evenementen op " + formattedDate + ": " + ex.getStatusCode() + " " + ex.getResponseBodyAsString());
+                    System.err.println("⚠️ Fout bij het ophalen van evenementen op " + formattedDate + ": " + ex.getStatusCode() + " " + ex.getResponseBodyAsString());
                     return Mono.empty();
                 })
                 .onErrorResume(Exception.class, ex -> {
-                    System.err.println("Algemene fout bij het ophalen van evenementen: " + ex.getMessage());
+                    System.err.println("⚠️ Algemene fout bij het ophalen van evenementen: " + ex.getMessage());
                     return Mono.empty();
                 })
+
                 .block();
     }
 

@@ -1,9 +1,8 @@
-// com/hogent/ewdj/itconference/controller/FavoriteController.java
 package com.hogent.ewdj.itconference.controller;
 
 import domain.Event;
-import exceptions.EventNotFoundException; // Zorg dat deze imports er zijn
-import exceptions.UserNotFoundException; // Zorg dat deze imports er zijn
+import exceptions.EventNotFoundException;
+import exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -38,8 +37,6 @@ public class FavoriteController {
                                    Authentication authentication,
                                    RedirectAttributes redirectAttributes) {
         String username = authentication.getName();
-        // Verwijder try-catch, laat ITConferenceErrorAdvice de exceptions afhandelen
-        // IllegalStateException, UserNotFoundException, EventNotFoundException
         favoriteService.addFavoriteEvent(username, eventId);
         String successMessage = messageSource.getMessage("favorite.add.success", null, LocaleContextHolder.getLocale());
         redirectAttributes.addFlashAttribute("message", successMessage);
@@ -52,8 +49,6 @@ public class FavoriteController {
                                       Authentication authentication,
                                       RedirectAttributes redirectAttributes) {
         String username = authentication.getName();
-        // Verwijder try-catch, laat ITConferenceErrorAdvice de exceptions afhandelen
-        // UserNotFoundException, EventNotFoundException
         favoriteService.removeFavoriteEvent(username, eventId);
         String successMessage = messageSource.getMessage("favorite.remove.success", null, LocaleContextHolder.getLocale());
         redirectAttributes.addFlashAttribute("message", successMessage);

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
-import validator.ValidBeamerCheck; // Zorg dat deze import er is
+import validator.ValidBeamerCheck;
 import validator.ValidConferenceDate;
 import validator.ValidEventConstraints;
 import validator.ValidSpeakerList;
@@ -49,7 +49,7 @@ public class Event implements Serializable {
     )
     @Size(min = 1, max = 3, message = "{event.sprekers.size}")
     @ValidSpeakerList
-    @ToString.Exclude // Hersteld
+    @ToString.Exclude
     private List<Spreker> sprekers;
 
     @ManyToOne(fetch = FetchType.LAZY)
