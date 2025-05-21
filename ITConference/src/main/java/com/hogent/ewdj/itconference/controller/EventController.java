@@ -130,7 +130,7 @@ public class EventController {
 
             model.addAttribute("lokalen", beschikbareLokalen);
             model.addAttribute("sprekers", beschikbareSprekers);
-            model.addAttribute("isEdit", true);
+            model.addAttribute("isEdit", true); // <-- VOEG DEZE REGEL TOE
             return "event-add";
         }
 

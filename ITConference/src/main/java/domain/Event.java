@@ -5,10 +5,10 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString; // Importeer ToString
+import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
-import validator.ValidBeamerCheck;
+import validator.ValidBeamerCheck; // Zorg dat deze import er is
 import validator.ValidConferenceDate;
 import validator.ValidEventConstraints;
 import validator.ValidSpeakerList;
@@ -16,11 +16,10 @@ import validator.ValidSpeakerList;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @ValidEventConstraints
+@ValidBeamerCheck
 @Entity
 @Data
 @NoArgsConstructor
