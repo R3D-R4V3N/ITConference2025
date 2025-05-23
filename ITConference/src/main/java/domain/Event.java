@@ -47,6 +47,7 @@ public class Event implements Serializable {
             joinColumns = @JoinColumn(name = "eventId"),
             inverseJoinColumns = @JoinColumn(name = "sprekerId")
     )
+    @NotNull(message = "{event.sprekers.notNull}") // <-- Voeg deze regel toe
     @Size(min = 1, max = 3, message = "{event.sprekers.size}")
     @ValidSpeakerList
     @ToString.Exclude

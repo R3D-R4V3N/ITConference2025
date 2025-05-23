@@ -32,7 +32,7 @@
           <option value="">Selecteer een spreker</option>
           <option th:each="spreker : ${sprekers}" th:value="${spreker.id}" th:text="${spreker.naam}"></option>
         </select>
-      </div>
+        <p th:if="${#fields.hasErrors('sprekers')}" th:errors="*{sprekers}" class="mt-1 text-xs text-red-400">Spreker Error</p> </div>
 
       <script th:inline="javascript">
         const allSpeakers = document.getElementById('allSpeakers');
