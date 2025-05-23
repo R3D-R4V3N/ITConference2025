@@ -38,6 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/icons/**").permitAll()
                         .requestMatchers("/error").permitAll() // Laat error pagina toe
                         .requestMatchers("/changeLocale").permitAll()
+                        .requestMatchers("/api/**").permitAll() // TOEGELATEN: Alle /api/** endpoints
                         .requestMatchers("/events/add").hasRole("ADMIN")
                         .requestMatchers("/events/edit/**").hasRole("ADMIN")
                         .requestMatchers("/lokalen/add").hasRole("ADMIN")
