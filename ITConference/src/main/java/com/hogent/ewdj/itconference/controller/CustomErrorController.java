@@ -23,46 +23,45 @@ public class CustomErrorController implements ErrorController {
 
     @RequestMapping("/error")
     public String handleError(
-            @RequestParam(name = "errorCode", required = false) String errorCodeParam, // Renamed to avoid conflict
-            @RequestParam(name = "errorMessage", required = false) String errorMessageParam, // Renamed to avoid conflict
+            @RequestParam(name = "errorCode", required = false) String errorCodeParam,
+            @RequestParam(name = "errorMessage", required = false) String errorMessageParam,
             HttpServletRequest request,
             Model model,
             Locale locale) {
 
-        // Check if flash attributes are present first
         String errorMessage = (String) request.getSession().getAttribute("errorMessage");
         String errorCode = (String) request.getSession().getAttribute("errorCode");
 
-        // Clear the flash attributes from session after retrieval
         request.getSession().removeAttribute("errorMessage");
         request.getSession().removeAttribute("errorCode");
 
-        if (errorMessage == null || errorCode == null) {
-            // Fallback to request parameters if flash attributes are not present
+        if (errorMessage == null) {
             errorMessage = errorMessageParam;
+        }
+        if (errorCode == null) {
             errorCode = errorCodeParam;
+        }
 
-            if ("Unknown".equals(errorCode) && "An unexpected error occurred".equals(errorMessage)) {
-                Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
+        if (errorMessage == null && errorCode == null) {
+            Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 
-                if (status != null) {
-                    Integer statusCode = Integer.valueOf(status.toString());
+            if (status != null) {
+                Integer statusCode = Integer.valueOf(status.toString());
 
-                    if (statusCode == HttpStatus.NOT_FOUND.value()) {
-                        errorCode = "404";
-                        errorMessage = messageSource.getMessage("error.404", null, "Page not found", locale);
-                    } else if (statusCode == HttpStatus.FORBIDDEN.value()) {
-                        errorCode = "403";
-                        errorMessage = messageSource.getMessage("error.403", null, "Access is denied", locale);
-                    } else {
-                        errorCode = statusCode.toString();
-                        errorMessage = messageSource.getMessage("error.unexpected", null, "An unexpected error occurred", locale);
-                    }
+                if (statusCode == HttpStatus.NOT_FOUND.value()) {
+                    errorCode = "404";
+                    errorMessage = messageSource.getMessage("error.404", null, "Page not found", locale);
+                } else if (statusCode == HttpStatus.FORBIDDEN.value()) {
+                    errorCode = "403";
+                    errorMessage = messageSource.getMessage("error.403", null, "Access is denied", locale);
+                } else {
+                    errorCode = statusCode.toString();
+                    errorMessage = messageSource.getMessage("error.unexpected", null, "An unexpected error occurred", locale);
                 }
             }
         }
 
-
+        // Always add attributes, even if null
         model.addAttribute(ERROR_CODE, errorCode);
         model.addAttribute(ERROR_MESSAGE, errorMessage);
 

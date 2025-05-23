@@ -2,7 +2,7 @@ package com.hogent.ewdj.itconference.controller;
 
 import domain.Event;
 import domain.Lokaal;
-import domain.MyUser; // Importeer MyUser
+import domain.MyUser;
 import domain.Spreker;
 import exceptions.LokaalNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,8 +14,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import service.EventService;
 import service.LokaalService;
-import service.MyUserService; // Importeer MyUserService
-import service.SprekerService; // Importeer SprekerService
+import service.MyUserService;
+import service.SprekerService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -47,10 +47,10 @@ class ITConferenceRestControllerTest {
     @MockitoBean
     private LokaalService lokaalService;
 
-    @MockitoBean // TOEVOEGD: SprekerService als mock bean
+    @MockitoBean
     private SprekerService sprekerService;
 
-    @MockitoBean // TOEVOEGD: MyUserService als mock bean
+    @MockitoBean
     private MyUserService myUserService;
 
     private Lokaal testLokaal;
@@ -70,15 +70,14 @@ class ITConferenceRestControllerTest {
                 testLokaal,
                 LocalDateTime.of(2025, 10, 26, 14, 0),
                 1234,
-                0, // beamercheck zal correct berekend worden in de constructor of via een setter
+                0,
                 new BigDecimal("50.00")
         );
 
-        // Algemene mocks voor de test context initialisatie, zodat InitDataConfig slaagt
         when(lokaalService.saveLokaal(any(Lokaal.class))).thenAnswer(invocation -> {
             Lokaal l = invocation.getArgument(0);
             if (l.getId() == null) {
-                l.setId(100L); // Dummy ID
+                l.setId(100L);
             }
             return l;
         });
@@ -89,7 +88,7 @@ class ITConferenceRestControllerTest {
         when(sprekerService.saveSpreker(any(Spreker.class))).thenAnswer(invocation -> {
             Spreker s = invocation.getArgument(0);
             if (s.getId() == null) {
-                s.setId(200L); // Dummy ID
+                s.setId(200L);
             }
             return s;
         });
@@ -100,36 +99,29 @@ class ITConferenceRestControllerTest {
         when(eventService.saveEvent(any(Event.class))).thenAnswer(invocation -> {
             Event e = invocation.getArgument(0);
             if (e.getId() == null) {
-                e.setId(400L); // Dummy ID
+                e.setId(400L);
             }
             return e;
         });
-        // Zorg ervoor dat EventService.findAllEvents altijd een lijst retourneert, ook al is deze leeg
         when(eventService.findAllEvents()).thenReturn(Collections.emptyList());
 
 
-        // Mock MyUserService.saveUser, gebruikt in InitDataConfig
         when(myUserService.saveUser(any(MyUser.class))).thenAnswer(invocation -> {
             MyUser user = invocation.getArgument(0);
-            user.setId(500L); // Geef een dummy ID om het beheerd te maken
+            user.setId(500L);
             return user;
         });
-        // Mock MyUserService.findByUsername, gebruikt in InitDataConfig, SecurityConfig, etc.
         when(myUserService.findByUsername(anyString())).thenAnswer(invocation -> {
             String username = invocation.getArgument(0);
-            // Een eenvoudige mock MyUser, voldoende voor InitDataConfig
             return MyUser.builder().id(500L).username(username).build();
         });
     }
-
-    // --- Tests voor getEventsByDate ---
 
     @Test
     void testGetEventsByDateSuccess() throws Exception {
         LocalDate date = LocalDate.of(2025, 10, 26);
         List<Event> eventsOnDate = Collections.singletonList(testEvent);
 
-        // Overschrijf de algemene mock voor findAllEvents voor deze specifieke test
         when(eventService.findAllEvents()).thenReturn(eventsOnDate);
 
         mockMvc.perform(get("/api/eventsByDate")
@@ -142,8 +134,6 @@ class ITConferenceRestControllerTest {
     @Test
     void testGetEventsByDateNoEventsFound() throws Exception {
         LocalDate date = LocalDate.of(2025, 1, 1);
-        // Voor deze test is de algemene mock (returns emptyList) voldoende,
-        // maar expliciet herhalen voor duidelijkheid is geen kwaad.
         when(eventService.findAllEvents()).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/api/eventsByDate")
@@ -155,10 +145,8 @@ class ITConferenceRestControllerTest {
     void testGetEventsByDateInvalidFormat() throws Exception {
         mockMvc.perform(get("/api/eventsByDate")
                         .param("date", "invalid-date"))
-                .andExpect(status().isBadRequest()); // Verwacht HTTP 400 Bad Request voor ongeldig datumformaat
+                .andExpect(status().isBadRequest());
     }
-
-    // --- Tests voor getLokaalCapaciteit ---
 
     @Test
     void testGetLokaalCapaciteitSuccess() throws Exception {

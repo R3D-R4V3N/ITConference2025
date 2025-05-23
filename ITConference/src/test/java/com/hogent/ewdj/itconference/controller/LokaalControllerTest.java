@@ -1,8 +1,8 @@
 package com.hogent.ewdj.itconference.controller;
 
-import domain.Event; // Import Event
+import domain.Event;
 import domain.Lokaal;
-import domain.MyUser; // Import MyUser
+import domain.MyUser;
 import domain.Spreker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,19 +13,19 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import service.EventService; // Import EventService
+import service.EventService;
 import service.LokaalService;
-import service.MyUserService; // Import MyUserService
+import service.MyUserService;
 import service.SprekerService;
 
 import java.util.Collections;
-import java.util.HashSet; // Import HashSet
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional; // Import Optional
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong; // Import anyLong
-import static org.mockito.ArgumentMatchers.anyString; // Import anyString
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -47,10 +47,10 @@ class LokaalControllerTest {
     private SprekerService sprekerService;
 
     @MockitoBean
-    private EventService eventService; // Nodig voor InitDataConfig
+    private EventService eventService;
 
     @MockitoBean
-    private MyUserService myUserService; // Nodig voor InitDataConfig
+    private MyUserService myUserService;
 
     private Lokaal testLokaal;
     private Spreker testSpreker;
@@ -60,70 +60,53 @@ class LokaalControllerTest {
         testLokaal = new Lokaal(1L, "A101", 50);
         testSpreker = new Spreker(1L, "Jan Janssen", new HashSet<>());
 
-        // --- Mocking voor InitDataConfig om succesvol te laten laden ---
-
-        // Mock LokaalService.saveLokaal
         when(lokaalService.saveLokaal(any(Lokaal.class))).thenAnswer(invocation -> {
             Lokaal l = invocation.getArgument(0);
-            if (l.getId() == null) { // Zorg voor een ID als het een nieuw object is
-                l.setId(100L); // Dummy ID
+            if (l.getId() == null) {
+                l.setId(100L);
             }
             return l;
         });
-        // Mock LokaalService.findLokaalById, gebruikt in EventService
         when(lokaalService.findLokaalById(anyLong())).thenReturn(Optional.of(testLokaal));
-        // Mock LokaalService.findLokaalByNaam, gebruikt in ITConferenceRestController of andere plaatsen
         when(lokaalService.findLokaalByNaam(anyString())).thenReturn(testLokaal);
 
-        // Mock SprekerService.saveSpreker
         when(sprekerService.saveSpreker(any(Spreker.class))).thenAnswer(invocation -> {
             Spreker s = invocation.getArgument(0);
-            if (s.getId() == null) { // Zorg voor een ID als het een nieuw object is
-                s.setId(200L); // Dummy ID
+            if (s.getId() == null) {
+                s.setId(200L);
             }
             return s;
         });
-        // Mock SprekerService.findSprekerById, gebruikt in EventService
         when(sprekerService.findSprekerById(anyLong())).thenReturn(Optional.of(testSpreker));
-        // Mock SprekerService.findSprekerByNaam, gebruikt in EventService
         when(sprekerService.findSprekerByNaam(anyString())).thenReturn(testSpreker);
 
 
-        // Mock MyUserService.saveUser
         when(myUserService.saveUser(any(MyUser.class))).thenAnswer(invocation -> {
             MyUser user = invocation.getArgument(0);
-            if (user.getId() == null) { // Zorg voor een ID als het een nieuw object is
-                user.setId(300L); // Dummy ID
+            if (user.getId() == null) {
+                user.setId(300L);
             }
             return user;
         });
-        // Mock MyUserService.findByUsername
         when(myUserService.findByUsername(anyString())).thenAnswer(invocation -> {
             String username = invocation.getArgument(0);
             return MyUser.builder().id(300L).username(username).build();
         });
 
 
-        // Mock EventService.saveEvent, zodat InitDataConfig succesvol Events kan opslaan
         when(eventService.saveEvent(any(Event.class))).thenAnswer(invocation -> {
             Event e = invocation.getArgument(0);
-            if (e.getId() == null) { // Zorg voor een ID als het een nieuw object is
-                e.setId(400L); // Dummy ID
+            if (e.getId() == null) {
+                e.setId(400L);
             }
             return e;
         });
 
-        // Mock EventService.findAllEvents, gebruikt in EventController, ITConferenceRestController
-        when(eventService.findAllEvents()).thenReturn(Collections.emptyList()); // Standaard leeg, tenzij overschreven voor specifieke tests
-        // Mock EventService.findEventById, gebruikt in EventController
-        when(eventService.findEventById(anyLong())).thenReturn(Optional.empty()); // Standaard leeg, tenzij overschreven
-        // Mock EventService.findEventsByDatumTijdAndLokaal, gebruikt in EventConstraintsValidator
+        when(eventService.findAllEvents()).thenReturn(Collections.emptyList());
+        when(eventService.findEventById(anyLong())).thenReturn(Optional.empty());
         when(eventService.findEventsByDatumTijdAndLokaal(any(), any(Lokaal.class))).thenReturn(Collections.emptyList());
-        // Mock EventService.findEventsByNaamAndDatum, gebruikt in EventConstraintsValidator
         when(eventService.findEventsByNaamAndDatum(anyString(), any())).thenReturn(Collections.emptyList());
     }
-
-    // --- showAddLokaalForm tests (GET /lokalen/add) ---
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
@@ -149,12 +132,9 @@ class LokaalControllerTest {
                 .andExpect(redirectedUrlPattern("**/login"));
     }
 
-    // --- processAddLokaalForm tests (POST /lokalen/add) ---
-
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void testProcessAddLokaalFormValidData() throws Exception {
-        // Zorg ervoor dat existsLokaalByNaam false is voor een succesvolle toevoeging
         when(lokaalService.existsLokaalByNaam(anyString())).thenReturn(false);
 
         mockMvc.perform(post("/lokalen/add")
@@ -170,11 +150,9 @@ class LokaalControllerTest {
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void testProcessAddLokaalFormInvalidData() throws Exception {
-        // Hier hoeven we existsLokaalByNaam niet te mocken, omdat de validatie
-        // al faalt voordat die service wordt aangeroepen.
         mockMvc.perform(post("/lokalen/add")
-                        .param("naam", "invalid") // Ongeldig patroon
-                        .param("capaciteit", "0") // Ongeldige minimum capaciteit
+                        .param("naam", "invalid")
+                        .param("capaciteit", "0")
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("lokaal-add"))
@@ -197,8 +175,6 @@ class LokaalControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("**/login"));
     }
-
-    // --- showLokaalOverview tests (GET /lokalen) ---
 
     @Test
     @WithMockUser(roles = {"ADMIN"})

@@ -28,7 +28,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet; // Added for HashSet
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -39,7 +39,7 @@ import static org.mockito.ArgumentMatchers.eq;
 public class EventTest {
 
     private Validator validator;
-    private EventRepository eventRepository; // Mock deze repository voor database validaties
+    private EventRepository eventRepository;
 
     private Lokaal testLokaal;
     private Spreker testSpreker1;
@@ -51,18 +51,13 @@ public class EventTest {
     @BeforeEach
     public void setupCommonData() {
         testLokaal = new Lokaal(1L, "A101", 50);
-        // Corrected Spreker instantiation to use the available constructor
         testSpreker1 = new Spreker(1L, "Jan Janssen", new HashSet<>());
         testSpreker2 = new Spreker(2L, "Piet Peeters", new HashSet<>());
         testSpreker3 = new Spreker(3L, "Joris Joosten", new HashSet<>());
         testSpreker4 = new Spreker(4L, "Anna Alberts", new HashSet<>());
 
-        // Mock de EventRepository
         eventRepository = Mockito.mock(EventRepository.class);
 
-        // Configureer de validator met een custom ConstraintValidatorFactory
-        // Dit is nodig om Spring-geïnjecteerde validators (zoals EventConstraintsValidator)
-        // te testen in een pure JUnit context, door de mock repository te injecteren.
         ValidatorFactory factory = Validation.byProvider(org.hibernate.validator.HibernateValidator.class)
                 .configure()
                 .constraintValidatorFactory(new SpringConstraintValidatorFactory(
@@ -146,19 +141,19 @@ public class EventTest {
                             public <T> T createBean(Class<T> beanClass) throws BeansException {
                                 if (beanClass.equals(EventConstraintsValidator.class)) {
                                     EventConstraintsValidator ecv = new EventConstraintsValidator();
-                                    ecv.setEventRepository(eventRepository); // Injecteer de mock
+                                    ecv.setEventRepository(eventRepository);
                                     return (T) ecv;
                                 }
                                 try {
-                                    // Use getDeclaredConstructor().newInstance() to avoid deprecated newInstance()
                                     return beanClass.getDeclaredConstructor().newInstance();
-                                } catch (Exception e) { // Catch broader Exception for reflection issues
+                                } catch (Exception e) {
                                     throw new BeansException("Failed to instantiate bean: " + beanClass.getName(), e) {};
                                 }
                             }
 
                             @Override
-                            public void autowireBean(Object existingBean) throws BeansException { /* no-op */ }
+                            public void autowireBean(Object existingBean) throws BeansException {
+                            }
                             @Override
                             public Object configureBean(Object existingBean, String beanName) throws BeansException { return existingBean; }
 
@@ -224,24 +219,20 @@ public class EventTest {
                             public Object resolveDependency(DependencyDescriptor descriptor, String requestingBeanName, Set<String> autowiredBeanNames, TypeConverter typeConverter) throws BeansException {
                                 return null;
                             }
-                            // Removed the problematic resolveDependency method as it's not needed
-                            // and causes compilation issues with BeanContainer.
                         }
                 ))
                 .buildValidatorFactory();
         validator = factory.getValidator();
     }
 
-    // Helper methode om een Event object te creëren
     private Event createEvent(Long id, String naam, String beschrijving, List<Spreker> sprekers, Lokaal lokaal,
                               LocalDateTime datumTijd, int beamercode, BigDecimal prijs) {
         Event event = new Event(naam, beschrijving, sprekers, lokaal, datumTijd, beamercode, prijs);
         event.setId(id);
-        event.setBeamercheck(event.calculateCorrectBeamerCheck()); // Bereken de correcte beamercheck
+        event.setBeamercheck(event.calculateCorrectBeamerCheck());
         return event;
     }
 
-    // Helper methode om een Event object te creëren met een specifieke beamercheck
     private Event createEventWithSpecificBeamercheck(Long id, String naam, String beschrijving, List<Spreker> sprekers, Lokaal lokaal,
                                                      LocalDateTime datumTijd, int beamercode, int beamercheck, BigDecimal prijs) {
         Event event = new Event(naam, beschrijving, sprekers, lokaal, datumTijd, beamercode, prijs);
@@ -250,8 +241,6 @@ public class EventTest {
         return event;
     }
 
-
-    // --- Validatie tests voor individuele velden (zonder @ValidEventConstraints) ---
 
     @Test
     void testValidEvent() {
@@ -311,7 +300,7 @@ public class EventTest {
                 1L,
                 "Evenement",
                 "Beschrijving",
-                null, // null sprekers
+                null,
                 testLokaal,
                 LocalDateTime.of(2025, 6, 1, 10, 0),
                 1234,
@@ -328,7 +317,7 @@ public class EventTest {
                 1L,
                 "Evenement",
                 "Beschrijving",
-                Collections.emptyList(), // lege sprekers lijst
+                Collections.emptyList(),
                 testLokaal,
                 LocalDateTime.of(2025, 6, 1, 10, 0),
                 1234,
@@ -345,7 +334,7 @@ public class EventTest {
                 1L,
                 "Evenement",
                 "Beschrijving",
-                Arrays.asList(testSpreker1, testSpreker2, testSpreker3, testSpreker4), // 4 sprekers
+                Arrays.asList(testSpreker1, testSpreker2, testSpreker3, testSpreker4),
                 testLokaal,
                 LocalDateTime.of(2025, 6, 1, 10, 0),
                 1234,
@@ -362,7 +351,7 @@ public class EventTest {
                 1L,
                 "Evenement",
                 "Beschrijving",
-                Arrays.asList(testSpreker1, testSpreker1), // Dubbele spreker
+                Arrays.asList(testSpreker1, testSpreker1),
                 testLokaal,
                 LocalDateTime.of(2025, 6, 1, 10, 0),
                 1234,
@@ -380,7 +369,7 @@ public class EventTest {
                 "Evenement",
                 "Beschrijving",
                 Arrays.asList(testSpreker1),
-                null, // null lokaal
+                null,
                 LocalDateTime.of(2025, 6, 1, 10, 0),
                 1234,
                 new BigDecimal("50.00")
@@ -398,7 +387,7 @@ public class EventTest {
                 "Beschrijving",
                 Arrays.asList(testSpreker1),
                 testLokaal,
-                null, // null datumTijd
+                null,
                 1234,
                 new BigDecimal("50.00")
         );
@@ -415,7 +404,7 @@ public class EventTest {
                 "Beschrijving",
                 Arrays.asList(testSpreker1),
                 testLokaal,
-                LocalDateTime.of(2020, 1, 1, 10, 0), // Datum in het verleden
+                LocalDateTime.of(2020, 1, 1, 10, 0),
                 1234,
                 new BigDecimal("50.00")
         );
@@ -432,13 +421,12 @@ public class EventTest {
                 "Beschrijving",
                 Arrays.asList(testSpreker1),
                 testLokaal,
-                LocalDateTime.of(2024, 1, 1, 10, 0), // Buiten 2025 periode (volgens ValidConferenceDate in Event.java)
+                LocalDateTime.of(2024, 1, 1, 10, 0),
                 1234,
                 new BigDecimal("50.00")
         );
         Set<ConstraintViolation<Event>> violations = validator.validate(invalidEvent);
         assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("datumTijd") &&
-                // De boodschap wordt direct geinterpolleerd in de validator.
                 v.getMessage().equals("De datum moet tussen 2025-05-18 en 2025-12-31 liggen."));
     }
 
@@ -470,7 +458,7 @@ public class EventTest {
                 testLokaal,
                 LocalDateTime.of(2025, 6, 1, 10, 0),
                 1234,
-                0, // Foutieve beamercheck (moet 1234 % 97 = 69 zijn)
+                0,
                 new BigDecimal("50.00")
         );
         Set<ConstraintViolation<Event>> violations = validator.validate(invalidEvent);
@@ -488,7 +476,7 @@ public class EventTest {
                 testLokaal,
                 LocalDateTime.of(2025, 6, 1, 10, 0),
                 1234,
-                null // null prijs
+                null
         );
         Set<ConstraintViolation<Event>> violations = validator.validate(invalidEvent);
         assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("prijs") &&
@@ -505,7 +493,7 @@ public class EventTest {
                 testLokaal,
                 LocalDateTime.of(2025, 6, 1, 10, 0),
                 1234,
-                new BigDecimal("9.98") // Prijs kleiner dan 9.99
+                new BigDecimal("9.98")
         );
         Set<ConstraintViolation<Event>> violations = validator.validate(invalidEvent);
         assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("prijs") &&
@@ -522,28 +510,26 @@ public class EventTest {
                 testLokaal,
                 LocalDateTime.of(2025, 6, 1, 10, 0),
                 1234,
-                new BigDecimal("100.00") // Prijs 100.00 (moet kleiner dan 100 zijn, dus exclusief)
+                new BigDecimal("100.00")
         );
         Set<ConstraintViolation<Event>> violations = validator.validate(invalidEvent);
         assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("prijs") &&
                 v.getMessageTemplate().equals("{event.prijs.max}"));
     }
 
-    // --- Validatie tests voor database constraints (@ValidEventConstraints) ---
     @Test
     void testDuplicateTimeLocation() {
         Event existingEvent = createEvent(
-                100L, // Een ID voor een 'bestaand' evenement
+                100L,
                 "Bestaand Evenement", "Omschrijving", Arrays.asList(testSpreker1), testLokaal,
                 LocalDateTime.of(2025, 6, 1, 10, 0), 1234, new BigDecimal("50.00")
         );
-        // Stel in dat de repository een bestaand evenement vindt op dezelfde tijd en locatie
         Mockito.when(eventRepository.findByDatumTijdAndLokaal(
                         eq(LocalDateTime.of(2025, 6, 1, 10, 0)), eq(testLokaal)))
                 .thenReturn(Collections.singletonList(existingEvent));
 
         Event newEvent = createEvent(
-                200L, // Nieuw, verschillend ID
+                200L,
                 "Nieuw Evenement", "Nieuwe Omschrijving", Arrays.asList(testSpreker2), testLokaal,
                 LocalDateTime.of(2025, 6, 1, 10, 0), 5678, new BigDecimal("60.00")
         );
@@ -556,20 +542,16 @@ public class EventTest {
     @Test
     void testNoDuplicateTimeLocationForSameEventEdit() {
         Event existingEvent = createEvent(
-                100L, // Een ID voor een 'bestaand' evenement
+                100L,
                 "Bestaand Evenement", "Omschrijving", Arrays.asList(testSpreker1), testLokaal,
                 LocalDateTime.of(2025, 6, 1, 10, 0), 1234, new BigDecimal("50.00")
         );
-        // Wanneer we een bestaand evenement editen, mag het niet als duplicaat gezien worden.
-        // De mock moet hetzelfde evenement teruggeven, wat betekent dat het evenement met dezelfde ID wordt gevonden.
         Mockito.when(eventRepository.findByDatumTijdAndLokaal(
                         eq(LocalDateTime.of(2025, 6, 1, 10, 0)), eq(testLokaal)))
                 .thenReturn(Collections.singletonList(existingEvent));
 
-        // Valideer hetzelfde evenement alsof het geüpdatet wordt (met hetzelfde ID)
         Set<ConstraintViolation<Event>> violations = validator.validate(existingEvent);
 
-        // Filter op de specifieke constraint en controleer dat deze niet aanwezig is.
         assertThat(violations).noneMatch(v -> v.getPropertyPath().toString().equals("datumTijd") &&
                 v.getMessageTemplate().equals("{event.constraints.duplicateTimeLocation}"));
     }
@@ -577,17 +559,16 @@ public class EventTest {
     @Test
     void testDuplicateNameDay() {
         Event existingEvent = createEvent(
-                101L, // Een ID voor een 'bestaand' evenement
+                101L,
                 "Dubbel Naam Evenement", "Omschrijving", Arrays.asList(testSpreker1), testLokaal,
                 LocalDateTime.of(2025, 6, 1, 12, 0), 1234, new BigDecimal("50.00")
         );
-        // Stel in dat de repository een bestaand evenement vindt met dezelfde naam op dezelfde dag
         Mockito.when(eventRepository.findByNaamAndDatum(
                         eq("Dubbel Naam Evenement"), eq(LocalDateTime.of(2025, 6, 1, 12, 0).toLocalDate())))
                 .thenReturn(Collections.singletonList(existingEvent));
 
         Event newEvent = createEvent(
-                201L, // Nieuw, verschillend ID
+                201L,
                 "Dubbel Naam Evenement", "Nieuwe Omschrijving", Arrays.asList(testSpreker2), testLokaal,
                 LocalDateTime.of(2025, 6, 1, 14, 0), 5678, new BigDecimal("60.00")
         );
@@ -600,19 +581,16 @@ public class EventTest {
     @Test
     void testNoDuplicateNameDayForSameEventEdit() {
         Event existingEvent = createEvent(
-                101L, // Een ID voor een 'bestaand' evenement
+                101L,
                 "Unieke Naam Evenement", "Omschrijving", Arrays.asList(testSpreker1), testLokaal,
                 LocalDateTime.of(2025, 6, 1, 10, 0), 1234, new BigDecimal("50.00")
         );
-        // Wanneer we een bestaand evenement editen, mag het niet als duplicaat gezien worden.
         Mockito.when(eventRepository.findByNaamAndDatum(
                         eq("Unieke Naam Evenement"), eq(LocalDateTime.of(2025, 6, 1, 10, 0).toLocalDate())))
                 .thenReturn(Collections.singletonList(existingEvent));
 
-        // Valideer hetzelfde evenement alsof het geüpdatet wordt (met hetzelfde ID)
         Set<ConstraintViolation<Event>> violations = validator.validate(existingEvent);
 
-        // Filter op de specifieke constraint en controleer dat deze niet aanwezig is.
         assertThat(violations).noneMatch(v -> v.getPropertyPath().toString().equals("naam") &&
                 v.getMessageTemplate().equals("{event.constraints.duplicateNameDay}"));
     }
