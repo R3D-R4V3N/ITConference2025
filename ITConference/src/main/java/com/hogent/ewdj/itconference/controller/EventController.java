@@ -5,6 +5,7 @@ import domain.Lokaal;
 import domain.Spreker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.security.access.prepost.PreAuthorize; // Importeer PreAuthorize
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,7 @@ import exceptions.EventNotFoundException;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional; // Importeer Optional
 
 @Controller
 @RequestMapping("/events")
@@ -48,6 +50,7 @@ public class EventController {
     }
 
     @GetMapping("/add")
+    @PreAuthorize("hasRole('ADMIN')") // Alleen admins kunnen events toevoegen
     public String showAddEventForm(Model model) {
         Event event = new Event();
         List<Lokaal> beschikbareLokalen = lokaalService.findAllLokalen();
@@ -62,6 +65,7 @@ public class EventController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("hasRole('ADMIN')") // Alleen admins kunnen events toevoegen
     public String processAddEventForm(@Validated @ModelAttribute("event") Event event, BindingResult result, Model model, RedirectAttributes redirectAttributes, Locale locale) {
 
         if (result.hasErrors()) {
@@ -106,6 +110,7 @@ public class EventController {
     }
 
     @GetMapping("/edit/{id}")
+    @PreAuthorize("hasRole('ADMIN')") // Alleen admins kunnen events bewerken
     public String showEditEventForm(@PathVariable("id") Long id, Model model) {
         Event event = eventService.findEventById(id)
                 .orElseThrow(() -> new EventNotFoundException("Evenement met ID " + id + " niet gevonden om te bewerken."));
@@ -122,6 +127,7 @@ public class EventController {
     }
 
     @PostMapping("/edit/{id}")
+    @PreAuthorize("hasRole('ADMIN')") // Alleen admins kunnen events bewerken
     public String processEditEventForm(@PathVariable("id") Long id,
                                        @Validated @ModelAttribute("event") Event event,
                                        BindingResult result,
@@ -145,5 +151,27 @@ public class EventController {
         String message = messageSource.getMessage("event.edit.success", null, "Evenement succesvol bijgewerkt!", locale);
         redirectAttributes.addFlashAttribute("message", message);
         return "redirect:/events/" + event.getId();
+    }
+
+    // Nieuwe methoden voor het verwijderen van een event
+
+    @GetMapping("/remove/{id}")
+    @PreAuthorize("hasRole('ADMIN')") // Alleen admins kunnen events verwijderen
+    public String showRemoveEventForm(@PathVariable("id") Long id, Model model) {
+        Optional<Event> eventOptional = eventService.findEventById(id);
+        if (eventOptional.isEmpty()) {
+            throw new EventNotFoundException("Evenement met ID " + id + " niet gevonden om te verwijderen.");
+        }
+        model.addAttribute("event", eventOptional.get());
+        return "event-remove"; // Dit wordt de nieuwe template
+    }
+
+    @PostMapping("/remove/{id}")
+    @PreAuthorize("hasRole('ADMIN')") // Alleen admins kunnen events verwijderen
+    public String processRemoveEvent(@PathVariable("id") Long id, RedirectAttributes redirectAttributes, Locale locale) {
+        eventService.deleteEventById(id);
+        String message = messageSource.getMessage("event.delete.success", null, "Evenement succesvol verwijderd!", locale);
+        redirectAttributes.addFlashAttribute("message", message);
+        return "redirect:/events";
     }
 }
