@@ -22,7 +22,6 @@
         <textarea id="beschrijving" th:field="*{beschrijving}" rows="3" class="w-full rounded-md bg-gray-900 border border-gray-600 px-4 py-2 text-gray-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
       </div>
 
-      <!-- Speaker Multi-Select with Badges -->
       <div>
         <label class="block text-gray-200 text-sm font-semibold mb-2">Spreker(s):</label>
         <select id="speakerSelect" class="hidden" name="sprekers" multiple>
@@ -35,10 +34,36 @@
         </select>
       </div>
 
-      <script>
+      <script th:inline="javascript">
         const allSpeakers = document.getElementById('allSpeakers');
         const badgeContainer = document.getElementById('badgeContainer');
         const hiddenSelect = document.getElementById('speakerSelect');
+
+        function addSpeakerBadge(id, name) {
+          const badge = document.createElement('div');
+          badge.className = 'inline-flex items-center space-x-1 bg-green-900 text-green-300 px-2 py-0.5 rounded-md text-sm mb-1 font-medium';
+          badge.innerHTML = `
+            <svg class="cursor-pointer h-4 w-4 text-green-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            <div class="select-none">${name}</div>
+          `;
+          badge.querySelector('svg').onclick = function() {
+            // Remove from hidden select
+            Array.from(hiddenSelect.options).forEach(opt => {
+              if (opt.value == id) { // Use == for type coercion
+                opt.selected = false;
+              }
+            });
+            // Add back to dropdown
+            const newOption = document.createElement('option');
+            newOption.value = id;
+            newOption.text = name;
+            allSpeakers.appendChild(newOption);
+            badge.remove();
+          };
+          badgeContainer.appendChild(badge);
+        }
 
         allSpeakers.addEventListener('change', function() {
           const selectedId = this.value;
@@ -47,38 +72,45 @@
 
           // Add to hidden select
           Array.from(hiddenSelect.options).forEach(opt => {
-            if (opt.value === selectedId) opt.selected = true;
+            if (opt.value == selectedId) opt.selected = true; // Use == for type coercion
           });
 
           // Remove from dropdown
-          const optionToRemove = Array.from(this.options).find(opt => opt.value === selectedId);
+          const optionToRemove = Array.from(this.options).find(opt => opt.value == selectedId); // Use == for type coercion
           if (optionToRemove) this.removeChild(optionToRemove);
 
-          // Create badge
-          const badge = document.createElement('div');
-          badge.className = 'inline-flex items-center space-x-1 bg-green-900 text-green-300 px-2 py-0.5 rounded-md text-sm mb-1 font-medium';
-          badge.innerHTML = `
-      <svg class="cursor-pointer h-4 w-4 text-green-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-      </svg>
-      <div class="select-none">${selectedText}</div>
-    `;
-          badge.querySelector('svg').onclick = function() {
-            // Remove from hidden select
-            Array.from(hiddenSelect.options).forEach(opt => {
-              if (opt.value === selectedId) opt.selected = false;
-            });
-            // Add back to dropdown
-            const newOption = document.createElement('option');
-            newOption.value = selectedId;
-            newOption.text = selectedText;
-            allSpeakers.appendChild(newOption);
-            badge.remove();
-          };
-          badgeContainer.appendChild(badge);
+          addSpeakerBadge(selectedId, selectedText);
 
           this.value = '';
         });
+
+        // Initialize badges for existing speakers when in edit mode
+        /*<![CDATA[*/
+        const isEdit = /*[[${isEdit}]]*/ false;
+        const eventSpeakers = /*[[${event.sprekers}]]*/ [];
+
+        if (isEdit && eventSpeakers.length > 0) {
+          eventSpeakers.forEach(function(speaker) {
+            const selectedId = speaker.id;
+            const selectedName = speaker.naam;
+
+            // Mark as selected in hidden select
+            Array.from(hiddenSelect.options).forEach(opt => {
+              if (opt.value == selectedId) { // Use == for type coercion
+                opt.selected = true;
+              }
+            });
+
+            // Remove from dropdown
+            const optionToRemove = Array.from(allSpeakers.options).find(opt => opt.value == selectedId);
+            if (optionToRemove) {
+              allSpeakers.removeChild(optionToRemove);
+            }
+
+            addSpeakerBadge(selectedId, selectedName);
+          });
+        }
+        /*]]>*/
       </script>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">

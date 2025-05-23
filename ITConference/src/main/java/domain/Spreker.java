@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -30,6 +31,7 @@ public class Spreker implements Serializable {
 
     @ManyToMany(mappedBy = "sprekers")
     @ToString.Exclude
+    @JsonBackReference
     private Set<Event> events = new HashSet<>();
 
     public Spreker(String naam) {

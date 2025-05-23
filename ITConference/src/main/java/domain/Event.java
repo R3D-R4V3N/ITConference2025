@@ -12,7 +12,7 @@ import validator.ValidBeamerCheck;
 import validator.ValidConferenceDate;
 import validator.ValidEventConstraints;
 import validator.ValidSpeakerList;
-
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -50,6 +50,7 @@ public class Event implements Serializable {
     @Size(min = 1, max = 3, message = "{event.sprekers.size}")
     @ValidSpeakerList
     @ToString.Exclude
+    @JsonManagedReference
     private List<Spreker> sprekers;
 
     @ManyToOne(fetch = FetchType.LAZY)
