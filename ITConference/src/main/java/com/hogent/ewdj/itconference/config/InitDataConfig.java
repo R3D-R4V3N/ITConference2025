@@ -61,17 +61,13 @@ public class InitDataConfig implements CommandLineRunner {
 
         System.out.println("👥 Standaard gebruikers aangemaakt: admin/admin en user/user");
 
-        Lokaal lokaal1 = new Lokaal("A101", 50);
-        Lokaal lokaal2 = new Lokaal("B202", 30);
-        lokaalService.saveLokaal(lokaal1);
-        lokaalService.saveLokaal(lokaal2);
+        // Zorg ervoor dat de opgeslagen instanties (met ID's) worden gebruikt.
+        Lokaal lokaal1 = lokaalService.saveLokaal(new Lokaal("A101", 50));
+        Lokaal lokaal2 = lokaalService.saveLokaal(new Lokaal("B202", 30));
 
-        Spreker spreker1 = new Spreker("Jan Janssen");
-        Spreker spreker2 = new Spreker("Piet Peeters");
-        Spreker spreker3 = new Spreker("Joris Joosten");
-        spreker1 = sprekerService.saveSpreker(spreker1);
-        spreker2 = sprekerService.saveSpreker(spreker2);
-        spreker3 = sprekerService.saveSpreker(spreker3);
+        Spreker spreker1 = sprekerService.saveSpreker(new Spreker("Jan Janssen"));
+        Spreker spreker2 = sprekerService.saveSpreker(new Spreker("Piet Peeters"));
+        Spreker spreker3 = sprekerService.saveSpreker(new Spreker("Joris Joosten"));
 
         LocalDateTime eventTime1 = LocalDateTime.now().plusDays(7).withHour(10).withMinute(0).withSecond(0).withNano(0);
         int beamerCode1 = 1234;
@@ -81,12 +77,12 @@ public class InitDataConfig implements CommandLineRunner {
         event1.setNaam("Inleiding tot Spring Boot");
         event1.setBeschrijving("Een introductie tot het Spring Boot framework en de basisprincipes.");
         event1.setDatumTijd(eventTime1);
-        event1.setLokaal(lokaal1);
+        event1.setLokaal(lokaal1); // Gebruik de beheerde 'lokaal1' instantie
         event1.setPrijs(new BigDecimal("49.99"));
         event1.setBeamercode(beamerCode1);
         event1.setBeamercheck(beamerCheck1);
 
-        List<Spreker> sprekersEvent1 = Arrays.asList(spreker1, spreker2);
+        List<Spreker> sprekersEvent1 = Arrays.asList(spreker1, spreker2); // Gebruik de beheerde 'spreker' instanties
         event1.setSprekers(sprekersEvent1);
 
         eventService.saveEvent(event1);
@@ -99,12 +95,12 @@ public class InitDataConfig implements CommandLineRunner {
         event2.setNaam("Advanced JPA Techniques");
         event2.setBeschrijving("Diepgaande kijk op JPA en Hibernate voor geavanceerd databeheer.");
         event2.setDatumTijd(eventTime2);
-        event2.setLokaal(lokaal2);
+        event2.setLokaal(lokaal2); // Gebruik de beheerde 'lokaal2' instantie
         event2.setPrijs(new BigDecimal("75.00"));
         event2.setBeamercode(beamerCode2);
         event2.setBeamercheck(beamerCheck2);
 
-        List<Spreker> sprekersEvent2 = Arrays.asList(spreker3);
+        List<Spreker> sprekersEvent2 = Arrays.asList(spreker3); // Gebruik de beheerde 'spreker' instantie
         event2.setSprekers(sprekersEvent2);
 
         eventService.saveEvent(event2);

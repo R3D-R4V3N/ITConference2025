@@ -1,4 +1,4 @@
-package com.hogent.ewdj.itconference;
+package com.hogent.ewdj.itconference.controller;
 
 import domain.Event;
 import domain.Lokaal;

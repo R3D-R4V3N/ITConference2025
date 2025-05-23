@@ -1,9 +1,8 @@
-package com.hogent.ewdj.itconference;
+package com.hogent.ewdj.itconference.controller;
 
 import domain.Event;
 import domain.Lokaal;
 import domain.Spreker;
-import exceptions.EventNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
