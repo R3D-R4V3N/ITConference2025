@@ -17,6 +17,7 @@ import java.util.Optional;
 @RestControllerAdvice
 public class ITConferenceRestErrorAdvice {
 
+
     @ExceptionHandler(EventNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleEventNotFound(EventNotFoundException ex) {

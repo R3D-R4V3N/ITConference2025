@@ -9,15 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 
-
-
 @Controller
 @RequestMapping("/login")
 public class LoginController {
 
     @Autowired
     private MessageSource messageSource;
-
 
     @GetMapping
     public String login(@RequestParam(value = "error", required = false) String error,
@@ -44,5 +41,4 @@ public class LoginController {
 
         return "login";
     }
-
 }

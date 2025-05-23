@@ -1,5 +1,8 @@
 package com.hogent.ewdj.itconference.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import java.util.Locale;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -15,11 +18,16 @@ public class CustomErrorController implements ErrorController {
     private static final String ERROR_CODE = "errorCode";
     private static final String ERROR_MESSAGE = "errorMessage";
 
+    @Autowired
+    private MessageSource messageSource;
+
     @RequestMapping("/error")
-    public String handleError(@RequestParam(name = "errorCode", required = false, defaultValue = "Unknown") String errorCode,
-                              @RequestParam(name = "errorMessage", required = false, defaultValue = "An unexpected error occurred") String errorMessage,
-                              HttpServletRequest request,
-                              Model model) {
+    public String handleError(
+            @RequestParam(name = "errorCode", required = false, defaultValue = "Unknown") String errorCode,
+            @RequestParam(name = "errorMessage", required = false, defaultValue = "An unexpected error occurred") String errorMessage,
+            HttpServletRequest request,
+            Model model,
+            Locale locale) {
 
         if ("Unknown".equals(errorCode) && "An unexpected error occurred".equals(errorMessage)) {
             Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
@@ -29,13 +37,13 @@ public class CustomErrorController implements ErrorController {
 
                 if (statusCode == HttpStatus.NOT_FOUND.value()) {
                     errorCode = "404";
-                    errorMessage = "Page not found";
+                    errorMessage = messageSource.getMessage("error.404", null, "Page not found", locale);
                 } else if (statusCode == HttpStatus.FORBIDDEN.value()) {
                     errorCode = "403";
-                    errorMessage = "Access is denied";
+                    errorMessage = messageSource.getMessage("error.403", null, "Access is denied", locale);
                 } else {
                     errorCode = statusCode.toString();
-                    errorMessage = "An unexpected error occurred";
+                    errorMessage = messageSource.getMessage("error.unexpected", null, "An unexpected error occurred", locale);
                 }
             }
         }

@@ -37,10 +37,14 @@ public class FavoriteController {
                                    Authentication authentication,
                                    RedirectAttributes redirectAttributes) {
         String username = authentication.getName();
-        favoriteService.addFavoriteEvent(username, eventId);
-        String successMessage = messageSource.getMessage("favorite.add.success", null, LocaleContextHolder.getLocale());
-        redirectAttributes.addFlashAttribute("message", successMessage);
-
+        try {
+            favoriteService.addFavoriteEvent(username, eventId);
+            String successMessage = messageSource.getMessage("favorite.add.success", null, LocaleContextHolder.getLocale());
+            redirectAttributes.addFlashAttribute("message", successMessage);
+        } catch (Exception ex) {
+            String errorMessage = messageSource.getMessage("favorite.add.error", new Object[]{ex.getMessage()}, LocaleContextHolder.getLocale());
+            redirectAttributes.addFlashAttribute("error", errorMessage);
+        }
         return "redirect:/events/" + eventId;
     }
 
@@ -49,11 +53,14 @@ public class FavoriteController {
                                       Authentication authentication,
                                       RedirectAttributes redirectAttributes) {
         String username = authentication.getName();
-        favoriteService.removeFavoriteEvent(username, eventId);
-        String successMessage = messageSource.getMessage("favorite.remove.success", null, LocaleContextHolder.getLocale());
-        redirectAttributes.addFlashAttribute("message", successMessage);
-
-        // Changed redirect URL to stay on the event-detail page
+        try {
+            favoriteService.removeFavoriteEvent(username, eventId);
+            String successMessage = messageSource.getMessage("favorite.remove.success", null, LocaleContextHolder.getLocale());
+            redirectAttributes.addFlashAttribute("message", successMessage);
+        } catch (Exception ex) {
+            String errorMessage = messageSource.getMessage("favorite.remove.error", new Object[]{ex.getMessage()}, LocaleContextHolder.getLocale());
+            redirectAttributes.addFlashAttribute("error", errorMessage);
+        }
         return "redirect:/events/" + eventId;
     }
 }

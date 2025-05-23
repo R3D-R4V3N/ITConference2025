@@ -4,6 +4,7 @@ import domain.Event;
 import domain.Lokaal;
 import domain.Spreker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +19,7 @@ import service.FavoriteService;
 import exceptions.EventNotFoundException;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Locale;
 
 @Controller
 @RequestMapping("/events")
@@ -35,6 +36,9 @@ public class EventController {
 
     @Autowired
     private FavoriteService favoriteService;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @GetMapping
     public String showEventOverview(Model model) {
@@ -58,7 +62,7 @@ public class EventController {
     }
 
     @PostMapping("/add")
-    public String processAddEventForm(@Validated @ModelAttribute("event") Event event, BindingResult result, Model model) {
+    public String processAddEventForm(@Validated @ModelAttribute("event") Event event, BindingResult result, Model model, RedirectAttributes redirectAttributes, Locale locale) {
 
         if (result.hasErrors()) {
             List<Lokaal> beschikbareLokalen = lokaalService.findAllLokalen();
@@ -72,6 +76,8 @@ public class EventController {
         }
 
         eventService.saveEvent(event);
+        String message = messageSource.getMessage("event.add.success", null, "Evenement succesvol toegevoegd!", locale);
+        redirectAttributes.addFlashAttribute("message", message);
         return "redirect:/events";
     }
 
@@ -120,7 +126,8 @@ public class EventController {
                                        @Validated @ModelAttribute("event") Event event,
                                        BindingResult result,
                                        Model model,
-                                       RedirectAttributes redirectAttributes) {
+                                       RedirectAttributes redirectAttributes,
+                                       Locale locale) {
 
         event.setId(id);
 
@@ -135,7 +142,8 @@ public class EventController {
         }
 
         eventService.saveEvent(event);
-        redirectAttributes.addFlashAttribute("message", "Evenement succesvol bijgewerkt!");
+        String message = messageSource.getMessage("event.edit.success", null, "Evenement succesvol bijgewerkt!", locale);
+        redirectAttributes.addFlashAttribute("message", message);
         return "redirect:/events/" + event.getId();
     }
 }
