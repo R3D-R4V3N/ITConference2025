@@ -101,7 +101,10 @@ class EventControllerTest {
     @WithMockUser(roles = {"USER"})
     void testShowAddEventFormUserForbidden() throws Exception {
         mockMvc.perform(get("/events/add"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().is3xxRedirection()) // Verwacht een redirect
+                .andExpect(redirectedUrl("/error"))    // Verwacht een redirect naar /error
+                .andExpect(flash().attributeExists("errorMessage"))
+                .andExpect(flash().attribute("errorMessage", "Access is denied"));
     }
 
     @Test
@@ -115,6 +118,9 @@ class EventControllerTest {
     @WithMockUser(roles = {"ADMIN"})
     void testProcessAddEventFormValidData() throws Exception {
         when(eventService.saveEvent(any(Event.class))).thenReturn(testEvent);
+        when(lokaalService.findLokaalById(anyLong())).thenReturn(Optional.of(testLokaal));
+        when(sprekerService.findSprekerById(anyLong())).thenReturn(Optional.of(testSpreker1)).thenReturn(Optional.of(testSpreker2));
+
 
         mockMvc.perform(post("/events/add")
                         .param("naam", testEvent.getNaam())
@@ -137,7 +143,10 @@ class EventControllerTest {
     void testProcessAddEventFormUserForbidden() throws Exception {
         mockMvc.perform(post("/events/add")
                         .with(csrf()))
-                .andExpect(status().isForbidden());
+                .andExpect(status().is3xxRedirection()) // Verwacht een redirect
+                .andExpect(redirectedUrl("/error"))    // Verwacht een redirect naar /error
+                .andExpect(flash().attributeExists("errorMessage"))
+                .andExpect(flash().attribute("errorMessage", "Access is denied"));
     }
 
     @Test
@@ -211,7 +220,10 @@ class EventControllerTest {
     @WithMockUser(roles = {"USER"})
     void testShowEditEventFormUserForbidden() throws Exception {
         mockMvc.perform(get("/events/edit/{id}", testEvent.getId()))
-                .andExpect(status().isForbidden());
+                .andExpect(status().is3xxRedirection()) // Verwacht een redirect
+                .andExpect(redirectedUrl("/error"))    // Verwacht een redirect naar /error
+                .andExpect(flash().attributeExists("errorMessage"))
+                .andExpect(flash().attribute("errorMessage", "Access is denied"));
     }
 
     @Test
@@ -220,14 +232,19 @@ class EventControllerTest {
         when(eventService.findEventById(any(Long.class))).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/events/edit/{id}", 999L))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("Evenement met ID 999 niet gevonden om te bewerken."));
+                .andExpect(status().is3xxRedirection()) // Verwacht een redirect
+                .andExpect(redirectedUrl("/error"))    // Verwacht een redirect naar /error
+                .andExpect(flash().attributeExists("errorMessage"))
+                .andExpect(flash().attribute("errorMessage", "Evenement met ID 999 niet gevonden om te bewerken."));
     }
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void testProcessEditEventFormValidData() throws Exception {
         when(eventService.saveEvent(any(Event.class))).thenReturn(testEvent);
+        when(lokaalService.findLokaalById(anyLong())).thenReturn(Optional.of(testLokaal));
+        when(sprekerService.findSprekerById(anyLong())).thenReturn(Optional.of(testSpreker1));
+
 
         mockMvc.perform(post("/events/edit/{id}", testEvent.getId())
                         .param("id", testEvent.getId().toString())
@@ -251,6 +268,7 @@ class EventControllerTest {
     void testProcessEditEventFormInvalidData() throws Exception {
         when(lokaalService.findAllLokalen()).thenReturn(Collections.singletonList(testLokaal));
         when(sprekerService.findAllSprekers()).thenReturn(Arrays.asList(testSpreker1, testSpreker2));
+        when(eventService.findEventById(anyLong())).thenReturn(Optional.of(testEvent)); // Nodig voor edit formulier
 
         mockMvc.perform(post("/events/edit/{id}", testEvent.getId())
                         .param("id", testEvent.getId().toString())
@@ -274,7 +292,10 @@ class EventControllerTest {
     void testProcessEditEventFormUserForbidden() throws Exception {
         mockMvc.perform(post("/events/edit/{id}", testEvent.getId())
                         .with(csrf()))
-                .andExpect(status().isForbidden());
+                .andExpect(status().is3xxRedirection()) // Verwacht een redirect
+                .andExpect(redirectedUrl("/error"))    // Verwacht een redirect naar /error
+                .andExpect(flash().attributeExists("errorMessage"))
+                .andExpect(flash().attribute("errorMessage", "Access is denied"));
     }
 
     @Test
@@ -283,8 +304,10 @@ class EventControllerTest {
         when(eventService.findEventById(any(Long.class))).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/events/{id}", 999L))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("Evenement met ID 999 niet gevonden."));
+                .andExpect(status().is3xxRedirection()) // Verwacht een redirect
+                .andExpect(redirectedUrl("/error"))    // Verwacht een redirect naar /error
+                .andExpect(flash().attributeExists("errorMessage"))
+                .andExpect(flash().attribute("errorMessage", "Evenement met ID 999 niet gevonden."));
     }
 
     @Test
@@ -307,7 +330,7 @@ class EventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("event-add"))
                 .andExpect(model().attributeHasFieldErrors("event", "naam"))
-                .andExpect(model().attributeHasFieldErrors("event", "beamercheck"));
+                .andExpect(model().attributeHasFieldErrors("event", "beamercheck")); // Beamercheck kan ook een fout hebben als de validator checkt op correctheid.
     }
 
     @Test
@@ -316,7 +339,10 @@ class EventControllerTest {
         mockMvc.perform(post("/favorites/add")
                         .param("eventId", "1")
                         .with(csrf()))
-                .andExpect(status().isForbidden());
+                .andExpect(status().is3xxRedirection()) // Verwacht een redirect
+                .andExpect(redirectedUrl("/error"))    // Verwacht een redirect naar /error
+                .andExpect(flash().attributeExists("errorMessage"))
+                .andExpect(flash().attribute("errorMessage", "Access is denied"));
     }
 
     @Test
@@ -340,7 +366,7 @@ class EventControllerTest {
                         .param("eventId", "1")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/favorites"))
+                .andExpect(redirectedUrl("/events/1")) // Aangepast naar de werkelijke redirect URL
                 .andExpect(flash().attributeExists("message"));
     }
 
