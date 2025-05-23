@@ -13,6 +13,7 @@ import validator.ValidConferenceDate;
 import validator.ValidEventConstraints;
 import validator.ValidSpeakerList;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties; // Importeer deze regel
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -47,7 +48,7 @@ public class Event implements Serializable {
             joinColumns = @JoinColumn(name = "eventId"),
             inverseJoinColumns = @JoinColumn(name = "sprekerId")
     )
-    @NotNull(message = "{event.sprekers.notNull}") // <-- Voeg deze regel toe
+    @NotNull(message = "{event.sprekers.notNull}")
     @Size(min = 1, max = 3, message = "{event.sprekers.size}")
     @ValidSpeakerList
     @ToString.Exclude
@@ -57,6 +58,7 @@ public class Event implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lokaalId", nullable = false)
     @NotNull(message = "{event.lokaal.notNull}")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // Toegevoegde regel
     private Lokaal lokaal;
 
     @Column(nullable = false)

@@ -48,9 +48,9 @@ public class PerformRestITConference implements CommandLineRunner {
                 .collectList()
                 .doOnSuccess(events -> {
                     if (events.isEmpty()) {
-                        System.out.println("Geen evenementen gevonden op " + formattedDate);
+                        System.out.println("🤷 Geen evenementen gevonden op " + formattedDate);
                     } else {
-                        System.out.println("Evenementen gevonden op " + formattedDate + ":");
+                        System.out.println("🎉 Evenementen gevonden op " + formattedDate + ":");
                         events.forEach(event -> System.out.println(" - " + event.getNaam() + " in " + event.getLokaal().getNaam()));
                     }
                 })
@@ -63,10 +63,9 @@ public class PerformRestITConference implements CommandLineRunner {
                     return Mono.empty();
                 })
                 .onErrorResume(Exception.class, ex -> {
-                    System.err.println("⚠️ Algemene fout bij het ophalen van evenementen: " + ex.getMessage());
+                    System.err.println("❌ Algemene fout bij het ophalen van evenementen: " + ex.getMessage());
                     return Mono.empty();
                 })
-
                 .block();
     }
 
@@ -76,17 +75,17 @@ public class PerformRestITConference implements CommandLineRunner {
                 .uri(SERVER_URI + "/lokalen/" + lokaalNaam + "/capaciteit")
                 .retrieve()
                 .bodyToMono(Integer.class)
-                .doOnSuccess(capaciteit -> System.out.println("Capaciteit van lokaal " + lokaalNaam + ": " + capaciteit))
+                .doOnSuccess(capaciteit -> System.out.println("✅ Capaciteit van lokaal " + lokaalNaam + ": " + capaciteit))
                 .onErrorResume(WebClientResponseException.NotFound.class, ex -> {
-                    System.err.println("Fout: Lokaal " + lokaalNaam + " niet gevonden (HTTP 404).");
+                    System.err.println("🚫 Fout: Lokaal " + lokaalNaam + " niet gevonden (HTTP 404).");
                     return Mono.empty();
                 })
                 .onErrorResume(WebClientResponseException.class, ex -> {
-                    System.err.println("Fout bij het ophalen van capaciteit voor lokaal " + lokaalNaam + ": " + ex.getStatusCode() + " " + ex.getResponseBodyAsString());
+                    System.err.println("⚠️ Fout bij het ophalen van capaciteit voor lokaal " + lokaalNaam + ": " + ex.getStatusCode() + " " + ex.getResponseBodyAsString());
                     return Mono.empty();
                 })
                 .onErrorResume(Exception.class, ex -> {
-                    System.err.println("Algemene fout bij het ophalen van capaciteit: " + ex.getMessage());
+                    System.err.println("❌ Algemene fout bij het ophalen van capaciteit: " + ex.getMessage());
                     return Mono.empty();
                 })
                 .block();
