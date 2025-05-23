@@ -22,13 +22,64 @@
         <textarea id="beschrijving" th:field="*{beschrijving}" rows="3" class="w-full rounded-md bg-gray-900 border border-gray-600 px-4 py-2 text-gray-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
       </div>
 
+      <!-- Speaker Multi-Select with Badges -->
       <div>
-        <label class="block text-gray-200 text-sm font-semibold mb-2" th:text="#{event.sprekers}">Spreker(s):</label>
-        <select th:field="*{sprekers}" multiple class="w-full rounded-md bg-gray-900 border border-gray-600 px-4 py-2 text-gray-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-          <option th:each="spreker : ${sprekers}" th:value="${spreker.id}" th:text="${spreker.naam}" th:selected="${event.sprekers != null && #lists.contains(event.sprekers, spreker)}">Spreker Naam</option>
+        <label class="block text-gray-200 text-sm font-semibold mb-2">Spreker(s):</label>
+        <select id="speakerSelect" class="hidden" name="sprekers" multiple>
+          <option th:each="spreker : ${sprekers}" th:value="${spreker.id}" th:text="${spreker.naam}"></option>
         </select>
-        <p th:if="${#fields.hasErrors('sprekers')}" th:errors="*{sprekers}" class="mt-1 text-xs text-red-400">Sprekers Error</p>
+        <div id="badgeContainer" class="flex flex-wrap gap-2 mb-2"></div>
+        <select id="allSpeakers" class="w-full rounded-md bg-gray-900 border border-gray-600 px-4 py-2 text-gray-100">
+          <option value="">Selecteer een spreker</option>
+          <option th:each="spreker : ${sprekers}" th:value="${spreker.id}" th:text="${spreker.naam}"></option>
+        </select>
       </div>
+
+      <script>
+        const allSpeakers = document.getElementById('allSpeakers');
+        const badgeContainer = document.getElementById('badgeContainer');
+        const hiddenSelect = document.getElementById('speakerSelect');
+
+        allSpeakers.addEventListener('change', function() {
+          const selectedId = this.value;
+          const selectedText = this.options[this.selectedIndex].text;
+          if (!selectedId) return;
+
+          // Add to hidden select
+          Array.from(hiddenSelect.options).forEach(opt => {
+            if (opt.value === selectedId) opt.selected = true;
+          });
+
+          // Remove from dropdown
+          const optionToRemove = Array.from(this.options).find(opt => opt.value === selectedId);
+          if (optionToRemove) this.removeChild(optionToRemove);
+
+          // Create badge
+          const badge = document.createElement('div');
+          badge.className = 'inline-flex items-center space-x-1 bg-green-900 text-green-300 px-2 py-0.5 rounded-md text-sm mb-1 font-medium';
+          badge.innerHTML = `
+      <svg class="cursor-pointer h-4 w-4 text-green-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+      <div class="select-none">${selectedText}</div>
+    `;
+          badge.querySelector('svg').onclick = function() {
+            // Remove from hidden select
+            Array.from(hiddenSelect.options).forEach(opt => {
+              if (opt.value === selectedId) opt.selected = false;
+            });
+            // Add back to dropdown
+            const newOption = document.createElement('option');
+            newOption.value = selectedId;
+            newOption.text = selectedText;
+            allSpeakers.appendChild(newOption);
+            badge.remove();
+          };
+          badgeContainer.appendChild(badge);
+
+          this.value = '';
+        });
+      </script>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
