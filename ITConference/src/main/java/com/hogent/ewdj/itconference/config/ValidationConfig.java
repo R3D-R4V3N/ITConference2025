@@ -1,5 +1,6 @@
 package com.hogent.ewdj.itconference.config;
 
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -10,7 +11,6 @@ import validator.SpeakerListValidator;
 
 @Configuration
 public class ValidationConfig {
-
 
     @Bean
     public BeamerCheckValidator beamerCheckValidator() {
@@ -32,11 +32,10 @@ public class ValidationConfig {
         return new SpeakerListValidator();
     }
 
-
     @Bean
-    public jakarta.validation.Validator validator() {
+    public jakarta.validation.Validator validator(MessageSource messageSource) {
         LocalValidatorFactoryBean factory = new LocalValidatorFactoryBean();
-
+        factory.setValidationMessageSource(messageSource);
         return factory;
     }
 }
