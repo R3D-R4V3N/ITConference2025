@@ -8,30 +8,30 @@
 </head>
 <body class="bg-gray-900 text-gray-200 font-sans min-h-screen">
 <div th:replace="~{nav :: navbar}"></div>
-
+<div th:replace="~{fragments/toast-fragment :: toast-notification}"></div>
 <div class="flex justify-center items-center py-12 px-4">
     <div class="relative w-full max-w-2xl bg-gray-800 rounded-lg p-8 border border-gray-700">
 
-        <!-- Favorieten ster links bovenin -->
         <div sec:authorize="hasRole('USER')" class="absolute top-4 right-4">
             <form th:if="${isFavorite}" th:action="@{/favorites/remove}" method="post">
                 <input type="hidden" name="eventId" th:value="${event.id}" />
-                <button type="submit" class="text-yellow-400  text-2xl" title="Verwijder uit favorieten">
+                <button type="submit" class="text-yellow-400 text-2xl" title="Verwijder uit favorieten">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 ms-2 text-yellow-300">
                         <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
                     </svg>
-
                 </button>
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             </form>
 
-            <form th:if="${!isFavorite and canAddFavorite}" th:action="@{/favorites/add}" method="post">
+            <form th:unless="${isFavorite}" th:action="@{/favorites/add}" method="post">
                 <input type="hidden" name="eventId" th:value="${event.id}" />
-                <button type="submit" class="text-gray-400  text-2xl" title="Voeg toe aan favorieten">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 ms-2  text-gray-300 dark:text-gray-500">
+                <button type="submit" class="text-gray-400 text-2xl"
+                        th:classappend="${canAddFavorite ? 'hover:text-yellow-400' : ''}"
+                        th:attr="title=${maxFavoritesReached ? 'U heeft het maximale aantal favoriete evenementen bereikt.' : 'Voeg toe aan favorieten'}"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 ms-2 text-gray-300 dark:text-gray-500">
                         <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
                     </svg>
-
                 </button>
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             </form>
@@ -75,20 +75,6 @@
                 <span class="font-semibold text-gray-200" th:text="#{eventDetail.datumTijd}">Datum en Tijd:</span>
                 <span class="text-gray-400" th:text="${#temporals.format(event.datumTijd, #messages.msg('datetime.format.pattern'))}"></span>
             </p>
-        </div>
-
-        <div sec:authorize="hasRole('USER')" class="mt-8 space-y-4">
-            <div th:if="${!isFavorite and maxFavoritesReached}" class="bg-yellow-900/70 border text-center border-yellow-700 text-yellow-200 p-4 rounded-lg">
-                <p class="font-medium">U heeft het maximale aantal favoriete evenementen bereikt.</p>
-            </div>
-        </div>
-
-        <div th:if="${message}" class="mt-6 text-center bg-indigo-900/70 font-medium border border-indigo-700 text-indigo-200 p-4 rounded-lg" role="alert">
-            <span th:text="${message}"></span>
-        </div>
-
-        <div th:if="${errorMessage}" class="mt-6 text-center bg-red-900/70 font-medium border border-red-700 text-red-300 p-4 rounded-lg" role="alert">
-            <span th:text="${errorMessage}"></span>
         </div>
 
         <div class="mt-8 text-center">

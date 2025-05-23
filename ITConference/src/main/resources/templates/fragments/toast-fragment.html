@@ -1,0 +1,81 @@
+<div th:fragment="toast-notification">
+    <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-3">
+
+        <!-- Success Toast -->
+        <div th:if="${message}" id="success-toast"
+             class="flex items-start w-full max-w-sm p-4 bg-green-50 border-l-4 border-green-500 text-green-800 rounded-lg shadow-md transition-all duration-300 ease-in-out
+                dark:bg-green-900 dark:border-green-400 dark:text-green-300"
+             role="alert">
+            <svg class="w-6 h-6 mt-0.5 text-green-500 shrink-0 dark:text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M5 13l4 4L19 7"/>
+            </svg>
+            <div class="ms-3 text-sm font-medium" th:text="${message}"></div>
+            <button type="button"
+                    class="ms-auto text-green-500 hover:text-green-700 rounded-lg focus:ring-2 focus:ring-green-300 p-1 transition
+                     dark:text-green-300 dark:hover:text-green-100 dark:focus:ring-green-600"
+                    data-dismiss-target="#success-toast" aria-label="Close">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Error Toast -->
+        <div th:if="${errorMessage}" id="error-toast"
+             class="flex items-start w-full max-w-sm p-4 bg-red-50 border-l-4 border-red-500 text-red-800 rounded-lg shadow-md transition-all duration-300 ease-in-out
+                dark:bg-red-900 dark:border-red-400 dark:text-red-300"
+             role="alert">
+            <svg class="w-6 h-6 mt-0.5 text-red-500 shrink-0 dark:text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+            <div class="ms-3 text-sm font-medium" th:text="${errorMessage}"></div>
+            <button type="button"
+                    class="ms-auto text-red-500 hover:text-red-700 rounded-lg focus:ring-2 focus:ring-red-300 p-1 transition
+                     dark:text-red-300 dark:hover:text-red-100 dark:focus:ring-red-600"
+                    data-dismiss-target="#error-toast" aria-label="Close">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const successToast = document.getElementById('success-toast');
+        if (successToast) {
+            setTimeout(() => {
+                successToast.style.opacity = '0';
+                setTimeout(() => successToast.remove(), 500);
+            }, 5000);
+        }
+
+        const errorToast = document.getElementById('error-toast');
+        if (errorToast) {
+            setTimeout(() => {
+                errorToast.style.opacity = '0';
+                setTimeout(() => errorToast.remove(), 500);
+            }, 7000);
+        }
+
+        document.querySelectorAll('[data-dismiss-target]').forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.getAttribute('data-dismiss-target');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.style.opacity = '0';
+                    setTimeout(() => targetElement.remove(), 300);
+                }
+            });
+        });
+        /*]]>*/
+    </script>
+</div>

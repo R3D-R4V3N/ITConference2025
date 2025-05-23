@@ -36,7 +36,7 @@ public class SecurityConfig {
                         .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/js/**").permitAll()
                         .requestMatchers("/icons/**").permitAll()
-                        .requestMatchers("/error").permitAll()
+                        .requestMatchers("/error").permitAll() // Laat error pagina toe
                         .requestMatchers("/changeLocale").permitAll()
                         .requestMatchers("/events/add").hasRole("ADMIN")
                         .requestMatchers("/events/edit/**").hasRole("ADMIN")
@@ -54,11 +54,20 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
+                        // Gebruik flash attribute voor logout message
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            request.getSession().setAttribute("message", "You have been logged out successfully."); // Direct in session plaatsen voor redirect
+                            response.sendRedirect("/login");
+                        })
                         .permitAll()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .accessDeniedPage("/error?errorCode=403&errorMessage=Access+Denied")
+                        // Gebruik flash attributes voor error messages
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            request.getSession().setAttribute("errorMessage", "Access is denied"); // Direct in session plaatsen voor redirect
+                            request.getSession().setAttribute("errorCode", "403"); // Direct in session plaatsen voor redirect
+                            response.sendRedirect("/error");
+                        })
                 );
 
         return http.build();

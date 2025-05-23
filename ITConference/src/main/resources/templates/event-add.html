@@ -8,6 +8,8 @@
 <body class="bg-gray-900 text-gray-200 min-h-screen font-sans">
 <div th:replace="~{nav :: navbar}"></div>
 
+<div th:replace="~{fragments/toast-fragment :: toast-notification}"></div>
+
 <div class="max-w-3xl mx-auto px-4 py-12">
   <div class="bg-gray-800 rounded-lg border border-gray-700 p-8">
     <h1 class="text-2xl font-bold text-white mb-8 text-center" th:text="${isEdit ? 'Evenement Bewerken' : #messages.msg('eventAdd.header')}">Nieuw Event Toevoegen</h1>
