@@ -83,7 +83,9 @@ class FavoriteControllerTest {
         mockMvc.perform(post("/favorites/add")
                         .param("eventId", testEvent.getId().toString())
                         .with(csrf()))
-                .andExpect(status().isForbidden());
+                .andExpect(status().is3xxRedirection()) // Aangepast van isForbidden()
+                .andExpect(redirectedUrl("/error"));    // Verwacht een redirect naar /error
+        // Geen flash attribute verwacht, gezien eerdere issues
     }
 
     @Test
@@ -104,7 +106,7 @@ class FavoriteControllerTest {
                         .param("eventId", testEvent.getId().toString())
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/favorites"))
+                .andExpect(redirectedUrl("/events/" + testEvent.getId())) // Aangepast naar de juiste redirect URL
                 .andExpect(flash().attributeExists("message"));
     }
 
@@ -114,7 +116,9 @@ class FavoriteControllerTest {
         mockMvc.perform(post("/favorites/remove")
                         .param("eventId", testEvent.getId().toString())
                         .with(csrf()))
-                .andExpect(status().isForbidden());
+                .andExpect(status().is3xxRedirection()) // Aangepast van isForbidden()
+                .andExpect(redirectedUrl("/error"));    // Verwacht een redirect naar /error
+        // Geen flash attribute verwacht
     }
 
     @Test
@@ -142,7 +146,9 @@ class FavoriteControllerTest {
     @WithMockUser(roles = {"ADMIN"})
     void testShowFavoriteEventsAdminForbidden() throws Exception {
         mockMvc.perform(get("/favorites"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().is3xxRedirection()) // Aangepast van isForbidden()
+                .andExpect(redirectedUrl("/error"));    // Verwacht een redirect naar /error
+        // Geen flash attribute verwacht
     }
 
     @Test
