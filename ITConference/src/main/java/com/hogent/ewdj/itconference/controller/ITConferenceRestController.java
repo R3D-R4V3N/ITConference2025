@@ -19,6 +19,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 
 
 @RestController
@@ -26,7 +27,7 @@ import java.util.List;
 public class ITConferenceRestController {
 
     @Autowired
-    private MessageSource messageSource;
+    private MessageSource messageSource; // Injected for use in exceptions
 
     @Autowired
     private EventService eventService;
@@ -36,25 +37,30 @@ public class ITConferenceRestController {
 
     @GetMapping("/eventsByDate")
     public ResponseEntity<List<Event>> getEventsByDate(
-            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-
+            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            Locale locale) { // Voeg Locale toe om gelokaliseerde berichten te gebruiken
         List<Event> allEvents = eventService.findAllEvents();
         List<Event> eventsOnDate = allEvents.stream()
                 .filter(event -> event.getDatumTijd() != null && event.getDatumTijd().toLocalDate().equals(date))
                 .toList();
 
         if (eventsOnDate.isEmpty()) {
-
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            // Voor een REST endpoint is het returnen van NOT_FOUND prima, maar je kunt een body toevoegen.
+            // De ITConferenceRestErrorAdvice zou dit afhandelen als je een specifieke exception gooit.
+            // Laten we hier een expliciete message teruggeven.
+            String message = messageSource.getMessage("event.notfound", new Object[]{date.toString()}, locale);
+            return new ResponseEntity(message, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(eventsOnDate, HttpStatus.OK);
     }
 
     @GetMapping("/lokalen/{naam}/capaciteit")
-    public ResponseEntity<Integer> getLokaalCapaciteit(@PathVariable("naam") String naam) {
+    public ResponseEntity<Integer> getLokaalCapaciteit(@PathVariable("naam") String naam, Locale locale) {
         Lokaal lokaal = lokaalService.findLokaalByNaam(naam);
         if (lokaal == null) {
-            throw new LokaalNotFoundException("Lokaal met naam " + naam + " niet gevonden.");
+            // Gooi een exception die door ITConferenceRestErrorAdvice wordt opgevangen
+            String message = messageSource.getMessage("lokaal.notfound", new Object[]{naam}, locale);
+            throw new LokaalNotFoundException(message);
         }
         return new ResponseEntity<>(lokaal.getCapaciteit(), HttpStatus.OK);
     }

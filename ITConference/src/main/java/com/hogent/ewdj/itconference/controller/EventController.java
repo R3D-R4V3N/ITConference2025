@@ -5,6 +5,7 @@ import domain.Lokaal;
 import domain.Spreker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -85,7 +86,9 @@ public class EventController {
     public String showEventDetail(@PathVariable("id") Long id, Model model, Authentication authentication) {
         Event event = eventService.findEventById(id).orElse(null);
         if (event == null) {
-            throw new EventNotFoundException("Evenement met ID " + id + " niet gevonden.");
+            // Gebruik MessageSource voor de exception message
+            String errorMessage = messageSource.getMessage("event.notfound", new Object[]{id}, LocaleContextHolder.getLocale());
+            throw new EventNotFoundException(errorMessage);
         }
         model.addAttribute("event", event);
 
@@ -95,7 +98,7 @@ public class EventController {
             boolean isFavorite = favoriteService.isEventFavoriteForUser(username, event.getId());
             long numberOfFavorites = favoriteService.getNumberOfFavoriteEventsForUser(username);
 
-            int maxFavorites = 5;
+            int maxFavorites = 5; // Dit zou ook uit een configuratiebestand kunnen komen, maar voor nu is dit prima.
 
             model.addAttribute("isFavorite", isFavorite);
             model.addAttribute("canAddFavorite", !isFavorite && numberOfFavorites < maxFavorites);
@@ -108,7 +111,7 @@ public class EventController {
     @GetMapping("/edit/{id}")
     public String showEditEventForm(@PathVariable("id") Long id, Model model) {
         Event event = eventService.findEventById(id)
-                .orElseThrow(() -> new EventNotFoundException("Evenement met ID " + id + " niet gevonden om te bewerken."));
+                .orElseThrow(() -> new EventNotFoundException(messageSource.getMessage("event.notfound", new Object[]{id}, LocaleContextHolder.getLocale()) + " om te bewerken."));
 
         List<Lokaal> beschikbareLokalen = lokaalService.findAllLokalen();
         List<Spreker> beschikbareSprekers = sprekerService.findAllSprekers();
@@ -129,7 +132,7 @@ public class EventController {
                                        RedirectAttributes redirectAttributes,
                                        Locale locale) {
 
-        event.setId(id);
+        event.setId(id); // Zorg ervoor dat het ID behouden blijft bij bewerken
 
         if (result.hasErrors()) {
             List<Lokaal> beschikbareLokalen = lokaalService.findAllLokalen();

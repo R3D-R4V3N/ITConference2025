@@ -45,7 +45,8 @@ public class LokaalController {
                 new Object[]{lokaal.getCapaciteit()},
                 LocaleContextHolder.getLocale()
         );
-        redirectAttributes.addFlashAttribute("successMessage", successMessage);
+        redirectAttributes.addFlashAttribute("message", successMessage); // Gebruik "message" voor consistentie
+        // Verwijder de "successMessage" flash attribute, en gebruik "message" zoals in EventController.
 
         return "redirect:/lokalen";
     }
