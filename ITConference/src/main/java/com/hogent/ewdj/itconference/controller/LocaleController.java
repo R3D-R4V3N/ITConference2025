@@ -21,7 +21,7 @@ public class LocaleController {
         Locale locale = switch (lang) {
             case "nl" -> new Locale("nl");
             case "en" -> Locale.ENGLISH;
-            default -> Locale.ENGLISH; // Fallback naar Engels als de taal niet herkend wordt
+            default -> Locale.ENGLISH;
         };
 
         localeResolver.setLocale(request, response, locale);
@@ -30,7 +30,7 @@ public class LocaleController {
         if (referer != null && !referer.isEmpty()) {
             return "redirect:" + referer;
         } else {
-            return "redirect:/events"; // Terug naar events overzicht als referer leeg is
+            return "redirect:/events";
         }
     }
 }
