@@ -25,7 +25,7 @@ public class BeamerCheckValidator implements ConstraintValidator<ValidBeamerChec
         if (!isValid) {
             context.disableDefaultConstraintViolation();
             ConstraintValidatorContext.ConstraintViolationBuilder violationBuilder = context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate());
-            if (violationBuilder != null) { // Add null check here
+            if (violationBuilder != null) { // nullcheck om fouten te vermijden
                 violationBuilder.addPropertyNode("beamercheck")
                         .addConstraintViolation();
             }

@@ -14,9 +14,9 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 
-@Configuration
-@EnableWebSecurity
-@EnableMethodSecurity
+@Configuration // configuratieklasse
+@EnableWebSecurity // activeert webbeveiliging
+@EnableMethodSecurity // methodbeveiliging
 public class SecurityConfig {
 
     @Autowired

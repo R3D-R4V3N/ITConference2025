@@ -100,7 +100,7 @@ class EventControllerTest {
                 .andExpect(model().attribute("events", Collections.emptyList()));
     }
 
-    // Security tests for /events/add (GET)
+    // Beveiligingstests voor /events/add (GET)
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void testShowAddEventFormAdminAllowed() throws Exception {
@@ -126,7 +126,7 @@ class EventControllerTest {
                 .andExpect(redirectedUrlPattern("**/login"));
     }
 
-    // Security tests for /events/add (POST)
+    // Beveiligingstests voor /events/add (POST)
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void testProcessAddEventFormAdminAllowed() throws Exception {
@@ -166,7 +166,7 @@ class EventControllerTest {
                 .andExpect(redirectedUrlPattern("**/login"));
     }
 
-    // Security tests for /events/edit/{id} (GET)
+    // Beveiligingstests voor /events/edit/{id} (GET)
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void testShowEditEventFormAdminAllowed() throws Exception {
@@ -192,7 +192,7 @@ class EventControllerTest {
                 .andExpect(redirectedUrlPattern("**/login"));
     }
 
-    // Security tests for /events/edit/{id} (POST)
+    // Beveiligingstests voor /events/edit/{id} (POST)
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void testProcessEditEventFormAdminAllowed() throws Exception {
@@ -233,7 +233,7 @@ class EventControllerTest {
                 .andExpect(redirectedUrlPattern("**/login"));
     }
 
-    // Security tests for /events/remove/{id} (GET)
+    // Beveiligingstests voor /events/remove/{id} (GET)
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void testShowRemoveEventFormAdminAllowed() throws Exception {
@@ -258,7 +258,7 @@ class EventControllerTest {
                 .andExpect(redirectedUrlPattern("**/login"));
     }
 
-    // Security tests for /events/remove/{id} (POST)
+    // Beveiligingstests voor /events/remove/{id} (POST)
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void testProcessRemoveEventAdminAllowed() throws Exception {
@@ -286,7 +286,7 @@ class EventControllerTest {
                 .andExpect(redirectedUrlPattern("**/login"));
     }
 
-    // Existing tests (kept for completeness or modified)
+    // Bestaande tests
     @Test
     @WithMockUser(username = "user", roles = {"USER"})
     void testShowEventDetailUserRole() throws Exception {
@@ -376,7 +376,7 @@ class EventControllerTest {
     void testProcessEditEventFormInvalidData() throws Exception {
         when(lokaalService.findAllLokalen()).thenReturn(Collections.singletonList(testLokaal));
         when(sprekerService.findAllSprekers()).thenReturn(Arrays.asList(testSpreker1, testSpreker2));
-        when(eventService.findEventById(anyLong())).thenReturn(Optional.of(testEvent)); // Nodig voor edit formulier
+        when(eventService.findEventById(anyLong())).thenReturn(Optional.of(testEvent)); // Noodzakelijk voor editformulier
 
         mockMvc.perform(post("/events/edit/{id}", testEvent.getId())
                         .param("id", testEvent.getId().toString())
@@ -395,8 +395,7 @@ class EventControllerTest {
                 .andExpect(model().attributeHasFieldErrors("event", "naam"));
     }
 
-    // Tests for FavoriteController endpoints from EventControllerTest (should be in FavoriteControllerTest)
-    // Moving these to FavoriteControllerTest if not already there, but keeping them here for now based on provided content.
+    // Tests voor FavoriteController-endpoints (blijven voorlopig hier)
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void testAddFavoriteEventAdminForbidden() throws Exception {

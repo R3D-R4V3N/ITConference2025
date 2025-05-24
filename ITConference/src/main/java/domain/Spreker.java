@@ -12,24 +12,24 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "sprekers")
+@Entity // JPA-entiteit
+@Data // Lombok: getters en setters
+@NoArgsConstructor // Lombok: standaardconstructor
+@AllArgsConstructor // Lombok: constructor met alle velden
+@Table(name = "sprekers") // tabel 'sprekers'
 public class Spreker implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id // primaire sleutel
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // autonoom gegenereerde id
     private Long id;
 
     @Column(nullable = false, unique = true)
     @NotBlank(message = "{spreker.naam.notBlank}")
     private String naam;
 
-    @ManyToMany(mappedBy = "sprekers")
+    @ManyToMany(mappedBy = "sprekers") // relatie met events
     @ToString.Exclude
     @JsonBackReference
     private Set<Event> events = new HashSet<>();

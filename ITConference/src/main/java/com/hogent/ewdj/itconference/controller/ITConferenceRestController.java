@@ -21,7 +21,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 
-@RestController
+@RestController // REST-endpoints
 @RequestMapping("/api")
 public class ITConferenceRestController {
 

@@ -1,6 +1,6 @@
 # 💻 IT-Conferentie 2025: Geavanceerd Evenementbeheer met Spring Boot
 
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.5-brightgreen)](https://spring.io/projects/spring-boot)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.5-brightgreen)](https://spring.io/projects/spring-boot)
 [![Java](https://img.shields.io/badge/Java-21-red)](https://www.oracle.com/java/technologies/downloads/#jdk21-windows)
 [![JPA](https://img.shields.io/badge/JPA-3.1-blue)](https://jakarta.ee/specifications/persistence/3.1/)
 [![Spring Security](https://img.shields.io/badge/Spring%20Security-6.2.0-orange)](https://spring.io/projects/spring-security)
@@ -70,7 +70,7 @@ De applicatie biedt de volgende kernfunctionaliteiten, verdeeld over verschillen
 
 ## 🛠️ Technologie Stack
 
-* **Spring Boot 3.2.5**: Het framework voor de snelle ontwikkeling van stand-alone, productieklare Spring-applicaties.
+* **Spring Boot 3.4.5**: Het framework voor de snelle ontwikkeling van stand-alone, productieklare Spring-applicaties.
 * **Spring MVC**: Voor het bouwen van de webapplicatie (controllers, views).
 * **Spring Security 6.2.0**: Robuust framework voor authenticatie en autorisatie.
 * **Spring Data JPA**: Voor eenvoudige en efficiënte data-access met de database.

@@ -10,18 +10,18 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Table(name = "users")
+@Entity // JPA-entiteit
+@Data // Lombok: getters en setters
+@Builder // Lombok: builderpatroon
+@AllArgsConstructor // Lombok: constructor met alle velden
+@NoArgsConstructor // Lombok: standaardconstructor
+@Table(name = "users") // tabel 'users'
 public class MyUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id // primaire sleutel
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // autonoom gegenereerde id
     private Long id;
 
     @Column(nullable = false, unique = true)
@@ -34,7 +34,7 @@ public class MyUser implements Serializable {
     @Column(length = 20)
     private Role role;
 
-    @ManyToMany
+    @ManyToMany // relatie met favoriete events
     @JoinTable(
             name = "user_favorite_events",
             joinColumns = @JoinColumn(name = "userId"),

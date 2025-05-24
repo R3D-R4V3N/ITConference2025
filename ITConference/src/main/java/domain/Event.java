@@ -19,19 +19,19 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@ValidEventConstraints
-@ValidBeamerCheck
-@Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "events")
+@ValidEventConstraints // valideert unieke naam en tijd
+@ValidBeamerCheck // controleert beamercheck
+@Entity // JPA-entiteit
+@Data // Lombok: genereert getters en setters
+@NoArgsConstructor // Lombok: standaardconstructor
+@AllArgsConstructor // Lombok: constructor met alle velden
+@Table(name = "events") // koppeling naar tabel 'events'
 public class Event implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id // primaire sleutel
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // autonoom gegenereerde id
     private Long id;
 
     @Column(nullable = false)
@@ -42,7 +42,7 @@ public class Event implements Serializable {
     @Lob
     private String beschrijving;
 
-    @ManyToMany
+    @ManyToMany // relatie met sprekers
     @JoinTable(
             name = "event_spreker",
             joinColumns = @JoinColumn(name = "eventId"),
@@ -55,7 +55,7 @@ public class Event implements Serializable {
     @JsonManagedReference
     private List<Spreker> sprekers;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) // koppeling naar een lokaal
     @JoinColumn(name = "lokaalId", nullable = false)
     @NotNull(message = "{event.lokaal.notNull}")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -64,7 +64,7 @@ public class Event implements Serializable {
     @Column(nullable = false)
     @NotNull(message = "{event.datumTijd.notNull}")
     @FutureOrPresent(message = "{event.datumTijd.futureOrPresent}")
-    @ValidConferenceDate(startDate = "2025-05-18", endDate = "2025-12-31")
+    @ValidConferenceDate(startDate = "2025-05-18", endDate = "2025-12-31") // datum binnen conferentieperiode
     private LocalDateTime datumTijd;
 
     @Column(nullable = false)
@@ -72,7 +72,7 @@ public class Event implements Serializable {
     @Max(value = 9999, message = "{event.beamercode.size}")
     private int beamercode;
 
-    @Transient
+    @Transient // niet persistent
     private int beamercheck;
 
     @Column(nullable = false)

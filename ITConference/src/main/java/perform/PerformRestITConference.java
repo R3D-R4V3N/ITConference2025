@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@Component
+@Component // kleine testclient
 public class PerformRestITConference implements CommandLineRunner {
 
     private final String SERVER_URI = "http://localhost:8080/api";

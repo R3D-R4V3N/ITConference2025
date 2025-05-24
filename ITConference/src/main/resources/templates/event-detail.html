@@ -25,7 +25,7 @@
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 </form>
 
-                <form th:unless="${isFavorite}" th:action="@{/favorites/add}" method="post">
+                <form th:if="${canAddFavorite}" th:action="@{/favorites/add}" method="post">
                     <input type="hidden" name="eventId" th:value="${event.id}" />
                     <button type="submit" class="text-gray-400 p-1 rounded-md focus:outline-none "
                             th:attr="title=${maxFavoritesReached ? 'U heeft het maximale aantal favoriete evenementen bereikt.' : 'Voeg toe aan favorieten'}">

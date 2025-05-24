@@ -118,7 +118,7 @@ class ITConferenceRestControllerTest {
         });
     }
 
-    // Existing functional tests
+    // Bestaande functionele tests
     @Test
     void testGetEventsByDateSuccess() throws Exception {
         LocalDate date = LocalDate.of(2025, 10, 26);
@@ -170,7 +170,7 @@ class ITConferenceRestControllerTest {
                 .andExpect(jsonPath("$.message").value("Lokaal met naam " + nonExistentLokaal + " niet gevonden."));
     }
 
-    // New security tests for /api/eventsByDate
+    // Nieuwe securitytests voor /api/eventsByDate
     @Test
     void testGetEventsByDateUnauthenticatedAllowed() throws Exception {
         LocalDate date = LocalDate.of(2025, 10, 26);
@@ -206,7 +206,7 @@ class ITConferenceRestControllerTest {
                 .andExpect(status().isOk());
     }
 
-    // New security tests for /api/lokalen/{naam}/capaciteit
+    // Nieuwe securitytests voor /api/lokalen/{naam}/capaciteit
     @Test
     void testGetLokaalCapaciteitUnauthenticatedAllowed() throws Exception {
         String lokaalNaam = "A101";

@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-@Controller
+@Controller // verwerkt webverzoeken rond events
 @RequestMapping("/events")
 public class EventController {
 

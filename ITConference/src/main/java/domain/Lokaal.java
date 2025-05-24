@@ -13,22 +13,22 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-@Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "lokalen")
+@Entity // JPA-entiteit
+@Data // Lombok: genereert getters en setters
+@NoArgsConstructor // Lombok: standaardconstructor
+@AllArgsConstructor // Lombok: constructor met alle velden
+@Table(name = "lokalen") // koppeling naar tabel 'lokalen'
 public class Lokaal implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id // primaire sleutel
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // autonoom gegenereerde id
     private Long id;
 
     @Column(nullable = false, unique = true)
     @NotBlank(message = "{lokaal.naam.notBlank}")
-    @Pattern(regexp = "^[A-Za-z]\\d{3}$", message = "{lokaal.naam.pattern}")
+    @Pattern(regexp = "^[A-Za-z]\\d{3}$", message = "{lokaal.naam.pattern}") // letter gevolgd door drie cijfers
     private String naam;
 
     @Column(nullable = false)

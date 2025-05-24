@@ -49,7 +49,7 @@ public class EventTest {
 
         @Override
         public void releaseInstance(ConstraintValidator<?, ?> instance) {
-            // No-op
+            // Geen actie nodig
         }
     }
 
@@ -208,7 +208,7 @@ public class EventTest {
         Spreker spreker = new Spreker("Jan Janssen");
         Event invalidEvent = createEvent("Test", lokaal, List.of(spreker),
                 LocalDateTime.of(2025, 6, 1, 10, 0), 1234, new BigDecimal("10.00"));
-        invalidEvent.setBeamercheck(1); // wrong value
+        invalidEvent.setBeamercheck(1); // foutieve waarde
 
         Set<ConstraintViolation<Event>> violations = validator.validate(invalidEvent);
 
