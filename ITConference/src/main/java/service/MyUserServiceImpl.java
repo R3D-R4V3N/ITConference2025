@@ -18,7 +18,6 @@ public class MyUserServiceImpl implements MyUserService {
     }
 
     @Override
-    @Transactional
     public MyUser saveUser(MyUser user) {
         return myUserRepository.save(user);
     }
