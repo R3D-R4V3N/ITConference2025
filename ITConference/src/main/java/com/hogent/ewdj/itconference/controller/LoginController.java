@@ -38,13 +38,13 @@ public class LoginController {
                     null,
                     LocaleContextHolder.getLocale()
             );
-            model.addAttribute("msg", logoutMessage);
-        } else {
-            Object sessionMsg = request.getSession().getAttribute("message");
-            if (sessionMsg != null) {
-                model.addAttribute("msg", sessionMsg.toString());
-                request.getSession().removeAttribute("message");
-            }
+            model.addAttribute("message", logoutMessage);
+        }
+
+        String sessionMessage = (String) request.getSession().getAttribute("message");
+        if (sessionMessage != null) {
+            model.addAttribute("message", sessionMessage);
+            request.getSession().removeAttribute("message");
         }
 
         return "login";
