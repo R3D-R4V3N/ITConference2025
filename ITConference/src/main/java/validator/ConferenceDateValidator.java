@@ -23,10 +23,15 @@ public class ConferenceDateValidator implements ConstraintValidator<ValidConfere
             this.conferenceStartDate = LocalDate.parse(constraintAnnotation.startDate());
             this.conferenceEndDate = LocalDate.parse(constraintAnnotation.endDate());
         } catch (DateTimeParseException e) {
-            String msg = messageSource.getMessage(
-                    "validator.conferenceDate.invalid_format",
-                    null,
-                    LocaleContextHolder.getLocale());
+            String msg;
+            if (messageSource != null) {
+                msg = messageSource.getMessage(
+                        "validator.conferenceDate.invalid_format",
+                        null,
+                        LocaleContextHolder.getLocale());
+            } else {
+                msg = "Invalid date format in ValidConferenceDate annotation";
+            }
             throw new RuntimeException(msg, e);
         }
     }
@@ -43,10 +48,16 @@ public class ConferenceDateValidator implements ConstraintValidator<ValidConfere
 
         if (!isValid) {
             context.disableDefaultConstraintViolation();
-            String msg = messageSource.getMessage(
-                    "event.datumTijd.outOfConferencePeriod",
-                    new Object[]{conferenceStartDate, conferenceEndDate},
-                    LocaleContextHolder.getLocale());
+            String msg;
+            if (messageSource != null) {
+                msg = messageSource.getMessage(
+                        "event.datumTijd.outOfConferencePeriod",
+                        new Object[]{conferenceStartDate, conferenceEndDate},
+                        LocaleContextHolder.getLocale());
+            } else {
+                msg = String.format("De datum moet tussen %s en %s liggen.",
+                        conferenceStartDate, conferenceEndDate);
+            }
             context.buildConstraintViolationWithTemplate(msg)
                     .addConstraintViolation();
         }
