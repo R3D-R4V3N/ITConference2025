@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
 import validator.ValidBeamerCheck;
 import validator.ValidConferenceDate;
@@ -65,8 +64,6 @@ public class Event implements Serializable {
     @Column(nullable = false)
     @NotNull(message = "{event.datumTijd.notNull}")
     @FutureOrPresent(message = "{event.datumTijd.futureOrPresent}")
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-
     @ValidConferenceDate(startDate = "2025-05-18", endDate = "2025-12-31")
     private LocalDateTime datumTijd;
 
