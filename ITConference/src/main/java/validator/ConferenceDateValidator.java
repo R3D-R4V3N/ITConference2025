@@ -2,6 +2,7 @@ package validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import lombok.Setter;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 
@@ -13,11 +14,8 @@ public class ConferenceDateValidator implements ConstraintValidator<ValidConfere
 
     private LocalDate conferenceStartDate;
     private LocalDate conferenceEndDate;
+    @Setter
     private MessageSource messageSource;
-
-    public void setMessageSource(MessageSource messageSource) {
-        this.messageSource = messageSource;
-    }
 
     @Override
     public void initialize(ValidConferenceDate constraintAnnotation) {
