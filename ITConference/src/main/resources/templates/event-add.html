@@ -16,12 +16,12 @@
     <form th:action="@{${isEdit ? '/events/edit/' + event.id : '/events/add'}}" th:object="${event}" method="post" class="space-y-8">
       <div>
         <label for="naam" class="block text-gray-200 text-sm font-semibold mb-2" th:text="#{event.naam}">Naam:</label>
-        <input type="text" id="naam" th:field="*{naam}" class="w-full rounded-md bg-gray-900 border border-gray-600 px-4 py-2 text-gray-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+        <input type="text" id="naam" th:field="*{naam}" class="w-full rounded-md bg-gray-900 border border-gray-600 px-4 py-2 text-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none" />
         <p th:if="${#fields.hasErrors('naam')}" th:errors="*{naam}" class="mt-1 text-xs text-red-400">Naam Error</p>
       </div>
       <div class="mt-6">
         <label for="beschrijving" class="block text-gray-200 text-sm font-semibold mb-2" th:text="#{event.description}">Beschrijving:</label>
-        <textarea id="beschrijving" th:field="*{beschrijving}" rows="3" class="w-full rounded-md bg-gray-900 border border-gray-600 px-4 py-2 text-gray-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+        <textarea id="beschrijving" th:field="*{beschrijving}" rows="3" class="w-full rounded-md bg-gray-900 border border-gray-600 px-4 py-2 text-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
       </div>
 
       <div>
@@ -118,7 +118,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <label for="lokaal" class="block text-gray-200 text-sm font-semibold mb-2" th:text="#{event.lokaal}">Lokaal:</label>
-          <select id="lokaal" th:field="*{lokaal}" class="w-full rounded-md bg-gray-900 border border-gray-600 px-4 py-2 text-gray-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          <select id="lokaal" th:field="*{lokaal}" class="w-full rounded-md bg-gray-900 border border-gray-600 px-4 py-2 text-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none">
             <option value="">Selecteer een lokaal</option>
             <option th:each="lokaal : ${lokalen}" th:value="${lokaal.id}" th:text="${lokaal.naam} + ' (' + ${lokaal.capaciteit} + ' plaatsen)'" th:selected="${event.lokaal != null && event.lokaal.id == lokaal.id}">Lokaal Naam (Capaciteit)</option>
           </select>
@@ -126,7 +126,7 @@
         </div>
         <div>
           <label for="datumTijd" class="block text-gray-200 text-sm font-semibold mb-2" th:text="#{event.datumTijd}">Datum en Tijd:</label>
-          <input type="datetime-local" id="datumTijd" th:field="*{datumTijd}" class="w-full rounded-md bg-gray-900 border border-gray-600 px-4 py-2 text-gray-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+          <input type="datetime-local" id="datumTijd" th:field="*{datumTijd}" class="w-full rounded-md bg-gray-900 border border-gray-600 px-4 py-2 text-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none" />
           <p th:if="${#fields.hasErrors('datumTijd')}" th:errors="*{datumTijd}" class="mt-1 text-xs text-red-400">Datum en Tijd Error</p>
         </div>
       </div>
@@ -134,17 +134,17 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
           <label for="beamercode" class="block text-gray-200 text-sm font-semibold mb-2" th:text="#{event.beamercode}">Beamercode:</label>
-          <input type="number" id="beamercode" th:field="*{beamercode}" class="w-full rounded-md bg-gray-900 border border-gray-600 px-4 py-2 text-gray-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+          <input type="number" id="beamercode" th:field="*{beamercode}" class="w-full rounded-md bg-gray-900 border border-gray-600 px-4 py-2 text-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none" />
           <p th:if="${#fields.hasErrors('beamercode')}" th:errors="*{beamercode}" class="mt-1 text-xs text-red-400">Beamercode Error</p>
         </div>
         <div>
           <label for="beamercheck" class="block text-gray-200 text-sm font-semibold mb-2" th:text="#{event.beamercheck}">Beamercheck:</label>
-          <input type="number" id="beamercheck" th:field="*{beamercheck}" class="w-full rounded-md bg-gray-900 border border-gray-600 px-4 py-2 text-gray-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+          <input type="number" id="beamercheck" th:field="*{beamercheck}" class="w-full rounded-md bg-gray-900 border border-gray-600 px-4 py-2 text-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none" />
           <p th:if="${#fields.hasErrors('beamercheck')}" th:errors="*{beamercheck}" class="mt-1 text-xs text-red-400">Beamercheck Error</p>
         </div>
         <div>
           <label for="prijs" class="block text-gray-200 text-sm font-semibold mb-2" th:text="#{event.price}">Prijs:</label>
-          <input type="number" id="prijs" th:field="*{prijs}" step="0.01" class="w-full rounded-md bg-gray-900 border border-gray-600 px-4 py-2 text-gray-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+          <input type="number" id="prijs" th:field="*{prijs}" step="0.01" class="w-full rounded-md bg-gray-900 border border-gray-600 px-4 py-2 text-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none" />
           <p th:if="${#fields.hasErrors('prijs')}" th:errors="*{prijs}" class="mt-1 text-xs text-red-400">Prijs Error</p>
         </div>
       </div>
@@ -158,7 +158,7 @@
       <div class="flex flex-col md:flex-row gap-4 mt-6 w-full">
         <button
                 type="submit"
-                class="w-full md:w-1/2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md transition focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                class="w-full md:w-1/2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition focus:outline-none focus:ring-2 focus:ring-blue-400"
                 th:text="${isEdit ? 'Evenement Bijwerken' : #messages.msg('eventAdd.submitButton')}">
           Event Toevoegen
         </button>

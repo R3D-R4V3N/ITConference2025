@@ -32,7 +32,7 @@
         <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-400" th:text="#{favoritesOverview.noFavorites}">U heeft nog geen favoriete evenementen.</td>
       </tr>
       <tr th:each="event : ${favoriteEvents}" class="hover:bg-gray-900/50 transition">
-        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-indigo-400">
+        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-blue-400">
           <a th:href="@{'/events/' + ${event.id}}" th:text="${event.naam}" class="hover:underline">Event Naam</a>
         </td>
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
@@ -58,7 +58,7 @@
   </div>
 
   <div class="mt-10 text-center">
-    <a th:href="@{/events}" class="inline-block text-indigo-400 hover:text-indigo-200 font-semibold">
+    <a th:href="@{/events}" class="inline-block text-blue-400 hover:text-blue-200 font-semibold">
       <span th:text="#{general.backToEvents}">Terug naar evenementen</span>
     </a>
   </div>
