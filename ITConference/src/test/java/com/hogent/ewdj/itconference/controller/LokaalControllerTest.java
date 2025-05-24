@@ -26,6 +26,7 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -69,6 +70,7 @@ class LokaalControllerTest {
         });
         when(lokaalService.findLokaalById(anyLong())).thenReturn(Optional.of(testLokaal));
         when(lokaalService.findLokaalByNaam(anyString())).thenReturn(testLokaal);
+        doNothing().when(lokaalService).deleteLokaalById(anyLong()); // Mock delete
 
         when(sprekerService.saveSpreker(any(Spreker.class))).thenAnswer(invocation -> {
             Spreker s = invocation.getArgument(0);
@@ -108,6 +110,7 @@ class LokaalControllerTest {
         when(eventService.findEventsByNaamAndDatum(anyString(), any())).thenReturn(Collections.emptyList());
     }
 
+    // Existing tests (kept for completeness or modified)
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void testShowAddLokaalFormAdmin() throws Exception {
@@ -200,6 +203,118 @@ class LokaalControllerTest {
     @Test
     void testShowLokaalOverviewUnauthenticatedRedirectToLogin() throws Exception {
         mockMvc.perform(get("/lokalen"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"));
+    }
+
+    // New security tests for /lokalen/edit/{id} (GET)
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    void testShowEditLokaalFormAdminAllowed() throws Exception {
+        mockMvc.perform(get("/lokalen/edit/{id}", testLokaal.getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("lokaal-add"))
+                .andExpect(model().attributeExists("lokaal"))
+                .andExpect(model().attribute("isEdit", true));
+    }
+
+    @Test
+    @WithMockUser(roles = {"USER"})
+    void testShowEditLokaalFormUserForbidden() throws Exception {
+        mockMvc.perform(get("/lokalen/edit/{id}", testLokaal.getId()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/error"));
+    }
+
+    @Test
+    void testShowEditLokaalFormUnauthenticatedRedirectToLogin() throws Exception {
+        mockMvc.perform(get("/lokalen/edit/{id}", testLokaal.getId()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"));
+    }
+
+    // New security tests for /lokalen/edit/{id} (POST)
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    void testProcessEditLokaalFormAdminAllowed() throws Exception {
+        // Gebruik geldige waarden voor naam en capaciteit om validatiefouten te voorkomen
+        mockMvc.perform(post("/lokalen/edit/{id}", testLokaal.getId())
+                        .param("id", testLokaal.getId().toString())
+                        .param("naam", "A101") // Geldige naam: Letter gevolgd door 3 cijfers
+                        .param("capaciteit", "40") // Geldige capaciteit: <= 50
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/lokalen"))
+                .andExpect(flash().attributeExists("message"));
+    }
+
+    @Test
+    @WithMockUser(roles = {"USER"})
+    void testProcessEditLokaalFormUserForbidden() throws Exception {
+        mockMvc.perform(post("/lokalen/edit/{id}", testLokaal.getId())
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/error"));
+    }
+
+    @Test
+    void testProcessEditLokaalFormUnauthenticatedRedirectToLogin() throws Exception {
+        mockMvc.perform(post("/lokalen/edit/{id}", testLokaal.getId())
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"));
+    }
+
+    // New security tests for /lokalen/remove/{id} (GET)
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    void testShowRemoveLokaalFormAdminAllowed() throws Exception {
+        // Deze test zal nog falen zolang lokaal-remove.html niet bestaat
+        mockMvc.perform(get("/lokalen/remove/{id}", testLokaal.getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("lokaal-remove"))
+                .andExpect(model().attributeExists("lokaal"));
+    }
+
+    @Test
+    @WithMockUser(roles = {"USER"})
+    void testShowRemoveLokaalFormUserForbidden() throws Exception {
+        mockMvc.perform(get("/lokalen/remove/{id}", testLokaal.getId()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/error"));
+    }
+
+    @Test
+    void testShowRemoveLokaalFormUnauthenticatedRedirectToLogin() throws Exception {
+        mockMvc.perform(get("/lokalen/remove/{id}", testLokaal.getId()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"));
+    }
+
+    // New security tests for /lokalen/remove/{id} (POST)
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    void testProcessRemoveLokaalAdminAllowed() throws Exception {
+        mockMvc.perform(post("/lokalen/remove/{id}", testLokaal.getId())
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/lokalen"))
+                .andExpect(flash().attributeExists("message"));
+    }
+
+    @Test
+    @WithMockUser(roles = {"USER"})
+    void testProcessRemoveLokaalUserForbidden() throws Exception {
+        mockMvc.perform(post("/lokalen/remove/{id}", testLokaal.getId())
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/error"));
+    }
+
+    @Test
+    void testProcessRemoveLokaalUnauthenticatedRedirectToLogin() throws Exception {
+        mockMvc.perform(post("/lokalen/remove/{id}", testLokaal.getId())
+                        .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("**/login"));
     }

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import service.EventService;
@@ -117,6 +118,7 @@ class ITConferenceRestControllerTest {
         });
     }
 
+    // Existing functional tests
     @Test
     void testGetEventsByDateSuccess() throws Exception {
         LocalDate date = LocalDate.of(2025, 10, 26);
@@ -166,5 +168,71 @@ class ITConferenceRestControllerTest {
         mockMvc.perform(get("/api/lokalen/{naam}/capaciteit", nonExistentLokaal))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Lokaal met naam " + nonExistentLokaal + " niet gevonden."));
+    }
+
+    // New security tests for /api/eventsByDate
+    @Test
+    void testGetEventsByDateUnauthenticatedAllowed() throws Exception {
+        LocalDate date = LocalDate.of(2025, 10, 26);
+        List<Event> eventsOnDate = Collections.singletonList(testEvent);
+        when(eventService.findAllEvents()).thenReturn(eventsOnDate);
+
+        mockMvc.perform(get("/api/eventsByDate")
+                        .param("date", date.toString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"USER"})
+    void testGetEventsByDateUserAllowed() throws Exception {
+        LocalDate date = LocalDate.of(2025, 10, 26);
+        List<Event> eventsOnDate = Collections.singletonList(testEvent);
+        when(eventService.findAllEvents()).thenReturn(eventsOnDate);
+
+        mockMvc.perform(get("/api/eventsByDate")
+                        .param("date", date.toString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    void testGetEventsByDateAdminAllowed() throws Exception {
+        LocalDate date = LocalDate.of(2025, 10, 26);
+        List<Event> eventsOnDate = Collections.singletonList(testEvent);
+        when(eventService.findAllEvents()).thenReturn(eventsOnDate);
+
+        mockMvc.perform(get("/api/eventsByDate")
+                        .param("date", date.toString()))
+                .andExpect(status().isOk());
+    }
+
+    // New security tests for /api/lokalen/{naam}/capaciteit
+    @Test
+    void testGetLokaalCapaciteitUnauthenticatedAllowed() throws Exception {
+        String lokaalNaam = "A101";
+        when(lokaalService.findLokaalByNaam(lokaalNaam)).thenReturn(testLokaal);
+
+        mockMvc.perform(get("/api/lokalen/{naam}/capaciteit", lokaalNaam))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"USER"})
+    void testGetLokaalCapaciteitUserAllowed() throws Exception {
+        String lokaalNaam = "A101";
+        when(lokaalService.findLokaalByNaam(lokaalNaam)).thenReturn(testLokaal);
+
+        mockMvc.perform(get("/api/lokalen/{naam}/capaciteit", lokaalNaam))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    void testGetLokaalCapaciteitAdminAllowed() throws Exception {
+        String lokaalNaam = "A101";
+        when(lokaalService.findLokaalByNaam(lokaalNaam)).thenReturn(testLokaal);
+
+        mockMvc.perform(get("/api/lokalen/{naam}/capaciteit", lokaalNaam))
+                .andExpect(status().isOk());
     }
 }

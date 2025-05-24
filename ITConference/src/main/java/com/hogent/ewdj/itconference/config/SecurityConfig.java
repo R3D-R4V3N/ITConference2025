@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity; // NIEUW: Importeer deze annotatie
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,6 +14,7 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity // NIEUW: Voeg deze annotatie toe
 public class SecurityConfig {
 
     @Autowired
@@ -41,6 +43,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/**").permitAll() // TOEGELATEN: Alle /api/** endpoints
                         .requestMatchers("/events/add").hasRole("ADMIN")
                         .requestMatchers("/events/edit/**").hasRole("ADMIN")
+                        // VOEG DEZE REGEL TOE ALS JE WILT DAT WEBAUTHORISATIE DIT AFDWINGT I.P.V. ENKEL @PreAuthorize
+                        // .requestMatchers("/events/remove/**").hasRole("ADMIN")
                         .requestMatchers("/lokalen/add").hasRole("ADMIN")
                         .requestMatchers("/lokalen").hasRole("ADMIN")
                         .requestMatchers("/favorites").hasRole("USER")
