@@ -92,14 +92,6 @@ public class Event implements Serializable {
         this.prijs = prijs;
     }
 
-    public int getBeamercheck() {
-        return beamercheck;
-    }
-
-    public void setBeamercheck(int beamercheck) {
-        this.beamercheck = beamercheck;
-    }
-
     public int calculateCorrectBeamerCheck() {
         return this.beamercode % 97;
     }
