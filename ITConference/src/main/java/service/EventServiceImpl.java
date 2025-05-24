@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import jakarta.validation.Valid;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,6 +32,9 @@ public class EventServiceImpl implements EventService {
 
     @Autowired
     private FavoriteService favoriteService;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Override
     public List<Event> findAllEvents() {
@@ -55,7 +60,11 @@ public class EventServiceImpl implements EventService {
                     if (managedSpreker.isPresent()) {
                         event.getSprekers().set(i, managedSpreker.get());
                     } else {
-                        throw new IllegalArgumentException("Ongeldige spreker met ID: " + spreker.getId());
+                        String msg = messageSource.getMessage(
+                                "speaker.invalid_id",
+                                new Object[]{spreker.getId()},
+                                LocaleContextHolder.getLocale());
+                        throw new IllegalArgumentException(msg);
                     }
                 }
             }

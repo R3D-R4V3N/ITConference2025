@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 @Configuration
 @EnableWebSecurity
@@ -22,6 +24,9 @@ public class SecurityConfig {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -58,14 +63,22 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessHandler((request, response, authentication) -> {
-                            request.getSession().setAttribute("message", "You have been logged out successfully.");
+                            String msg = messageSource.getMessage(
+                                    "login.logout.success",
+                                    null,
+                                    LocaleContextHolder.getLocale());
+                            request.getSession().setAttribute("message", msg);
                             response.sendRedirect("/login");
                         })
                         .permitAll()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
-                            request.getSession().setAttribute("errorMessage", "Access is denied");
+                            String msg = messageSource.getMessage(
+                                    "access.denied",
+                                    null,
+                                    LocaleContextHolder.getLocale());
+                            request.getSession().setAttribute("errorMessage", msg);
                             request.getSession().setAttribute("errorCode", "403");
                             response.sendRedirect("/error");
                         })

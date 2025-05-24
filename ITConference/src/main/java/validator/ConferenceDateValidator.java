@@ -2,6 +2,8 @@ package validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,6 +13,11 @@ public class ConferenceDateValidator implements ConstraintValidator<ValidConfere
 
     private LocalDate conferenceStartDate;
     private LocalDate conferenceEndDate;
+    private MessageSource messageSource;
+
+    public void setMessageSource(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     @Override
     public void initialize(ValidConferenceDate constraintAnnotation) {
@@ -18,8 +25,11 @@ public class ConferenceDateValidator implements ConstraintValidator<ValidConfere
             this.conferenceStartDate = LocalDate.parse(constraintAnnotation.startDate());
             this.conferenceEndDate = LocalDate.parse(constraintAnnotation.endDate());
         } catch (DateTimeParseException e) {
-            System.err.println("Fout bij het parsen van conferentie datums in ValidConferenceDate annotatie: " + e.getMessage());
-            throw new RuntimeException("Ongeldige datum formaat in ValidConferenceDate annotatie", e);
+            String msg = messageSource.getMessage(
+                    "validator.conferenceDate.invalid_format",
+                    null,
+                    LocaleContextHolder.getLocale());
+            throw new RuntimeException(msg, e);
         }
     }
 
@@ -35,7 +45,11 @@ public class ConferenceDateValidator implements ConstraintValidator<ValidConfere
 
         if (!isValid) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("De datum moet tussen " + conferenceStartDate + " en " + conferenceEndDate + " liggen.")
+            String msg = messageSource.getMessage(
+                    "event.datumTijd.outOfConferencePeriod",
+                    new Object[]{conferenceStartDate, conferenceEndDate},
+                    LocaleContextHolder.getLocale());
+            context.buildConstraintViolationWithTemplate(msg)
                     .addConstraintViolation();
         }
 

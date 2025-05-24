@@ -18,8 +18,10 @@ public class ValidationConfig {
     }
 
     @Bean
-    public ConferenceDateValidator conferenceDateValidator() {
-        return new ConferenceDateValidator();
+    public ConferenceDateValidator conferenceDateValidator(MessageSource messageSource) {
+        ConferenceDateValidator validator = new ConferenceDateValidator();
+        validator.setMessageSource(messageSource);
+        return validator;
     }
 
     @Bean
