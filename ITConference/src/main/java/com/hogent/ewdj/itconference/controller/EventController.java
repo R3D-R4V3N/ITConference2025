@@ -5,6 +5,7 @@ import domain.Lokaal;
 import domain.Spreker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -89,7 +90,11 @@ public class EventController {
     public String showEventDetail(@PathVariable("id") Long id, Model model, Authentication authentication) {
         Event event = eventService.findEventById(id).orElse(null);
         if (event == null) {
-            throw new EventNotFoundException("Evenement met ID " + id + " niet gevonden.");
+            String msg = messageSource.getMessage(
+                    "event.notfound",
+                    new Object[]{id},
+                    LocaleContextHolder.getLocale());
+            throw new EventNotFoundException(msg);
         }
         model.addAttribute("event", event);
 
@@ -113,7 +118,13 @@ public class EventController {
     @PreAuthorize("hasRole('ADMIN')")
     public String showEditEventForm(@PathVariable("id") Long id, Model model) {
         Event event = eventService.findEventById(id)
-                .orElseThrow(() -> new EventNotFoundException("Evenement met ID " + id + " niet gevonden om te bewerken."));
+                .orElseThrow(() -> {
+                    String msg = messageSource.getMessage(
+                            "event.notfound",
+                            new Object[]{id},
+                            LocaleContextHolder.getLocale());
+                    return new EventNotFoundException(msg);
+                });
 
         List<Lokaal> beschikbareLokalen = lokaalService.findAllLokalen();
         List<Spreker> beschikbareSprekers = sprekerService.findAllSprekers();
@@ -158,7 +169,11 @@ public class EventController {
     public String showRemoveEventForm(@PathVariable("id") Long id, Model model) {
         Optional<Event> eventOptional = eventService.findEventById(id);
         if (eventOptional.isEmpty()) {
-            throw new EventNotFoundException("Evenement met ID " + id + " niet gevonden om te verwijderen.");
+            String msg = messageSource.getMessage(
+                    "event.notfound",
+                    new Object[]{id},
+                    LocaleContextHolder.getLocale());
+            throw new EventNotFoundException(msg);
         }
         model.addAttribute("event", eventOptional.get());
         return "event-remove";

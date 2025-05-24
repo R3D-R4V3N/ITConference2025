@@ -3,6 +3,7 @@ package com.hogent.ewdj.itconference.advice;
 import exceptions.EventNotFoundException;
 import exceptions.LokaalNotFoundException;
 import exceptions.UserNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,9 +14,14 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 @RestControllerAdvice
 public class ITConferenceRestErrorAdvice {
+
+    @Autowired
+    private MessageSource messageSource;
 
 
     @ExceptionHandler(EventNotFoundException.class)
@@ -57,8 +63,11 @@ public class ITConferenceRestErrorAdvice {
         String parameterName = ex.getName();
         String requiredType = Optional.ofNullable(ex.getRequiredType()).map(Class::getSimpleName).orElse("onbekend type");
         String suppliedValue = Optional.ofNullable(ex.getValue()).map(Object::toString).orElse("geen waarde");
-        response.put("message", String.format("Ongeldig type voor parameter '%s'. Vereist: %s, Gegeven: '%s'",
-                parameterName, requiredType, suppliedValue));
+        String msg = messageSource.getMessage(
+                "error.invalid_argument_type",
+                new Object[]{parameterName, requiredType, suppliedValue},
+                LocaleContextHolder.getLocale());
+        response.put("message", msg);
         return response;
     }
 }

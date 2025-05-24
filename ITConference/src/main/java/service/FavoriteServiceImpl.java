@@ -10,6 +10,8 @@ import service.FavoriteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +29,9 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Autowired
     private EventRepository eventRepository;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @Override
     public List<Event> findFavoriteEventsByUsername(String username) {
         return favoriteRepository.findFavoriteEventsByUsernameOrderByDatumTijdAscNaamAsc(username);
@@ -37,19 +42,31 @@ public class FavoriteServiceImpl implements FavoriteService {
     public void addFavoriteEvent(String username, Long eventId) {
         MyUser user = myUserService.findByUsername(username);
         if (user == null) {
-            throw new UserNotFoundException("Gebruiker met gebruikersnaam " + username + " niet gevonden.");
+            String msg = messageSource.getMessage(
+                    "user.notfound",
+                    new Object[]{username},
+                    LocaleContextHolder.getLocale());
+            throw new UserNotFoundException(msg);
         }
 
         Optional<Event> eventOptional = eventRepository.findById(eventId);
         if (eventOptional.isEmpty()) {
-            throw new EventNotFoundException("Evenement met ID " + eventId + " niet gevonden.");
+            String msg = messageSource.getMessage(
+                    "event.notfound",
+                    new Object[]{eventId},
+                    LocaleContextHolder.getLocale());
+            throw new EventNotFoundException(msg);
         }
         Event event = eventOptional.get();
 
         Set<Event> favoriteEvents = user.getFavoriteEvents();
 
         if (favoriteEvents.size() >= MAX_FAVORITES_PER_USER) {
-            throw new IllegalStateException("U heeft het maximale aantal van " + MAX_FAVORITES_PER_USER + " favoriete evenementen bereikt.");
+            String msg = messageSource.getMessage(
+                    "favorite.max_reached",
+                    new Object[]{MAX_FAVORITES_PER_USER},
+                    LocaleContextHolder.getLocale());
+            throw new IllegalStateException(msg);
         }
 
         if (!favoriteEvents.contains(event)) {
@@ -63,12 +80,20 @@ public class FavoriteServiceImpl implements FavoriteService {
     public void removeFavoriteEvent(String username, Long eventId) {
         MyUser user = myUserService.findByUsername(username);
         if (user == null) {
-            throw new UserNotFoundException("Gebruiker met gebruikersnaam " + username + " niet gevonden.");
+            String msg = messageSource.getMessage(
+                    "user.notfound",
+                    new Object[]{username},
+                    LocaleContextHolder.getLocale());
+            throw new UserNotFoundException(msg);
         }
 
         Optional<Event> eventOptional = eventRepository.findById(eventId);
         if (eventOptional.isEmpty()) {
-            throw new EventNotFoundException("Evenement met ID " + eventId + " niet gevonden.");
+            String msg = messageSource.getMessage(
+                    "event.notfound",
+                    new Object[]{eventId},
+                    LocaleContextHolder.getLocale());
+            throw new EventNotFoundException(msg);
         }
         Event event = eventOptional.get();
 

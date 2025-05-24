@@ -66,7 +66,13 @@ public class LokaalController {
     @PreAuthorize("hasRole('ADMIN')")
     public String showEditLokaalForm(@PathVariable("id") Long id, Model model) {
         Lokaal lokaal = lokaalService.findLokaalById(id)
-                .orElseThrow(() -> new LokaalNotFoundException("Lokaal met ID " + id + " niet gevonden om te bewerken."));
+                .orElseThrow(() -> {
+                    String msg = messageSource.getMessage(
+                            "lokaal.notfound.id",
+                            new Object[]{id},
+                            LocaleContextHolder.getLocale());
+                    return new LokaalNotFoundException(msg);
+                });
 
         model.addAttribute("lokaal", lokaal);
         model.addAttribute("isEdit", true);
@@ -100,7 +106,11 @@ public class LokaalController {
     public String showRemoveLokaalForm(@PathVariable("id") Long id, Model model) {
         Optional<Lokaal> lokaalOptional = lokaalService.findLokaalById(id);
         if (lokaalOptional.isEmpty()) {
-            throw new LokaalNotFoundException("Lokaal met ID " + id + " niet gevonden om te verwijderen.");
+            String msg = messageSource.getMessage(
+                    "lokaal.notfound.id",
+                    new Object[]{id},
+                    LocaleContextHolder.getLocale());
+            throw new LokaalNotFoundException(msg);
         }
         model.addAttribute("lokaal", lokaalOptional.get());
         return "lokaal-remove";

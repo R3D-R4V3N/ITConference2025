@@ -54,7 +54,11 @@ public class ITConferenceRestController {
     public ResponseEntity<Integer> getLokaalCapaciteit(@PathVariable("naam") String naam) {
         Lokaal lokaal = lokaalService.findLokaalByNaam(naam);
         if (lokaal == null) {
-            throw new LokaalNotFoundException("Lokaal met naam " + naam + " niet gevonden.");
+            String msg = messageSource.getMessage(
+                    "lokaal.notfound",
+                    new Object[]{naam},
+                    LocaleContextHolder.getLocale());
+            throw new LokaalNotFoundException(msg);
         }
         return new ResponseEntity<>(lokaal.getCapaciteit(), HttpStatus.OK);
     }

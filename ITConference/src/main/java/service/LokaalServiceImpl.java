@@ -4,6 +4,8 @@ import domain.Lokaal;
 import repository.LokaalRepository;
 import repository.EventRepository;
 import exceptions.LokaalNotFoundException;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,9 @@ public class LokaalServiceImpl implements LokaalService {
 
     @Autowired
     private EventRepository eventRepository;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Override
     public List<Lokaal> findAllLokalen() {
@@ -51,10 +56,20 @@ public class LokaalServiceImpl implements LokaalService {
     @Transactional
     public void deleteLokaalById(Long id) {
         Lokaal lokaal = lokaalRepository.findById(id)
-                .orElseThrow(() -> new LokaalNotFoundException("Lokaal met ID " + id + " niet gevonden."));
+                .orElseThrow(() -> {
+                    String msg = messageSource.getMessage(
+                            "lokaal.notfound.id",
+                            new Object[]{id},
+                            LocaleContextHolder.getLocale());
+                    return new LokaalNotFoundException(msg);
+                });
 
         if (eventRepository.countByLokaal(lokaal) > 0) {
-            throw new IllegalStateException("Kan lokaal niet verwijderen. Er zijn nog evenementen gekoppeld aan dit lokaal.");
+            String msg = messageSource.getMessage(
+                    "lokaal.delete.error.has_linked_events",
+                    null,
+                    LocaleContextHolder.getLocale());
+            throw new IllegalStateException(msg);
         }
 
         lokaalRepository.deleteById(id);
