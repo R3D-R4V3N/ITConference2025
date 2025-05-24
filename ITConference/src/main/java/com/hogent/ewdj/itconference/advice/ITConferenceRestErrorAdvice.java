@@ -3,6 +3,7 @@ package com.hogent.ewdj.itconference.advice;
 import exceptions.EventNotFoundException;
 import exceptions.LokaalNotFoundException;
 import exceptions.UserNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
