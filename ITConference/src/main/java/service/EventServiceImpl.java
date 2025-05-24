@@ -1,8 +1,8 @@
 package service;
 
 import domain.Event;
-import domain.Lokaal;
-import domain.Spreker;
+import domain.Room;
+import domain.Speaker;
 import repository.EventRepository;
 
 
@@ -25,10 +25,10 @@ public class EventServiceImpl implements EventService {
     private EventRepository eventRepository;
 
     @Autowired
-    private LokaalService lokaalService;
+    private RoomService roomService;
 
     @Autowired
-    private SprekerService sprekerService;
+    private SpeakerService speakerService;
 
     @Autowired
     private FavoriteService favoriteService;
@@ -44,25 +44,25 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional
     public Event saveEvent(@Valid Event event) {
-        if (event.getSprekers() != null) {
-            for (int i = 0; i < event.getSprekers().size(); i++) {
-                Spreker spreker = event.getSprekers().get(i);
-                if (spreker.getId() == null) {
-                    Spreker bestaandeSpreker = sprekerService.findSprekerByNaam(spreker.getNaam());
-                    if (bestaandeSpreker != null) {
-                        event.getSprekers().set(i, bestaandeSpreker);
+        if (event.getSpeakers() != null) {
+            for (int i = 0; i < event.getSpeakers().size(); i++) {
+                Speaker speaker = event.getSpeakers().get(i);
+                if (speaker.getId() == null) {
+                    Speaker existingSpeaker = speakerService.findSpeakerByName(speaker.getName());
+                    if (existingSpeaker != null) {
+                        event.getSpeakers().set(i, existingSpeaker);
                     } else {
-                        spreker = sprekerService.saveSpreker(spreker);
-                        event.getSprekers().set(i, spreker);
+                        speaker = speakerService.saveSpeaker(speaker);
+                        event.getSpeakers().set(i, speaker);
                     }
                 } else {
-                    Optional<Spreker> managedSpreker = sprekerService.findSprekerById(spreker.getId());
-                    if (managedSpreker.isPresent()) {
-                        event.getSprekers().set(i, managedSpreker.get());
+                    Optional<Speaker> managedSpeaker = speakerService.findSpeakerById(speaker.getId());
+                    if (managedSpeaker.isPresent()) {
+                        event.getSpeakers().set(i, managedSpeaker.get());
                     } else {
                         String msg = messageSource.getMessage(
                                 "speaker.invalid_id",
-                                new Object[]{spreker.getId()},
+                                new Object[]{speaker.getId()},
                                 LocaleContextHolder.getLocale());
                         throw new IllegalArgumentException(msg);
                     }
@@ -70,8 +70,8 @@ public class EventServiceImpl implements EventService {
             }
         }
 
-        if (event.getLokaal() != null && event.getLokaal().getId() != null) {
-            lokaalService.findLokaalById(event.getLokaal().getId()).ifPresent(event::setLokaal);
+        if (event.getRoom() != null && event.getRoom().getId() != null) {
+            roomService.findRoomById(event.getRoom().getId()).ifPresent(event::setRoom);
         }
 
         return eventRepository.save(event);
@@ -83,8 +83,8 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> findEventsByDatumTijdAndLokaal(LocalDateTime datumTijd, Lokaal lokaal) {
-        return eventRepository.findByDatumTijdAndLokaal(datumTijd, lokaal);
+    public List<Event> findEventsByDatumTijdAndRoom(LocalDateTime datumTijd, Room room) {
+        return eventRepository.findByDatumTijdAndRoom(datumTijd, room);
     }
 
     @Override
@@ -98,13 +98,13 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Lokaal> findAllLokalen() {
-        return lokaalService.findAllLokalen();
+    public List<Room> findAllRooms() {
+        return roomService.findAllRooms();
     }
 
     @Override
-    public List<Spreker> findAllSprekers() {
-        return sprekerService.findAllSprekers();
+    public List<Speaker> findAllSpeakers() {
+        return speakerService.findAllSpeakers();
     }
 
     @Override

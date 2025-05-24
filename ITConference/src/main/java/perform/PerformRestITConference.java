@@ -30,11 +30,11 @@ public class PerformRestITConference implements CommandLineRunner {
         LocalDate nonExistentDate = LocalDate.now().plusYears(1);
         getEventsByDate(nonExistentDate);
 
-        System.out.println("\n🏢 ---- GET LOKAAL CAPACITEIT (bestaand lokaal) ----");
-        getLokaalCapaciteit("A101");
+        System.out.println("\n🏢 ---- GET ROOM CAPACITY (existing room) ----");
+        getRoomCapacity("A101");
 
-        System.out.println("\n🏢 ---- GET LOKAAL CAPACITEIT (niet-bestaand lokaal) ----");
-        getLokaalCapaciteit("ONBESTAAND_LOKAAL");
+        System.out.println("\n🏢 ---- GET ROOM CAPACITY (non-existent room) ----");
+        getRoomCapacity("ONBESTAAND_LOKAAL");
 
         System.out.println("\n✅ ---- TESTEN VAN REST API VOLTOOID ----");
     }
@@ -70,19 +70,19 @@ public class PerformRestITConference implements CommandLineRunner {
                 .block();
     }
 
-    private void getLokaalCapaciteit(String lokaalNaam) {
-        System.out.println("Aanroepen: " + SERVER_URI + "/lokalen/" + lokaalNaam + "/capaciteit");
+    private void getRoomCapacity(String roomName) {
+        System.out.println("Aanroepen: " + SERVER_URI + "/lokalen/" + roomName + "/capaciteit");
         webClient.get()
-                .uri(SERVER_URI + "/lokalen/" + lokaalNaam + "/capaciteit")
+                .uri(SERVER_URI + "/lokalen/" + roomName + "/capaciteit")
                 .retrieve()
                 .bodyToMono(Integer.class)
-                .doOnSuccess(capaciteit -> System.out.println("✅ Capaciteit van lokaal " + lokaalNaam + ": " + capaciteit))
+                .doOnSuccess(capacity -> System.out.println("✅ Capaciteit van lokaal " + roomName + ": " + capacity))
                 .onErrorResume(WebClientResponseException.NotFound.class, ex -> {
-                    System.err.println("🚫 Fout: Lokaal " + lokaalNaam + " niet gevonden (HTTP 404).");
+                    System.err.println("🚫 Fout: Lokaal " + roomName + " niet gevonden (HTTP 404).");
                     return Mono.empty();
                 })
                 .onErrorResume(WebClientResponseException.class, ex -> {
-                    System.err.println("⚠️ Fout bij het ophalen van capaciteit voor lokaal " + lokaalNaam + ": " + ex.getStatusCode() + " " + ex.getResponseBodyAsString());
+                    System.err.println("⚠️ Fout bij het ophalen van capaciteit voor lokaal " + roomName + ": " + ex.getStatusCode() + " " + ex.getResponseBodyAsString());
                     return Mono.empty();
                 })
                 .onErrorResume(Exception.class, ex -> {

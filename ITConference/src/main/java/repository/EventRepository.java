@@ -1,7 +1,7 @@
 package repository;
 
 import domain.Event;
-import domain.Lokaal;
+import domain.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
 
-    List<Event> findByDatumTijdAndLokaal(LocalDateTime datumTijd, Lokaal lokaal);
+    List<Event> findByDatumTijdAndRoom(LocalDateTime datumTijd, Room room);
 
     @Query("SELECT e FROM Event e WHERE e.naam = :naam AND DATE(e.datumTijd) = :datum")
     List<Event> findByNaamAndDatum(@Param("naam") String naam, @Param("datum") LocalDate datum);
@@ -24,5 +24,5 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     List<Event> findAllByOrderByDatumTijdAsc();
 
-    long countByLokaal(Lokaal lokaal);
+    long countByRoom(Room room);
 }

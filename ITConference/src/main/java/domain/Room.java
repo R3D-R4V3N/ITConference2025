@@ -18,7 +18,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "lokalen")
-public class Lokaal implements Serializable {
+public class Room implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -29,17 +29,17 @@ public class Lokaal implements Serializable {
     @Column(nullable = false, unique = true)
     @NotBlank(message = "{lokaal.naam.notBlank}")
     @Pattern(regexp = "^[A-Za-z]\\d{3}$", message = "{lokaal.naam.pattern}")
-    private String naam;
+    private String name;
 
     @Column(nullable = false)
     @NotNull(message = "{lokaal.capaciteit.notNull}")
     @Min(value = 1, message = "{lokaal.capaciteit.min}")
     @Max(value = 50, message = "{lokaal.capaciteit.max}")
-    private int capaciteit;
+    private int capacity;
 
 
-    public Lokaal(String naam, int capaciteit) {
-        this.naam = naam;
-        this.capaciteit = capaciteit;
+    public Room(String name, int capacity) {
+        this.name = name;
+        this.capacity = capacity;
     }
 }

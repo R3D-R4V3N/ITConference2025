@@ -1,6 +1,6 @@
 package com.hogent.ewdj.itconference.domain;
 
-import domain.Lokaal;
+import domain.Room;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -15,7 +15,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class LokaalTest {
+public class RoomTest {
 
     private Validator validator;
 
@@ -25,8 +25,8 @@ public class LokaalTest {
         validator = factory.getValidator();
     }
 
-    private Lokaal createLokaal(String naam, int capaciteit) {
-        return new Lokaal(naam, capaciteit);
+    private Room createRoom(String name, int capacity) {
+        return new Room(name, capacity);
     }
 
     @ParameterizedTest
@@ -35,20 +35,20 @@ public class LokaalTest {
             "B001, 1",
             "C999, 49"
     })
-    void testValidLokaal(String naam, int capaciteit) {
-        Lokaal validLokaal = createLokaal(naam, capaciteit);
+    void testValidRoom(String name, int capacity) {
+        Room validRoom = createRoom(name, capacity);
 
-        Set<ConstraintViolation<Lokaal>> violations = validator.validate(validLokaal);
+        Set<ConstraintViolation<Room>> violations = validator.validate(validRoom);
 
         assertThat(violations).isEmpty();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"", "   "})
-    void testInvalidLokaalNaamNotBlank(String naam) {
-        Lokaal invalidLokaal = createLokaal(naam, 30);
+    void testInvalidRoomNameNotBlank(String name) {
+        Room invalidRoom = createRoom(name, 30);
 
-        Set<ConstraintViolation<Lokaal>> violations = validator.validate(invalidLokaal);
+        Set<ConstraintViolation<Room>> violations = validator.validate(invalidRoom);
 
         assertThat(violations).isNotEmpty();
         assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("naam") &&
@@ -57,10 +57,10 @@ public class LokaalTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"1234", "a12", "AB123", "A101A", "1A10"})
-    void testInvalidLokaalNaamPattern(String naam) {
-        Lokaal invalidLokaal = createLokaal(naam, 30);
+    void testInvalidRoomNamePattern(String name) {
+        Room invalidRoom = createRoom(name, 30);
 
-        Set<ConstraintViolation<Lokaal>> violations = validator.validate(invalidLokaal);
+        Set<ConstraintViolation<Room>> violations = validator.validate(invalidRoom);
 
         assertThat(violations).isNotEmpty();
         assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("naam") &&
@@ -68,15 +68,15 @@ public class LokaalTest {
     }
 
     @Test
-    void testInvalidLokaalCapaciteitNotNull() {
+    void testInvalidRoomCapacityNotNull() {
     }
 
     @ParameterizedTest
     @ValueSource(ints = {0, -1, -10})
-    void testInvalidLokaalCapaciteitMin(int capaciteit) {
-        Lokaal invalidLokaal = createLokaal("A101", capaciteit);
+    void testInvalidRoomCapacityMin(int capacity) {
+        Room invalidRoom = createRoom("A101", capacity);
 
-        Set<ConstraintViolation<Lokaal>> violations = validator.validate(invalidLokaal);
+        Set<ConstraintViolation<Room>> violations = validator.validate(invalidRoom);
 
         assertThat(violations).isNotEmpty();
         assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("capaciteit") &&
@@ -85,10 +85,10 @@ public class LokaalTest {
 
     @ParameterizedTest
     @ValueSource(ints = {51, 100, 1000})
-    void testInvalidLokaalCapaciteitMax(int capaciteit) {
-        Lokaal invalidLokaal = createLokaal("A101", capaciteit);
+    void testInvalidRoomCapacityMax(int capacity) {
+        Room invalidRoom = createRoom("A101", capacity);
 
-        Set<ConstraintViolation<Lokaal>> violations = validator.validate(invalidLokaal);
+        Set<ConstraintViolation<Room>> violations = validator.validate(invalidRoom);
 
         assertThat(violations).isNotEmpty();
         assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("capaciteit") &&

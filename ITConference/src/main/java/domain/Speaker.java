@@ -17,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "sprekers")
-public class Spreker implements Serializable {
+public class Speaker implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -27,14 +27,14 @@ public class Spreker implements Serializable {
 
     @Column(nullable = false, unique = true)
     @NotBlank(message = "{spreker.naam.notBlank}")
-    private String naam;
+    private String name;
 
-    @ManyToMany(mappedBy = "sprekers")
+    @ManyToMany(mappedBy = "speakers")
     @ToString.Exclude
     @JsonBackReference
     private Set<Event> events = new HashSet<>();
 
-    public Spreker(String naam) {
-        this.naam = naam;
+    public Speaker(String name) {
+        this.name = name;
     }
 }

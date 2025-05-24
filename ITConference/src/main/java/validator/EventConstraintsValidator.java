@@ -1,7 +1,7 @@
 package validator;
 
 import domain.Event;
-import domain.Lokaal;
+import domain.Room;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import repository.EventRepository;
@@ -34,20 +34,20 @@ public class EventConstraintsValidator implements ConstraintValidator<ValidEvent
 
         boolean isValid = true;
 
-        LocalDateTime datumTijd = event.getDatumTijd();
-        Lokaal lokaal = event.getLokaal();
+        LocalDateTime datumTijd = event.getDateTime();
+        Room room = event.getRoom();
 
         if (eventRepository == null) {
             return false;
         }
 
 
-        List<Event> bestaandeEventsTijdLokaal = eventRepository.findByDatumTijdAndLokaal(datumTijd, lokaal);
+        List<Event> existingEventsTimeRoom = eventRepository.findByDatumTijdAndRoom(datumTijd, room);
 
-        if (bestaandeEventsTijdLokaal != null && !bestaandeEventsTijdLokaal.isEmpty()) {
+        if (existingEventsTimeRoom != null && !existingEventsTimeRoom.isEmpty()) {
             boolean isDuplicate = false;
-            for (Event bestaandEvent : bestaandeEventsTijdLokaal) {
-                if (event.getId() == null || !event.getId().equals(bestaandEvent.getId())) {
+            for (Event existingEvent : existingEventsTimeRoom) {
+                if (event.getId() == null || !event.getId().equals(existingEvent.getId())) {
                     isDuplicate = true;
                     break;
                 }

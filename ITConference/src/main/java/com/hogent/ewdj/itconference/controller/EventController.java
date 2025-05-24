@@ -1,8 +1,8 @@
 package com.hogent.ewdj.itconference.controller;
 
 import domain.Event;
-import domain.Lokaal;
-import domain.Spreker;
+import domain.Room;
+import domain.Speaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -15,8 +15,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import service.EventService;
-import service.LokaalService;
-import service.SprekerService;
+import service.RoomService;
+import service.SpeakerService;
 import service.FavoriteService;
 import exceptions.EventNotFoundException;
 
@@ -32,10 +32,10 @@ public class EventController {
     private EventService eventService;
 
     @Autowired
-    private LokaalService lokaalService;
+    private RoomService roomService;
 
     @Autowired
-    private SprekerService sprekerService;
+    private SpeakerService speakerService;
 
     @Autowired
     private FavoriteService favoriteService;
@@ -54,12 +54,12 @@ public class EventController {
     @PreAuthorize("hasRole('ADMIN')")
     public String showAddEventForm(Model model) {
         Event event = new Event();
-        List<Lokaal> beschikbareLokalen = lokaalService.findAllLokalen();
-        List<Spreker> beschikbareSprekers = sprekerService.findAllSprekers();
+        List<Room> availableRooms = roomService.findAllRooms();
+        List<Speaker> availableSpeakers = speakerService.findAllSpeakers();
 
         model.addAttribute("event", event);
-        model.addAttribute("lokalen", beschikbareLokalen);
-        model.addAttribute("sprekers", beschikbareSprekers);
+        model.addAttribute("lokalen", availableRooms);
+        model.addAttribute("sprekers", availableSpeakers);
         model.addAttribute("isEdit", false);
 
         return "event-add";
@@ -70,11 +70,11 @@ public class EventController {
     public String processAddEventForm(@Validated @ModelAttribute("event") Event event, BindingResult result, Model model, RedirectAttributes redirectAttributes, Locale locale) {
 
         if (result.hasErrors()) {
-            List<Lokaal> beschikbareLokalen = lokaalService.findAllLokalen();
-            List<Spreker> beschikbareSprekers = sprekerService.findAllSprekers();
+            List<Room> availableRooms = roomService.findAllRooms();
+            List<Speaker> availableSpeakers = speakerService.findAllSpeakers();
 
-            model.addAttribute("lokalen", beschikbareLokalen);
-            model.addAttribute("sprekers", beschikbareSprekers);
+            model.addAttribute("lokalen", availableRooms);
+            model.addAttribute("sprekers", availableSpeakers);
             model.addAttribute("isEdit", false);
 
             return "event-add";
@@ -126,12 +126,12 @@ public class EventController {
                     return new EventNotFoundException(msg);
                 });
 
-        List<Lokaal> beschikbareLokalen = lokaalService.findAllLokalen();
-        List<Spreker> beschikbareSprekers = sprekerService.findAllSprekers();
+        List<Room> availableRooms = roomService.findAllRooms();
+        List<Speaker> availableSpeakers = speakerService.findAllSpeakers();
 
         model.addAttribute("event", event);
-        model.addAttribute("lokalen", beschikbareLokalen);
-        model.addAttribute("sprekers", beschikbareSprekers);
+        model.addAttribute("lokalen", availableRooms);
+        model.addAttribute("sprekers", availableSpeakers);
         model.addAttribute("isEdit", true);
 
         return "event-add";
@@ -149,11 +149,11 @@ public class EventController {
         event.setId(id);
 
         if (result.hasErrors()) {
-            List<Lokaal> beschikbareLokalen = lokaalService.findAllLokalen();
-            List<Spreker> beschikbareSprekers = sprekerService.findAllSprekers();
+            List<Room> availableRooms = roomService.findAllRooms();
+            List<Speaker> availableSpeakers = speakerService.findAllSpeakers();
 
-            model.addAttribute("lokalen", beschikbareLokalen);
-            model.addAttribute("sprekers", beschikbareSprekers);
+            model.addAttribute("lokalen", availableRooms);
+            model.addAttribute("sprekers", availableSpeakers);
             model.addAttribute("isEdit", true);
             return "event-add";
         }

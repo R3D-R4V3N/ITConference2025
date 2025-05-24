@@ -1,8 +1,8 @@
 package service;
 
 import domain.Event;
-import domain.Lokaal;
-import domain.Spreker;
+import domain.Room;
+import domain.Speaker;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,15 +17,15 @@ public interface EventService {
 
     Optional<Event> findEventById(Long id);
 
-    List<Event> findEventsByDatumTijdAndLokaal(LocalDateTime datumTijd, Lokaal lokaal);
+    List<Event> findEventsByDatumTijdAndRoom(LocalDateTime datumTijd, Room room);
 
     List<Event> findEventsByNaamAndDatum(String naam, LocalDate datum);
 
     List<Event> findEventsByDate(LocalDate date);
 
-    List<Lokaal> findAllLokalen();
+    List<Room> findAllRooms();
 
-    List<Spreker> findAllSprekers();
+    List<Speaker> findAllSpeakers();
 
     void deleteEventById(Long id);
 }
