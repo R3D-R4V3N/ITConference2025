@@ -15,7 +15,7 @@
                         </svg>
                     </div>
                     <div class="flex flex-col gap-0.5 text-sm flex-1">
-                        <h3 class="font-semibold">Succesvol</h3>
+                        <h3 th:text="#{toast.success.title}" class="font-semibold">Succesvol</h3>
                         <p th:text="${displayMessage}"></p>
                     </div>
                     <button type="button"
@@ -43,7 +43,7 @@
                         </svg>
                     </div>
                     <div class="flex flex-col gap-0.5 text-sm flex-1">
-                        <h3 class="font-semibold">Fout</h3>
+                        <h3 th:text="#{toast.error.title}" class="font-semibold">Fout</h3>
                         <p th:text="${displayErrorMessage}"></p>
                     </div>
                     <button type="button"
