@@ -16,7 +16,6 @@ public class BeamerCheckValidator implements ConstraintValidator<ValidBeamerChec
             return true;
         }
 
-
         int beamercode = event.getBeamercode();
         int beamercheck = event.getBeamercheck();
         int calculatedBeamerCheck = event.calculateCorrectBeamerCheck();
@@ -25,9 +24,11 @@ public class BeamerCheckValidator implements ConstraintValidator<ValidBeamerChec
 
         if (!isValid) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
-                    .addPropertyNode("beamercheck")
-                    .addConstraintViolation();
+            ConstraintValidatorContext.ConstraintViolationBuilder violationBuilder = context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate());
+            if (violationBuilder != null) { // Add null check here
+                violationBuilder.addPropertyNode("beamercheck")
+                        .addConstraintViolation();
+            }
         }
 
         return isValid;
