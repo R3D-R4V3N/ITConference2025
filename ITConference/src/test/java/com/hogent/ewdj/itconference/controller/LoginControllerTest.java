@@ -110,7 +110,7 @@ class LoginControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("login"))
                 .andExpect(model().attributeDoesNotExist("error"))
-                .andExpect(model().attributeDoesNotExist("msg"));
+                .andExpect(model().attributeDoesNotExist("message"));
     }
 
     @Test
@@ -129,8 +129,8 @@ class LoginControllerTest {
         mockMvc.perform(get("/login").param("logout", "true"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("login"))
-                .andExpect(model().attributeExists("msg"))
-                .andExpect(model().attribute("msg", "Je bent succesvol afgemeld."));
+                .andExpect(model().attributeExists("message"))
+                .andExpect(model().attribute("message", "Je bent succesvol afgemeld."));
     }
 
     @Test
