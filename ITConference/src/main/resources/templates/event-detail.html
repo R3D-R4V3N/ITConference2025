@@ -12,7 +12,6 @@
 <div class="max-w-3xl mx-auto px-4 py-12">
     <div class="relative bg-gray-800 rounded-lg border border-gray-700 p-8 space-y-6">
 
-        <!-- Alleen favorieten sterren behouden -->
         <div class="absolute top-4 right-4 flex space-x-2">
             <div sec:authorize="hasRole('USER')">
                 <form th:if="${isFavorite}" th:action="@{/favorites/remove}" method="post">
@@ -59,20 +58,19 @@
                 <span class="font-semibold text-gray-200" th:text="#{eventDetail.lokaal}">Lokaal:</span>
                 <p class="text-gray-400 mt-1">
                     <span th:text="${event.lokaal.naam}"></span>
-                    <span class="text-gray-500" th:text="#{eventDetail.capaciteit}"> (Capaciteit: </span>
-                    <span class="text-gray-400" th:text="${event.lokaal.capaciteit}">100</span><span class="text-gray-500">)</span>
+                    <span class="text-gray-400" th:text="#{eventDetail.capaciteit}"> Capaciteit: </span>
+                    <span class="text-gray-400" th:text="${event.lokaal.capaciteit}">100</span><span class="text-gray-500"></span>
                 </p>
             </div>
 
             <div>
                 <span class="font-semibold text-gray-200" th:text="#{eventDetail.datumTijd}">Datum en Tijd:</span>
-                <p class="text-gray-400 mt-1" th:text="${#temporals.format(event.datumTijd, #messages.msg('datetime.format.pattern'))}"></p>
+                <p class="text-gray-400 mt-1" th:text="${{event.datumTijd}}"></p>
             </div>
         </div>
 
         <div class="flex gap-4 mt-4">
 
-            <!-- Bewerken knop: alleen voor ADMIN -->
             <div sec:authorize="hasRole('ADMIN')" class="w-1/2">
                 <a th:href="@{'/events/edit/' + ${event.id}}"
                    class="block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 transition text-center">
@@ -80,7 +78,6 @@
                 </a>
             </div>
 
-            <!-- Terug knop: breedte is 1/2 als admin, anders full -->
             <div th:classappend="${#authorization.expression('hasRole(''ADMIN'')')} ? 'w-1/2' : 'w-full'">
                 <a th:href="@{/events}"
                    class="block text-center bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-white font-semibold py-2 px-4 rounded focus:outline-none transition">

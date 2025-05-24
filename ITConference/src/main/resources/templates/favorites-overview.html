@@ -41,7 +41,7 @@
             </span>
         </td>
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300" th:text="${event.lokaal.naam}">Lokaal Naam</td>
-        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300" th:text="${#temporals.format(event.datumTijd, #messages.msg('datetime.format.pattern'))}">Datum en Tijd</td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300" th:text="${{event.datumTijd}}">Datum en Tijd</td>
         <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
           <form th:action="@{/favorites/remove}" method="post" class="inline-block">
             <input type="hidden" name="eventId" th:value="${event.id}" />
