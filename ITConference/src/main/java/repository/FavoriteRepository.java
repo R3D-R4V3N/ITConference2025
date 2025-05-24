@@ -18,7 +18,6 @@ public interface FavoriteRepository extends JpaRepository<MyUser, Long> {
     @Query("SELECT COUNT(e) FROM MyUser u JOIN u.favoriteEvents e WHERE u.username = :username AND e.id = :eventId")
     long countFavoriteEventByUsernameAndEventId(@Param("username") String username, @Param("eventId") Long eventId);
 
-    // Nieuwe methode om alle gebruikers te vinden die een specifiek event als favoriet hebben
     @Query("SELECT u FROM MyUser u JOIN u.favoriteEvents e WHERE e.id = :eventId")
     List<MyUser> findUsersByFavoriteEventId(@Param("eventId") Long eventId);
 }

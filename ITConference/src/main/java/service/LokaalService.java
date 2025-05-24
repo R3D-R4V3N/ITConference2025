@@ -17,6 +17,5 @@ public interface LokaalService {
 
     boolean existsLokaalByNaam(String naam);
 
-    // Nieuwe methode voor het verwijderen van een lokaal
     void deleteLokaalById(Long id);
 }

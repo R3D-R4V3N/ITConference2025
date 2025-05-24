@@ -95,13 +95,11 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     @Transactional
     public void deleteFavoritesByEventId(Long eventId) {
-        // Vind alle gebruikers die dit event als favoriet hebben
-        List<MyUser> usersWithFavoriteEvent = favoriteRepository.findUsersByFavoriteEventId(eventId); // Nieuwe methode in FavoriteRepository nodig
+        List<MyUser> usersWithFavoriteEvent = favoriteRepository.findUsersByFavoriteEventId(eventId);
 
-        // Verwijder het event uit de favorietenlijst van elke gebruiker
         for (MyUser user : usersWithFavoriteEvent) {
             user.getFavoriteEvents().removeIf(event -> event.getId().equals(eventId));
-            myUserService.saveUser(user); // Sla de bijgewerkte gebruiker op
+            myUserService.saveUser(user);
         }
     }
 }

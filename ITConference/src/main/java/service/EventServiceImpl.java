@@ -29,7 +29,7 @@ public class EventServiceImpl implements EventService {
     private SprekerService sprekerService;
 
     @Autowired
-    private FavoriteService favoriteService; // FavoriteService toevoegen om gerelateerde favorieten te verwijderen
+    private FavoriteService favoriteService;
 
     @Override
     public List<Event> findAllEvents() {
@@ -99,10 +99,9 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    @Transactional // Zorg ervoor dat de hele operatie transactioneel is
+    @Transactional
     public void deleteEventById(Long id) {
-        // Controleer of er favorieten zijn gekoppeld aan dit event en verwijder deze eerst
-        favoriteService.deleteFavoritesByEventId(id); // Hiervoor is een nieuwe methode in FavoriteService nodig
+        favoriteService.deleteFavoritesByEventId(id);
 
         eventRepository.deleteById(id);
     }

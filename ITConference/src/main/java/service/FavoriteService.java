@@ -12,6 +12,5 @@ public interface FavoriteService {
     boolean isEventFavoriteForUser(String username, Long eventId);
     long getNumberOfFavoriteEventsForUser(String username);
 
-    // Nieuwe methode voor het verwijderen van alle favorieten voor een specifiek event
     void deleteFavoritesByEventId(Long eventId);
 }
