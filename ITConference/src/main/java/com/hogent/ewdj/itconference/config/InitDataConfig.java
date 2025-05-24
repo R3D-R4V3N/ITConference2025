@@ -8,6 +8,7 @@ import domain.Role;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+@Order(1)
 @Component
 @Transactional
 public class InitDataConfig implements CommandLineRunner {
@@ -61,7 +63,6 @@ public class InitDataConfig implements CommandLineRunner {
 
         System.out.println("👥 Standaard gebruikers aangemaakt: admin/admin en user/user");
 
-        // Zorg ervoor dat de opgeslagen instanties (met ID's) worden gebruikt.
         Lokaal lokaal1 = lokaalService.saveLokaal(new Lokaal("A101", 50));
         Lokaal lokaal2 = lokaalService.saveLokaal(new Lokaal("B202", 30));
 
@@ -77,12 +78,12 @@ public class InitDataConfig implements CommandLineRunner {
         event1.setNaam("Inleiding tot Spring Boot");
         event1.setBeschrijving("Een introductie tot het Spring Boot framework en de basisprincipes.");
         event1.setDatumTijd(eventTime1);
-        event1.setLokaal(lokaal1); // Gebruik de beheerde 'lokaal1' instantie
+        event1.setLokaal(lokaal1);
         event1.setPrijs(new BigDecimal("49.99"));
         event1.setBeamercode(beamerCode1);
         event1.setBeamercheck(beamerCheck1);
 
-        List<Spreker> sprekersEvent1 = Arrays.asList(spreker1, spreker2); // Gebruik de beheerde 'spreker' instanties
+        List<Spreker> sprekersEvent1 = Arrays.asList(spreker1, spreker2);
         event1.setSprekers(sprekersEvent1);
 
         eventService.saveEvent(event1);
@@ -95,12 +96,12 @@ public class InitDataConfig implements CommandLineRunner {
         event2.setNaam("Advanced JPA Techniques");
         event2.setBeschrijving("Diepgaande kijk op JPA en Hibernate voor geavanceerd databeheer.");
         event2.setDatumTijd(eventTime2);
-        event2.setLokaal(lokaal2); // Gebruik de beheerde 'lokaal2' instantie
+        event2.setLokaal(lokaal2);
         event2.setPrijs(new BigDecimal("75.00"));
         event2.setBeamercode(beamerCode2);
         event2.setBeamercheck(beamerCheck2);
 
-        List<Spreker> sprekersEvent2 = Arrays.asList(spreker3); // Gebruik de beheerde 'spreker' instantie
+        List<Spreker> sprekersEvent2 = Arrays.asList(spreker3);
         event2.setSprekers(sprekersEvent2);
 
         eventService.saveEvent(event2);

@@ -1,7 +1,7 @@
 package repository;
 
 import domain.Event;
-import domain.Lokaal; // Importeer Lokaal
+import domain.Lokaal;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,6 +24,5 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     List<Event> findAllByOrderByDatumTijdAsc();
 
-    // Nieuwe methode om het aantal events te tellen gekoppeld aan een specifiek lokaal
     long countByLokaal(Lokaal lokaal);
 }

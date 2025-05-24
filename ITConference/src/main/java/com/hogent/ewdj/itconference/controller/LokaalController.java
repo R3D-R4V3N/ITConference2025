@@ -7,7 +7,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model; // Importeer Model
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -45,7 +45,7 @@ public class LokaalController {
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')")
-    public String processAddLokaalForm(@Valid Lokaal lokaal, BindingResult result, Model model, RedirectAttributes redirectAttributes, Locale locale) { // Model toegevoegd als parameter
+    public String processAddLokaalForm(@Valid Lokaal lokaal, BindingResult result, Model model, RedirectAttributes redirectAttributes, Locale locale) {
 
         if (result.hasErrors()) {
             model.addAttribute("isEdit", false);
@@ -78,7 +78,7 @@ public class LokaalController {
     public String processEditLokaalForm(@PathVariable("id") Long id,
                                         @Valid @ModelAttribute("lokaal") Lokaal lokaal,
                                         BindingResult result,
-                                        Model model, // Model toegevoegd als parameter
+                                        Model model,
                                         RedirectAttributes redirectAttributes,
                                         Locale locale) {
 

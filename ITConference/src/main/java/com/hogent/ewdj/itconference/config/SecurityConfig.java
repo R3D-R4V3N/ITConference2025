@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity; // NIEUW: Importeer deze annotatie
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,7 +14,7 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity // NIEUW: Voeg deze annotatie toe
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Autowired
@@ -38,13 +38,11 @@ public class SecurityConfig {
                         .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/js/**").permitAll()
                         .requestMatchers("/icons/**").permitAll()
-                        .requestMatchers("/error").permitAll() // Laat error pagina toe
+                        .requestMatchers("/error").permitAll()
                         .requestMatchers("/changeLocale").permitAll()
-                        .requestMatchers("/api/**").permitAll() // TOEGELATEN: Alle /api/** endpoints
+                        .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/events/add").hasRole("ADMIN")
                         .requestMatchers("/events/edit/**").hasRole("ADMIN")
-                        // VOEG DEZE REGEL TOE ALS JE WILT DAT WEBAUTHORISATIE DIT AFDWINGT I.P.V. ENKEL @PreAuthorize
-                        // .requestMatchers("/events/remove/**").hasRole("ADMIN")
                         .requestMatchers("/lokalen/add").hasRole("ADMIN")
                         .requestMatchers("/lokalen").hasRole("ADMIN")
                         .requestMatchers("/favorites").hasRole("USER")
@@ -59,18 +57,16 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        // Gebruik flash attribute voor logout message
                         .logoutSuccessHandler((request, response, authentication) -> {
-                            request.getSession().setAttribute("message", "You have been logged out successfully."); // Direct in session plaatsen voor redirect
+                            request.getSession().setAttribute("message", "You have been logged out successfully.");
                             response.sendRedirect("/login");
                         })
                         .permitAll()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
-                        // Gebruik flash attributes voor error messages
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
-                            request.getSession().setAttribute("errorMessage", "Access is denied"); // Direct in session plaatsen voor redirect
-                            request.getSession().setAttribute("errorCode", "403"); // Direct in session plaatsen voor redirect
+                            request.getSession().setAttribute("errorMessage", "Access is denied");
+                            request.getSession().setAttribute("errorCode", "403");
                             response.sendRedirect("/error");
                         })
                 );

@@ -41,9 +41,9 @@ public class FavoriteController {
             favoriteService.addFavoriteEvent(username, eventId);
             String successMessage = messageSource.getMessage("favorite.add.success", null, LocaleContextHolder.getLocale());
             redirectAttributes.addFlashAttribute("message", successMessage);
-        } catch (Exception ex) { // Deze vangt ook de IllegalStateException op
+        } catch (Exception ex) {
             String errorMessage = messageSource.getMessage("favorite.add.error", new Object[]{ex.getMessage()}, LocaleContextHolder.getLocale());
-            redirectAttributes.addFlashAttribute("errorMessage", errorMessage); // Gebruik errorMessage voor fouten
+            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
         }
         return "redirect:/events/" + eventId;
     }
@@ -59,8 +59,8 @@ public class FavoriteController {
             redirectAttributes.addFlashAttribute("message", successMessage);
         } catch (Exception ex) {
             String errorMessage = messageSource.getMessage("favorite.remove.error", new Object[]{ex.getMessage()}, LocaleContextHolder.getLocale());
-            redirectAttributes.addFlashAttribute("errorMessage", errorMessage); // Gebruik errorMessage voor fouten
+            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
         }
-        return "redirect:/events/" + eventId; // Redirect naar event detail pagina na verwijderen
+        return "redirect:/events/" + eventId;
     }
 }

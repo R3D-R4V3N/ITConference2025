@@ -2,6 +2,7 @@ package perform;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
@@ -16,7 +17,7 @@ public class PerformRestITConference implements CommandLineRunner {
     private final String SERVER_URI = "http://localhost:8080/api";
     private final WebClient webClient = WebClient.create();
 
-
+    @Transactional
     @Override
     public void run(String... args) throws Exception {
         System.out.println("🎯 ---- TESTEN VAN REST API MET REACTIVE WEB CLIENT ----");
