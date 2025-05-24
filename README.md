@@ -1,11 +1,3 @@
- EWDJ
-Aangepaste Gem
-
-Mijn excuses! Je hebt gelijk, de markdown op het einde was afgebroken. Mijn excuses voor het ongemak.
-
-Hier is de complete en gecorrigeerde versie van de README.md pagina. Ik heb de onderbreking hersteld en ervoor gezorgd dat alles volledig is:
-Markdown
-
 # 💻 IT-Conferentie 2025: Geavanceerd Evenementbeheer met Spring Boot
 
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.5-brightgreen)](https://spring.io/projects/spring-boot)
