@@ -16,4 +16,6 @@ public interface LokaalService {
     Lokaal findLokaalByNaam(String naam);
 
     boolean existsLokaalByNaam(String naam);
+
+    void deleteLokaalById(Long id);
 }

@@ -23,4 +23,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findByDatum(@Param("date") LocalDate date);
 
     List<Event> findAllByOrderByDatumTijdAsc();
+
+    long countByLokaal(Lokaal lokaal);
 }

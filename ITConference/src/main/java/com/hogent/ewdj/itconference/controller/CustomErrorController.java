@@ -61,7 +61,6 @@ public class CustomErrorController implements ErrorController {
             }
         }
 
-        // Always add attributes, even if null
         model.addAttribute(ERROR_CODE, errorCode);
         model.addAttribute(ERROR_MESSAGE, errorMessage);
 

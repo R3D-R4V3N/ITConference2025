@@ -28,6 +28,9 @@ public class EventServiceImpl implements EventService {
     @Autowired
     private SprekerService sprekerService;
 
+    @Autowired
+    private FavoriteService favoriteService;
+
     @Override
     public List<Event> findAllEvents() {
         return eventRepository.findAllByOrderByDatumTijdAsc();
@@ -93,5 +96,13 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<Spreker> findAllSprekers() {
         return sprekerService.findAllSprekers();
+    }
+
+    @Override
+    @Transactional
+    public void deleteEventById(Long id) {
+        favoriteService.deleteFavoritesByEventId(id);
+
+        eventRepository.deleteById(id);
     }
 }

@@ -26,4 +26,6 @@ public interface EventService {
     List<Lokaal> findAllLokalen();
 
     List<Spreker> findAllSprekers();
+
+    void deleteEventById(Long id);
 }

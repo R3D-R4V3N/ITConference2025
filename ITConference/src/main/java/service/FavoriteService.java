@@ -1,4 +1,3 @@
-
 package service;
 
 import domain.Event;
@@ -12,4 +11,6 @@ public interface FavoriteService {
     void removeFavoriteEvent(String username, Long eventId);
     boolean isEventFavoriteForUser(String username, Long eventId);
     long getNumberOfFavoriteEventsForUser(String username);
+
+    void deleteFavoritesByEventId(Long eventId);
 }
