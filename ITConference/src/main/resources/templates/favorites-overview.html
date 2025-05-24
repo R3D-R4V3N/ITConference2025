@@ -57,13 +57,6 @@
     </table>
   </div>
 
-  <div th:if="${message}" class="mt-6 font-medium text-indigo-200 bg-indigo-900/70 border border-indigo-700 p-4 rounded-lg text-center" role="alert">
-    <span th:text="${message}"></span>
-  </div>
-  <div th:if="${errorMessage}" class="mt-6 font-medium text-red-300 bg-red-900/70 border border-red-700 p-4 rounded-lg text-center" role="alert">
-    <span th:text="${errorMessage}"></span>
-  </div>
-
   <div class="mt-10 text-center">
     <a th:href="@{/events}" class="inline-block text-indigo-400 hover:text-indigo-200 font-semibold">
       <span th:text="#{general.backToEvents}">Terug naar evenementen</span>

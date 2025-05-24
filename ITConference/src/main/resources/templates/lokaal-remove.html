@@ -17,13 +17,13 @@
 
         <form th:action="@{'/lokalen/remove/' + ${lokaal.id}}" method="post" class="space-y-4">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-            <div class="flex justify-center gap-4">
+            <div class="flex flex-col md:flex-row gap-4 mt-4 w-full">
                 <button type="submit"
-                        class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-md transition focus:outline-none focus:ring-2 focus:ring-red-500">
+                        class="w-full md:w-1/2 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md transition focus:outline-none focus:ring-2 focus:ring-red-500">
                     <span th:text="#{lokaalRemove.deleteButton}">Verwijderen</span>
                 </button>
                 <a th:href="@{/lokalen}"
-                   class="inline-block bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-md text-center transition focus:outline-none focus:ring-2 focus:ring-gray-500"
+                   class="w-full md:w-1/2 text-center bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-md transition focus:outline-none focus:ring-2 focus:ring-gray-500"
                    th:text="#{general.cancel}">Annuleren</a>
             </div>
         </form>
