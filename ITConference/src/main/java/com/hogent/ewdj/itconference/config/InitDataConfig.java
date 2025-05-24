@@ -63,20 +63,20 @@ public class InitDataConfig implements CommandLineRunner {
 
         System.out.println("👥 Standaard gebruikers aangemaakt: admin/admin en user/user");
 
-        // Existing Locals
+        // Bestaande lokalen
         Lokaal lokaal1 = lokaalService.saveLokaal(new Lokaal("A101", 50));
         Lokaal lokaal2 = lokaalService.saveLokaal(new Lokaal("B202", 30));
         System.out.println("🏢 Lokaal A101 (Capaciteit: 50) aangemaakt.");
         System.out.println("🏢 Lokaal B202 (Capaciteit: 30) aangemaakt.");
 
-        // New Locals
+        // Nieuwe lokalen
         Lokaal lokaal3 = lokaalService.saveLokaal(new Lokaal("C303", 40));
         Lokaal lokaal4 = lokaalService.saveLokaal(new Lokaal("D404", 25));
         System.out.println("🏢 Lokaal C303 (Capaciteit: 40) aangemaakt.");
         System.out.println("🏢 Lokaal D404 (Capaciteit: 25) aangemaakt.");
 
 
-        // Speakers
+        // Sprekers
         Spreker spreker1 = sprekerService.saveSpreker(new Spreker("Jan Janssen"));
         System.out.println("🎤 Spreker 'Jan Janssen' aangemaakt.");
         Spreker spreker2 = sprekerService.saveSpreker(new Spreker("Piet Peeters"));
@@ -93,7 +93,7 @@ public class InitDataConfig implements CommandLineRunner {
         System.out.println("🎤 Spreker 'Sofie Smits' aangemaakt.");
 
 
-        // Existing Event 1
+        // Bestaand event 1
         LocalDateTime eventTime1 = LocalDateTime.now().plusDays(7).withHour(10).withMinute(0).withSecond(0).withNano(0);
         int beamerCode1 = 1234;
         int beamerCheck1 = beamerCode1 % 97;
@@ -113,7 +113,7 @@ public class InitDataConfig implements CommandLineRunner {
         eventService.saveEvent(event1);
         System.out.println("📅 Event 'Inleiding tot Spring Boot' aangemaakt.");
 
-        // Existing Event 2
+        // Bestaand event 2
         LocalDateTime eventTime2 = LocalDateTime.now().plusDays(8).withHour(14).withMinute(30).withSecond(0).withNano(0);
         int beamerCode2 = 5678;
         int beamerCheck2 = beamerCode2 % 97;
@@ -133,7 +133,7 @@ public class InitDataConfig implements CommandLineRunner {
         eventService.saveEvent(event2);
         System.out.println("📅 Event 'Advanced JPA Techniques' aangemaakt.");
 
-        // New Event 3
+        // Nieuw event 3
         LocalDateTime eventTime3 = LocalDateTime.now().plusDays(9).withHour(9).withMinute(0).withSecond(0).withNano(0);
         int beamerCode3 = 9876;
         int beamerCheck3 = beamerCode3 % 97;
@@ -153,7 +153,7 @@ public class InitDataConfig implements CommandLineRunner {
         eventService.saveEvent(event3);
         System.out.println("📅 Event 'Microservices with Spring Cloud' aangemaakt.");
 
-        // New Event 4
+        // Nieuw event 4
         LocalDateTime eventTime4 = LocalDateTime.now().plusDays(10).withHour(11).withMinute(0).withSecond(0).withNano(0);
         int beamerCode4 = 2468;
         int beamerCheck4 = beamerCode4 % 97;

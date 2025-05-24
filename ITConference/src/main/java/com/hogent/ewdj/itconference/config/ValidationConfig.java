@@ -9,7 +9,7 @@ import validator.ConferenceDateValidator;
 import validator.EventConstraintsValidator;
 import validator.SpeakerListValidator;
 
-@Configuration
+@Configuration // definieert validator beans
 public class ValidationConfig {
 
     @Bean

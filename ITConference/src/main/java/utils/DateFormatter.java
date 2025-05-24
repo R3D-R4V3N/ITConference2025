@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-@Component
+@Component // eigen formatter voor LocalDateTime
 public class DateFormatter implements Formatter<LocalDateTime> {
 
     private final MessageSource messageSource;

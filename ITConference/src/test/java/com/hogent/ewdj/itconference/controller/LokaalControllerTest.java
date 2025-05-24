@@ -70,7 +70,7 @@ class LokaalControllerTest {
         });
         when(lokaalService.findLokaalById(anyLong())).thenReturn(Optional.of(testLokaal));
         when(lokaalService.findLokaalByNaam(anyString())).thenReturn(testLokaal);
-        doNothing().when(lokaalService).deleteLokaalById(anyLong()); // Mock delete
+        doNothing().when(lokaalService).deleteLokaalById(anyLong()); // verwijdermock
 
         when(sprekerService.saveSpreker(any(Spreker.class))).thenAnswer(invocation -> {
             Spreker s = invocation.getArgument(0);
@@ -110,7 +110,7 @@ class LokaalControllerTest {
         when(eventService.findEventsByNaamAndDatum(anyString(), any())).thenReturn(Collections.emptyList());
     }
 
-    // Existing tests (kept for completeness or modified)
+    // Bestaande tests
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void testShowAddLokaalFormAdmin() throws Exception {
@@ -207,7 +207,7 @@ class LokaalControllerTest {
                 .andExpect(redirectedUrlPattern("**/login"));
     }
 
-    // New security tests for /lokalen/edit/{id} (GET)
+    // Nieuwe securitytests voor /lokalen/edit/{id} (GET)
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void testShowEditLokaalFormAdminAllowed() throws Exception {
@@ -233,15 +233,15 @@ class LokaalControllerTest {
                 .andExpect(redirectedUrlPattern("**/login"));
     }
 
-    // New security tests for /lokalen/edit/{id} (POST)
+    // Nieuwe securitytests voor /lokalen/edit/{id} (POST)
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void testProcessEditLokaalFormAdminAllowed() throws Exception {
         // Gebruik geldige waarden voor naam en capaciteit om validatiefouten te voorkomen
         mockMvc.perform(post("/lokalen/edit/{id}", testLokaal.getId())
                         .param("id", testLokaal.getId().toString())
-                        .param("naam", "A101") // Geldige naam: Letter gevolgd door 3 cijfers
-                        .param("capaciteit", "40") // Geldige capaciteit: <= 50
+                        .param("naam", "A101") // geldige naam
+                        .param("capaciteit", "40") // geldige capaciteit
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/lokalen"))
@@ -265,11 +265,11 @@ class LokaalControllerTest {
                 .andExpect(redirectedUrlPattern("**/login"));
     }
 
-    // New security tests for /lokalen/remove/{id} (GET)
+    // Nieuwe securitytests voor /lokalen/remove/{id} (GET)
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void testShowRemoveLokaalFormAdminAllowed() throws Exception {
-        // Deze test zal nog falen zolang lokaal-remove.html niet bestaat
+        // Deze test faalt als lokaal-remove.html ontbreekt
         mockMvc.perform(get("/lokalen/remove/{id}", testLokaal.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("lokaal-remove"))
@@ -291,7 +291,7 @@ class LokaalControllerTest {
                 .andExpect(redirectedUrlPattern("**/login"));
     }
 
-    // New security tests for /lokalen/remove/{id} (POST)
+    // Nieuwe securitytests voor /lokalen/remove/{id} (POST)
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void testProcessRemoveLokaalAdminAllowed() throws Exception {

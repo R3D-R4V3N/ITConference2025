@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Locale;
 
-@Controller
+@Controller // wisselen van taal
 public class LocaleController {
 
     @Autowired

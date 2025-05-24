@@ -12,7 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@Controller
+@Controller // afhandeling van fouten
 public class CustomErrorController implements ErrorController {
 
     private static final String ERROR_CODE = "errorCode";

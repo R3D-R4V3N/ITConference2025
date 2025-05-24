@@ -51,13 +51,13 @@
             <div class="select-none">${name}</div>
           `;
           badge.querySelector('svg').onclick = function() {
-            // Remove from hidden select
+          // Verwijder uit verborgen selectie
             Array.from(hiddenSelect.options).forEach(opt => {
-              if (opt.value == id) { // Use == for type coercion
+              if (opt.value == id) {
                 opt.selected = false;
               }
             });
-            // Add back to dropdown
+          // Voeg opnieuw toe aan keuzelijst
             const newOption = document.createElement('option');
             newOption.value = id;
             newOption.text = name;
@@ -72,13 +72,13 @@
           const selectedText = this.options[this.selectedIndex].text;
           if (!selectedId) return;
 
-          // Add to hidden select
+            // Voeg toe aan verborgen selectie
           Array.from(hiddenSelect.options).forEach(opt => {
-            if (opt.value == selectedId) opt.selected = true; // Use == for type coercion
+            if (opt.value == selectedId) opt.selected = true;
           });
 
-          // Remove from dropdown
-          const optionToRemove = Array.from(this.options).find(opt => opt.value == selectedId); // Use == for type coercion
+          // Verwijder uit keuzelijst
+          const optionToRemove = Array.from(this.options).find(opt => opt.value == selectedId);
           if (optionToRemove) this.removeChild(optionToRemove);
 
           addSpeakerBadge(selectedId, selectedText);
@@ -86,7 +86,7 @@
           this.value = '';
         });
 
-        // Initialize badges for existing speakers when in edit mode
+        // Initialiseer badges voor bestaande sprekers in bewerkmodus
         /*<![CDATA[*/
         const isEdit = /*[[${isEdit}]]*/ false;
         const eventSpeakers = /*[[${event.sprekers}]]*/ [];
@@ -96,14 +96,14 @@
             const selectedId = speaker.id;
             const selectedName = speaker.naam;
 
-            // Mark as selected in hidden select
+            // Markeer als geselecteerd in verborgen selectie
             Array.from(hiddenSelect.options).forEach(opt => {
-              if (opt.value == selectedId) { // Use == for type coercion
+              if (opt.value == selectedId) {
                 opt.selected = true;
               }
             });
 
-            // Remove from dropdown
+            // Verwijder uit keuzelijst
             const optionToRemove = Array.from(allSpeakers.options).find(opt => opt.value == selectedId);
             if (optionToRemove) {
               allSpeakers.removeChild(optionToRemove);
