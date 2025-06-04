@@ -15,6 +15,8 @@ import validator.EventConstraintsValidator;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Clock;
+import java.time.ZoneOffset;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -61,6 +63,10 @@ public class EventTest {
 
         Configuration<?> config = Validation.byDefaultProvider().configure();
         config.constraintValidatorFactory(new InjectingConstraintValidatorFactory(repo));
+        config.clockProvider(() -> Clock.fixed(
+                LocalDateTime.of(2025, 5, 18, 0, 0)
+                        .toInstant(ZoneOffset.UTC),
+                ZoneOffset.UTC));
         ValidatorFactory factory = config.buildValidatorFactory();
         validator = factory.getValidator();
     }
