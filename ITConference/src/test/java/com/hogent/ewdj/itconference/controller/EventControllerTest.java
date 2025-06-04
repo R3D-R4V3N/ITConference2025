@@ -18,6 +18,7 @@ import service.SprekerService;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -51,6 +52,7 @@ class EventControllerTest {
     private Lokaal testLokaal;
     private Spreker testSpreker1;
     private Spreker testSpreker2;
+    private String futureDateTimeStr;
 
     @BeforeEach
     void setUp() {
@@ -58,13 +60,17 @@ class EventControllerTest {
         testSpreker1 = new Spreker(1L, "Jan Janssen", new HashSet<>());
         testSpreker2 = new Spreker(2L, "Piet Peeters", new HashSet<>());
 
+        LocalDateTime futureDateTime = LocalDateTime.now().plusDays(1)
+                .withHour(10).withMinute(0).withSecond(0).withNano(0);
+        futureDateTimeStr = futureDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
+
         testEvent = new Event(
                 1L,
                 "Test Event",
                 "Beschrijving van Test Event",
                 Arrays.asList(testSpreker1, testSpreker2),
                 testLokaal,
-                LocalDateTime.of(2025, 6, 1, 10, 0),
+                futureDateTime,
                 1234,
                 0,
                 new BigDecimal("50.00")
@@ -139,7 +145,7 @@ class EventControllerTest {
                         .param("beschrijving", testEvent.getBeschrijving())
                         .param("sprekers[0].id", testSpreker1.getId().toString())
                         .param("lokaal.id", testLokaal.getId().toString())
-                        .param("datumTijd", "2025-06-01T10:00")
+                        .param("datumTijd", futureDateTimeStr)
                         .param("beamercode", String.valueOf(testEvent.getBeamercode()))
                         .param("beamercheck", String.valueOf(testEvent.calculateCorrectBeamerCheck()))
                         .param("prijs", testEvent.getPrijs().toString())
@@ -206,7 +212,7 @@ class EventControllerTest {
                         .param("beschrijving", testEvent.getBeschrijving())
                         .param("sprekers[0].id", testSpreker1.getId().toString())
                         .param("lokaal.id", testLokaal.getId().toString())
-                        .param("datumTijd", "2025-06-01T10:00")
+                        .param("datumTijd", futureDateTimeStr)
                         .param("beamercode", String.valueOf(testEvent.getBeamercode()))
                         .param("beamercheck", String.valueOf(testEvent.calculateCorrectBeamerCheck()))
                         .param("prijs", testEvent.getPrijs().toString())
@@ -359,7 +365,7 @@ class EventControllerTest {
                         .param("beschrijving", "Dit is een beschrijving.")
                         .param("sprekers[0].id", testSpreker1.getId().toString())
                         .param("lokaal.id", testLokaal.getId().toString())
-                        .param("datumTijd", "2025-06-01T10:00")
+                        .param("datumTijd", futureDateTimeStr)
                         .param("beamercode", "1234")
                         .param("beamercheck", "0")
                         .param("prijs", "50.00")
@@ -384,7 +390,7 @@ class EventControllerTest {
                         .param("beschrijving", "Some description")
                         .param("sprekers[0].id", testSpreker1.getId().toString())
                         .param("lokaal.id", testLokaal.getId().toString())
-                        .param("datumTijd", "2025-06-01T10:00")
+                        .param("datumTijd", futureDateTimeStr)
                         .param("beamercode", "1234")
                         .param("beamercheck", "0")
                         .param("prijs", "50.00")
