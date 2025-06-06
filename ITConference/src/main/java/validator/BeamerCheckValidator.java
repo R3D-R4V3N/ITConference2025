@@ -3,7 +3,9 @@ package validator;
 import domain.Event;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import org.springframework.stereotype.Component;
 
+@Component
 public class BeamerCheckValidator implements ConstraintValidator<ValidBeamerCheck, Event> {
 
     @Override
